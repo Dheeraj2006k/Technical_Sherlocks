@@ -1,0 +1,29 @@
+{
+  "name": "sherlocks-last-case",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "db:migrate": "node scripts/migrate.mjs",
+    "db:smoke": "node scripts/db-smoke.mjs",
+    "check:leaks": "node scripts/check-bundle-leaks.mjs",
+    "check:leaks:selftest": "node scripts/check-bundle-leaks.mjs --self-test"
+  },
+  "dependencies": {
+    "next": "16.4.0",
+    "pg": "^8.23.1",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.0",
+    "typescript": "^5"
+  }
+}
