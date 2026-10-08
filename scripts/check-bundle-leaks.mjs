@@ -28,6 +28,8 @@ export function buildNeedles(env) {
   }
   for (const [k, v] of Object.entries(env)) {
     if (REQUIRED.includes(k) || OPTIONAL.includes(k)) continue;
+    // NEXT_PUBLIC_* values are public by design (e.g. the Supabase anon key) and are inlined into the bundle on purpose.
+    if (k.startsWith('NEXT_PUBLIC_')) continue;
     // Short values (e.g. "true", "3000") would false-positive.
     if (v.length >= MIN_LEN) needles.push({ label: `value of ${k}`, text: v });
     else if (v.length > 0) skipped.push(k);
@@ -68,6 +70,8 @@ function selfTest() {
   check('missing required secret is an error', buildNeedles({ ...good, SESSION_SECRET: undefined }).errors.length === 1);
   const emptyKey = buildNeedles({ ...good, SUPABASE_SERVICE_ROLE_KEY: '' });
   check('empty service key: no error, not scanned, not reported', emptyKey.errors.length === 0 && !emptyKey.needles.some((n) => n.label.includes('SERVICE_ROLE_KEY')) && emptyKey.skipped.length === 0);
+  const pub = buildNeedles({ ...good, NEXT_PUBLIC_SUPABASE_ANON_KEY: 'public-anon-key-value' });
+  check('NEXT_PUBLIC_ values are intentionally not scanned', !pub.needles.some((n) => n.label.includes('NEXT_PUBLIC')));
   const shortKey = buildNeedles({ ...good, SUPABASE_SERVICE_ROLE_KEY: 'abc' });
   check('set service key (even short) is scanned, no error', shortKey.errors.length === 0 && shortKey.needles.some((n) => n.label.includes('SERVICE_ROLE_KEY')));
 
