@@ -17,6 +17,7 @@ teams). Admin URL: `<site>/admin`. Public board for the projector: `<site>/leade
       `SUPABASE_SERVICE_ROLE_KEY`, `SESSION_SECRET`, `ADMIN_PASSWORD`, `NEXT_PUBLIC_SUPABASE_URL`,
       `NEXT_PUBLIC_SUPABASE_ANON_KEY`, **`JOIN_RATE_PER_MINUTE` and `JOIN_RATE_PER_HOUR` raised** (suggest 200 and 1500;
       the whole venue may share one public IP).
+- [ ] `npm run check:env` (with the event values) prints `environment looks good`: both database URLs are the pooled port-6543 ones.
 - [ ] `SESSION_SECRET` and `ADMIN_PASSWORD` are different from the dev values and stored in the organizers' password manager.
 
 ### 2. Cases and credentials

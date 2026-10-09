@@ -70,14 +70,17 @@ export default function App() {
     setLoaded(true);
   }, []);
 
+  const signedIn = snap !== null;
   useEffect(() => {
     const first = setTimeout(refresh, 0);
+    // Only poll once signed in: visitors on the landing page make one check, not one every 3 seconds.
+    if (!signedIn) return () => clearTimeout(first);
     const t = setInterval(refresh, live ? POLL_LIVE_MS : POLL_MS);
     return () => {
       clearTimeout(first);
       clearInterval(t);
     };
-  }, [refresh, live]);
+  }, [refresh, live, signedIn]);
 
   // Realtime: a ping means "something changed" -> refetch authoritative state. On every (re)connect
   // we refetch too, because pings may have been missed while the socket was down.

@@ -10,6 +10,7 @@
     "db:migrate": "node scripts/migrate.mjs",
     "db:smoke": "node scripts/db-smoke.mjs",
     "test": "node tests/run.mjs",
+    "check:env": "node scripts/check-env.mjs",
     "check:leaks": "node scripts/check-bundle-leaks.mjs",
     "check:leaks:selftest": "node scripts/check-bundle-leaks.mjs --self-test"
   },

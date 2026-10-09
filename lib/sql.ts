@@ -32,5 +32,5 @@ export function classifyError(e: unknown): QueryErrorInfo {
   if (code === "53300" || code === "57P01" || code === "08006") {
     return { error_type: "unavailable", message: "The database is busy. Try again in a moment." };
   }
-  return { error_type: "other", message: "That query couldn't be run." };
+  return { error_type: "other", message: "The evidence database could not be reached just now. Try again in a few seconds, and tell an organizer if it keeps happening." };
 }

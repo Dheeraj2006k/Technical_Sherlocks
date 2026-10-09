@@ -16,7 +16,13 @@ if (!process.argv.includes('--no-build')) {
   if (b.status !== 0) process.exit(1);
 }
 
-const server = spawn(`npx next start -p ${PORT}`, { cwd: root, shell: true, stdio: ['ignore', 'pipe', 'pipe'] });
+// Pin the documented default join limits for the test server, whatever the developer set in .env.local.
+const server = spawn(`npx next start -p ${PORT}`, {
+  cwd: root,
+  shell: true,
+  stdio: ['ignore', 'pipe', 'pipe'],
+  env: { ...process.env, JOIN_RATE_PER_MINUTE: '10', JOIN_RATE_PER_HOUR: '30' },
+});
 let serverLog = '';
 server.stdout.on('data', (d) => (serverLog += d));
 server.stderr.on('data', (d) => (serverLog += d));

@@ -141,13 +141,15 @@ Nothing in this repo deploys automatically. When you are ready:
    `JOIN_RATE_PER_MINUTE`, `JOIN_RATE_PER_HOUR`.
 5. Deploy, then run the "before the event" checks in the runbook against the deployed URL.
 
-Caveat: the transaction-mode pooler path (cursors, `SET LOCAL`, role defaults over the pooler) has not been
-exercised against a real pooled endpoint yet; do the full-case dry run in the runbook before the event.
+Both `DATABASE_URL` and `DATABASE_URL_PLAYER` must be the **pooled** (port 6543) URLs on Vercel. Run `npm run check:env`
+first: it verifies both URLs and replays the exact player query path (read-only tx, `SET LOCAL`, cursor, RLS gate)
+through the pooler without printing any secret. The full test suite has been run against the transaction pooler.
 
 ## Troubleshooting
 
 | Symptom | Likely cause / fix |
 |---|---|
+| Console shows "The evidence database could not be reached" on Vercel but the rest works | `DATABASE_URL_PLAYER` is the **direct** host (IPv6-only; Vercel cannot reach it). Run `node scripts/setup-player-role.mjs --pooled`, copy the new `DATABASE_URL_PLAYER` into Vercel, redeploy, and confirm with `npm run check:env` |
 | "Query console is unavailable" | `DATABASE_URL_PLAYER` missing in the environment; run `setup-player-role.mjs` or set it in Vercel |
 | Everyone gets "Too many attempts" when joining | The venue shares one IP; raise `JOIN_RATE_PER_MINUTE` / `JOIN_RATE_PER_HOUR` |
 | A team's console shows "That query took too long" | Statement timeout (3 s) working as designed; check Admin > Inspect for the pattern |

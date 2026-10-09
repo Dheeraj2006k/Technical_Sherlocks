@@ -85,6 +85,11 @@ export async function POST(req: Request) {
         throw new HttpError(503, "The query console is unavailable.");
       }
       const info2 = classifyError(e);
+      // Infrastructure failures (not the player's SQL) are logged for the organizers: code + short message only.
+      if (info2.error_type === "other" || info2.error_type === "unavailable") {
+        const er = e as { code?: string; message?: string };
+        console.error("player query infrastructure error:", er.code ?? "no-code", String(er.message ?? "").slice(0, 160));
+      }
       const ms = Math.round(performance.now() - t0);
       await query("update query_logs set execution_time_ms = $2, success = false, error_type = $3 where id = $1", [
         logId,

@@ -4,6 +4,10 @@
 //
 //   node scripts/setup-player-role.mjs            create role if missing; write the env var if missing
 //   node scripts/setup-player-role.mjs --rotate   also generate a new password and rewrite the env var
+//   node scripts/setup-player-role.mjs --pooled   keep the password, but rebuild DATABASE_URL_PLAYER from the host,
+//                                                 port and database of DATABASE_URL (use after switching DATABASE_URL to
+//                                                 the pooled/transaction-mode URL, which is what Vercel needs: its
+//                                                 servers cannot reach Supabase's direct IPv6-only host)
 //
 // Safe to re-run: role settings are re-applied every time.
 import { randomBytes } from 'node:crypto';
@@ -17,6 +21,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 loadEnvLocal(root);
 const ROLE = 'player_exec';
 const rotate = process.argv.includes('--rotate');
+const pooled = process.argv.includes('--pooled');
 
 if (!process.env.DATABASE_URL) {
   console.error('DATABASE_URL is not set (expected in .env.local)');
@@ -29,15 +34,23 @@ let wroteEnv = false;
 try {
   const exists = (await client.query('select 1 from pg_roles where rolname = $1', [ROLE])).rowCount === 1;
   const haveUrl = Boolean(parseEnvLocal(root).DATABASE_URL_PLAYER);
-  const needPassword = !exists || rotate || !haveUrl;
-  const password = needPassword ? randomBytes(24).toString('hex') : null;
+  const existingPassword = (() => {
+    try {
+      return decodeURIComponent(new URL(parseEnvLocal(root).DATABASE_URL_PLAYER).password) || null;
+    } catch {
+      return null;
+    }
+  })();
+  if (pooled && !existingPassword) throw new Error('--pooled needs an existing DATABASE_URL_PLAYER (it reuses its password)');
+  const needPassword = !exists || rotate || !haveUrl || pooled;
+  const password = pooled && !rotate && exists ? existingPassword : needPassword ? randomBytes(24).toString('hex') : null;
 
   if (!exists) {
     await client.query(
       `create role ${ROLE} login nosuperuser nocreatedb nocreaterole noinherit nobypassrls
          connection limit 30 password ${client.escapeLiteral(password)}`,
     );
-  } else if (needPassword) {
+  } else if (needPassword && !(pooled && !rotate)) {
     await client.query(`alter role ${ROLE} password ${client.escapeLiteral(password)}`);
   }
 
@@ -67,6 +80,11 @@ try {
   }
   console.log(`role ${ROLE}: ready (${exists ? 'existing' : 'created'}), settings applied`);
   console.log(wroteEnv ? 'DATABASE_URL_PLAYER written to .env.local (value not shown)' : 'DATABASE_URL_PLAYER already present, unchanged');
+  if (wroteEnv) {
+    const u = new URL(process.env.DATABASE_URL);
+    console.log(`  -> now uses host kind: ${/pooler\.supabase\.com$/.test(u.hostname) ? 'pooler' : 'direct'}, port ${u.port || '5432'}`);
+    console.log('  -> copy this value from .env.local into Vercel (DATABASE_URL_PLAYER) and redeploy');
+  }
 } catch (e) {
   console.error('setup failed:', e.message);
   process.exitCode = 1;
