@@ -52,7 +52,7 @@ async function live() {
     add(Boolean(mig) && mig.rows[0].n >= 8, 'all migrations are applied (8 or more)', 'run: npm run db:migrate');
     const cases = (await a.query("select count(*)::int total, count(*) filter (where status in ('live','published'))::int live from cases")).rows[0];
     add(cases.total >= 10, `cases installed (${cases.total} found, ${cases.live} published)`, 'run: node scripts/seed-cases.mjs');
-    const sample = (await a.query("select c.id, c.slug, k.key from cases c join case_query_keys k on k.case_id = c.id and k.phase = 1 where c.slug <> 'stub' limit 1")).rows[0];
+    const sample = (await a.query("select c.id, c.slug, k.key, k.table_name as tbl from cases c join case_table_keys k on k.case_id = c.id where c.case_code = 'SQL01' and k.table_name = (select tables_unlocked[1] from case_phases where case_id = c.id and phase_number = 1) limit 1")).rows[0];
 
     const p = new pg.Client({ connectionString: E.DATABASE_URL_PLAYER });
     p.on('error', () => {});
@@ -65,15 +65,15 @@ async function live() {
           await p.query('begin read only');
           await p.query("set local statement_timeout = '3000ms'");
           await p.query(`set local search_path = ${p.escapeIdentifier('case_' + sample.slug)}`);
-          await p.query("select set_config('app.key', $1, true)", [sample.key]);
-          const cur = p.query(new Cursor('select count(*)::int from cast_crew', [], { rowMode: 'array' }));
+          await p.query("select set_config('app.keys', $1, true)", [sample.key]);
+          const cur = p.query(new Cursor(`select count(*)::int from ${p.escapeIdentifier(sample.tbl)}`, [], { rowMode: 'array' }));
           const rows = await cur.read(5).catch(() => null);
           await cur.close().catch(() => {});
           await p.query('rollback');
           if (i === 1) add(Boolean(rows) && rows[0][0] > 0, 'player query path works end to end (cursor, SET LOCAL, RLS gate, repeated)', 'check DATABASE_URL_PLAYER and that the case is seeded');
         }
         await p.query('begin read only');
-        const nokey = await p.query(`select count(*)::int n from ${p.escapeIdentifier('case_' + sample.slug)}.cast_crew`);
+        const nokey = await p.query(`select count(*)::int n from ${p.escapeIdentifier('case_' + sample.slug)}.${p.escapeIdentifier(sample.tbl)}`);
         await p.query('rollback');
         add(nokey.rows[0].n === 0, 'without the phase key the evidence tables return nothing (RLS gate holds)');
         let denied = false;
