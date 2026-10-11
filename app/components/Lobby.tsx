@@ -33,6 +33,8 @@ export default function Lobby({ gs, act, notify }: { gs: GameState; act: Act; no
         {gs.case.hook_text && <p className="file-hook">{gs.case.hook_text}</p>}
         <div className="file-meta">
           <span>Status: <b>awaiting briefing</b></span>
+          <span>Case: <b>{gs.case.code}</b></span>
+          <span>Track: <b>{gs.case.track === "SQL" ? "SQL investigation" : "Logic investigation"}</b></span>
           <span>Phases: <b>3 + final deduction</b></span>
         </div>
       </section>

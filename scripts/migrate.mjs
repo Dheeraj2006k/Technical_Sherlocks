@@ -16,9 +16,13 @@ if (!url) {
 }
 
 const dir = join(root, 'supabase', 'migrations');
-const files = readdirSync(dir).filter((f) => f.endsWith('.sql')).sort();
+const uptoIdx = process.argv.indexOf('--upto');
+const upto = uptoIdx > -1 ? process.argv[uptoIdx + 1] : null; // e.g. --upto 008 applies migrations 001..008 only (upgrade tests)
+const files = readdirSync(dir)
+  .filter((f) => f.endsWith('.sql') && (!upto || f.slice(0, 3) <= upto))
+  .sort();
 
-const client = new pg.Client({ connectionString: url, ssl: { rejectUnauthorized: false } });
+const client = new pg.Client({ connectionString: url });
 await client.connect();
 try {
   await client.query(

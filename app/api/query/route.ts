@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { query, withTx } from "@/lib/db";
+import { getUnlocks } from "@/lib/engine";
 import { api, HttpError, json, readBody } from "@/lib/http";
 import { PlayerDbUnavailable, runPlayerQuery } from "@/lib/playerdb";
 import { QUERIES_PER_MINUTE } from "@/lib/ratelimit";
@@ -17,21 +18,11 @@ export async function POST(req: Request) {
     const body = await readBody(req);
     const sql = precheckSql(body.sql);
 
-    const info = await query<{ state: string; slug: string; key: string | null; reached: number }>(
-      `select tp.state, c.slug, k.key,
-              case tp.state when 'WAITING' then 0 when 'PHASE_1' then 1 when 'PHASE_2' then 2 else 3 end as reached
-         from team_progress tp
-         join teams t on t.id = tp.team_id
-         join cases c on c.id = t.case_id
-         left join case_query_keys k on k.case_id = c.id
-              and k.phase = case tp.state when 'PHASE_1' then 1 when 'PHASE_2' then 2 else 3 end
-        where tp.team_id = $1`,
-      [s.team_id],
-    );
-    const row = info.rows[0];
-    if (!row) throw new HttpError(401, "Session no longer valid");
-    if (row.reached === 0) throw new HttpError(409, "The investigation hasn't started yet.");
-    if (!row.key) throw new HttpError(503, "This case isn't ready for queries.");
+    // The evidence tables this team has unlocked (phase starts + thread unlocks) and their keys.
+    const unlocks = await getUnlocks(query, s.team_id);
+    if (!unlocks) throw new HttpError(401, "Session no longer valid");
+    if (unlocks.state === "WAITING") throw new HttpError(409, "The investigation hasn't started yet.");
+    if (unlocks.tables.length === 0) throw new HttpError(503, "This case isn't ready for queries.");
 
     const hash = createHash("sha256").update(sql).digest("hex");
 
@@ -60,7 +51,7 @@ export async function POST(req: Request) {
 
     const t0 = performance.now();
     try {
-      const result = await runPlayerQuery(schemaFor(row.slug), row.key, sql);
+      const result = await runPlayerQuery(schemaFor(unlocks.slug), unlocks.keys, sql);
       const ms = Math.round(performance.now() - t0);
       await query("update query_logs set execution_time_ms = $2, row_count = $3, success = true, error_type = null where id = $1", [
         logId,
@@ -70,12 +61,11 @@ export async function POST(req: Request) {
 
       let notice: string | undefined;
       if (result.rows.length === 0) {
-        const locked = await query<{ tables_unlocked: string[] }>(
-          `select tables_unlocked from case_phases
-            where case_id = (select case_id from teams where id = $1) and phase_number > $2`,
-          [s.team_id, row.reached],
-        );
-        const hit = locked.rows.flatMap((r) => r.tables_unlocked).find((n) => new RegExp(`\\b${n}\\b`, "i").test(sql));
+        const all = await query<{ table_name: string }>("select table_name from case_table_keys where case_id = $1", [unlocks.caseId]);
+        const hit = all.rows
+          .map((r) => r.table_name)
+          .filter((n) => !unlocks.tables.includes(n))
+          .find((n) => new RegExp(`\\b${n}\\b`, "i").test(sql));
         if (hit) notice = `Heads up: "${hit}" isn't unlocked yet, so it returns nothing.`;
       }
       return json({ ok: true, ...result, row_count: result.rows.length, row_cap: 200, elapsed_ms: ms, notice });
@@ -85,6 +75,11 @@ export async function POST(req: Request) {
         throw new HttpError(503, "The query console is unavailable.");
       }
       const info2 = classifyError(e);
+      // Infrastructure failures (not the player's SQL) are logged for the organizers: code + short message only.
+      if (info2.error_type === "other" || info2.error_type === "unavailable") {
+        const er = e as { code?: string; message?: string };
+        console.error("player query infrastructure error:", er.code ?? "no-code", String(er.message ?? "").slice(0, 160));
+      }
       const ms = Math.round(performance.now() - t0);
       await query("update query_logs set execution_time_ms = $2, success = false, error_type = $3 where id = $1", [
         logId,

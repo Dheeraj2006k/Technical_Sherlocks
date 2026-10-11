@@ -1,30 +1,47 @@
 export type AnswerType = "SINGLE_CHARACTER" | "NUMBER" | "TIME" | "TEXT";
 export type Role = "head" | "investigator";
+export type Track = "SQL" | "LOGIC";
 export type EvidenceKind = "PERSON" | "ACCESS" | "OBJECT" | "MESSAGE" | "TIME" | "MOTIVE";
+export type OutcomeType = "CLEARED" | "LEAD_DISCOVERED" | "REMAINS_PERSON_OF_INTEREST" | "COMPLETED";
 
 export type Player = { id: string; display_name: string; role: Role; online: boolean };
-export type Task = {
+
+export type Hint = { position: number; text: string };
+export type Question = {
   id: string;
-  difficulty: string | null;
+  position: number;
+  title: string | null;
   prompt_text: string;
   answer_type: AnswerType;
-  title: string | null;
   kind: EvidenceKind | null;
-  assigned_to: string | null;
-  assigned_by: string | null;
-  solved: boolean;
+  base_points: number;
+  reward_schedule: number[];
+  completed: boolean;
+  points_awarded: number | null;
+  answer: string | null; // only present once the team has completed the question
+  hints_total: number;
+  hints: Hint[];
+  wrong_attempts: number;
 };
-export type Evidence = {
-  task_id: string;
+export type Thread = {
+  id: string;
   phase: number;
-  title: string | null;
-  kind: EvidenceKind | null;
-  label: string | null;
-  answer_type: AnswerType;
-  value: string;
+  position: number;
+  title: string;
+  subject_character_id: string | null;
+  intro_text: string | null;
+  required: boolean;
+  done: boolean;
+  outcome_type: OutcomeType | null;
+  outcome_text: string | null;
+  assigned_to: string | null;
+  questions: Question[];
+  tables: string[];
 };
+export type StoryEvent = { title: string; body: string };
 export type RosterEntry = { id: string; name: string; role: string | null };
 export type Solution = { culprit: string | null; motive: string | null; method: string | null; chain: string[] };
+export type FinalOption = { id: string; label: string };
 
 export type GameState = {
   state: "WAITING" | "PHASE_1" | "PHASE_2" | "PHASE_3" | "FINAL_DEDUCTION" | "FINISHED";
@@ -32,14 +49,18 @@ export type GameState = {
   team: { team_code: string; team_name: string; started_at: string; finished_at: string | null; elapsed_s: number };
   realtime_channel: string;
   paused: boolean;
-  culprit: { submitted: boolean; correct?: boolean; chosen_character_id?: string };
-  case: { title: string; hook_text: string | null };
+  case: { code: string; title: string; hook_text: string | null; track: Track; target_minutes: number };
   me: { player_id: string; display_name: string; role: Role };
   players: Player[];
-  tasks: Task[];
-  evidence: Evidence[];
+  threads: Thread[];
+  story: StoryEvent[];
+  final: {
+    culprit: { resolved: boolean; points: number; max: number };
+    mechanism: { resolved: boolean; points: number; max: number; options: FinalOption[] };
+    wrong_attempts: number;
+  };
   solution: Solution | null;
-  scores: { phase1_pts: number; phase2_pts: number; phase3_pts: number; culprit_pts: number; total_pts: number };
+  scores: { total_pts: number; by_component: Record<string, number> };
   narrative: { phase: number; clue_text: string | null }[];
   unlocked_tables: string[];
   roster: RosterEntry[];

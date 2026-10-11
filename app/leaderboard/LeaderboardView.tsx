@@ -22,15 +22,24 @@ const MEDAL = ["gold", "silver", "bronze"];
 export default function LeaderboardView() {
   const [rows, setRows] = useState<Row[] | null>(null);
   const [ok, setOk] = useState(true);
+  const [track, setTrack] = useState<"SQL" | "LOGIC">("SQL");
   const [updated, setUpdated] = useState<Date | null>(null);
   const tops = useRef(new Map<string, number>());
   const els = useRef(new Map<string, HTMLTableRowElement>());
+
+  // ?track=LOGIC deep-links to the Logic leaderboard (read after mount so it never differs from the server render)
+  useEffect(() => {
+    const t = setTimeout(() => {
+      if (new URLSearchParams(window.location.search).get("track")?.toUpperCase() === "LOGIC") setTrack("LOGIC");
+    }, 0);
+    return () => clearTimeout(t);
+  }, []);
 
   useEffect(() => {
     let live = true;
     const load = async () => {
       try {
-        const r = await fetch("/api/leaderboard", { cache: "no-store" });
+        const r = await fetch(`/api/leaderboard?track=${track}`, { cache: "no-store" });
         if (!r.ok) throw new Error("bad status");
         const d = await r.json();
         if (live) {
@@ -49,7 +58,7 @@ export default function LeaderboardView() {
       clearTimeout(first);
       clearInterval(t);
     };
-  }, []);
+  }, [track]);
 
   // FLIP: when ranks change, rows glide from their old position to the new one.
   useLayoutEffect(() => {
@@ -74,7 +83,14 @@ export default function LeaderboardView() {
       <header className="board-title">
         <p className="eyebrow"><Icon name="trophy" size={14} /> Live standings</p>
         <h1>The Investigation Board</h1>
-        <p className="muted">Highest score wins. Ties go to the earliest correct accusation.</p>
+        <p className="muted">Highest score wins. Ties go to the team that finished the final deduction first.</p>
+        <div role="tablist" aria-label="Track" className="tabs inline">
+          {(["SQL", "LOGIC"] as const).map((t) => (
+            <button key={t} type="button" role="tab" aria-selected={track === t} className={track === t ? "on" : ""} onClick={() => { setRows(null); setTrack(t); }}>
+              {t === "SQL" ? "SQL track" : "Logic track"}
+            </button>
+          ))}
+        </div>
         <p className="board-status" role="status">
           <span className={`conn ${ok ? "live" : "reconnecting"}`}><i aria-hidden="true" /> {ok ? "Live" : "Connection interrupted — retrying…"}</span>
           {updated && ok && <span className="muted"> Updated {updated.toLocaleTimeString()}</span>}
@@ -84,7 +100,7 @@ export default function LeaderboardView() {
       {rows === null ? (
         <p className="empty">Connecting to the investigation server…</p>
       ) : rows.length === 0 ? (
-        <p className="empty">No investigation teams have formed yet. The board fills up as teams open their cases.</p>
+        <p className="empty">No teams on this track yet. The board fills up as teams open their cases.</p>
       ) : (
         <div className="table-wrap">
           <table className="lb">

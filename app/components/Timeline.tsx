@@ -7,15 +7,15 @@ const idx = (s: GameState["state"]) => ORDER.indexOf(s);
 
 export function timelineSteps(gs: GameState) {
   const at = idx(gs.state);
-  const solvedIn = (p: number) => gs.evidence.filter((e) => e.phase === p).length;
-  const p1Cleared = at > 1;
+  const answered = gs.threads.flatMap((t) => t.questions).filter((q) => q.completed).length;
+  const doneThreads = gs.threads.filter((t) => t.done).length;
   const steps = [
     { label: "Case opened", done: at >= 1 },
-    { label: "Scene analyzed", done: p1Cleared || solvedIn(1) >= 2 },
-    { label: "Access verified", done: p1Cleared },
-    { label: "Evidence connected", done: at > 2 },
-    { label: "Motive established", done: at > 3 },
-    { label: "Culprit identified", done: gs.state === "FINISHED" && gs.culprit.correct === true },
+    { label: "Scene analyzed", done: at > 1 || doneThreads >= 1 },
+    { label: "Records reviewed", done: at > 2 || answered >= 4 },
+    { label: "Evidence connected", done: at > 3 || answered >= 6 },
+    { label: "Responsibility established", done: gs.final.culprit.resolved },
+    { label: "Case closed", done: gs.state === "FINISHED" },
   ];
   const current = steps.findIndex((s) => !s.done);
   return steps.map((s, i) => ({ ...s, current: i === current }));

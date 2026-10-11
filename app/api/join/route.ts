@@ -1,19 +1,19 @@
 import bcrypt from "bcryptjs";
 import { after } from "next/server";
 import type { PoolClient } from "pg";
-import { formatCode, generateTeamCode, normalizeCode } from "@/lib/codes";
-import { query, withTx } from "@/lib/db";
+import { formatCode, generateTeamCode, normalizeCaseCode, normalizeCode } from "@/lib/codes";
+import { withTx } from "@/lib/db";
 import { cleanName, MAX_PLAYERS } from "@/lib/game";
 import { api, HttpError, json, readBody, str } from "@/lib/http";
 import { checkJoinRate } from "@/lib/ratelimit";
 import { pingTeam } from "@/lib/realtime";
 import { issueSession, type Role } from "@/lib/session";
 
-// Compared against when the code isn't found, so timing doesn't reveal which codes exist.
+// Compared against when nothing is found, so timing doesn't reveal which credentials exist.
 const DUMMY_HASH = bcrypt.hashSync("not-a-real-password", 10);
 
-// One body, one status, for every credential failure: wrong/malformed code, wrong password,
-// case not live. Never say which part was wrong.
+// One body, one status, for every credential failure (PRD 4): unknown/withdrawn registration, no assignment, wrong case
+// code, wrong password, case not published. Never say which part was wrong.
 const fail = () => new HttpError(401, "Invalid credentials");
 
 type Joined = {
@@ -26,17 +26,15 @@ type Joined = {
   replay: boolean;
 };
 
-class Replay extends Error {}
-
 export async function POST(req: Request) {
   return api(async () => {
     await checkJoinRate(req);
     const body = await readBody(req);
-    const hasCase = body.case_code !== undefined;
+    const hasReg = body.registration_ref !== undefined;
     const hasTeam = body.team_code !== undefined;
-    if (hasCase === hasTeam) throw fail();
+    if (hasReg === hasTeam) throw fail();
 
-    const joined = hasCase ? await joinAsHead(body) : await joinAsTeamMember(body);
+    const joined = hasReg ? await joinAsHead(body) : await joinAsTeamMember(body);
 
     if (!joined.replay) after(() => pingTeam(joined.team_id)); // teammates see the new player live
     const res = json({
@@ -56,87 +54,64 @@ async function checkPassword(password: unknown, hash: string | undefined): Promi
   return ok && hash !== undefined && pw.length > 0;
 }
 
+// The head joins with the registration reference (credential), the case code the organizer assigned and the case password.
+// The case comes from the ADMIN's assignment for that registration, never from what the head claims.
 async function joinAsHead(body: Record<string, unknown>): Promise<Joined> {
   const name = cleanName(body.display_name);
-  const key = str(body.idempotency_key, "idempotency_key", 100);
-  if (key.length < 8) throw new HttpError(400, "idempotency_key is too short");
-  const teamNameIn = typeof body.team_name === "string" && body.team_name.trim() ? str(body.team_name, "team_name", 40) : null;
+  const key = body.idempotency_key === undefined ? null : str(body.idempotency_key, "idempotency_key", 100);
+  if (key !== null && key.length < 8) throw new HttpError(400, "idempotency_key is too short");
 
-  const code = normalizeCode(body.case_code, 8);
-  const c = code
-    ? await query<{ id: string; password_hash: string; status: string }>(
-        "select id, password_hash, status from cases where case_code = $1",
-        [code],
-      )
-    : { rows: [] as { id: string; password_hash: string; status: string }[] };
-  const found = c.rows[0];
-  const pwOk = await checkPassword(body.case_password, found?.password_hash);
-  if (!found || !pwOk || found.status !== "live") throw fail();
-  const caseId = found.id;
+  const ref = normalizeCode(body.registration_ref, 8);
+  const code = normalizeCaseCode(body.case_code);
 
-  const existing = async () => {
-    const r = await query<Joined & { case_id: string }>(JOINED_BY_KEY, [key]);
-    if (!r.rows[0]) return null;
-    if (r.rows[0].case_id !== caseId) throw new HttpError(409, "idempotency_key was already used");
-    return { ...r.rows[0], replay: true };
-  };
+  return withTx<Joined>(async (tx) => {
+    const reg = ref
+      ? await tx.query(
+          `select r.id, r.team_ref, r.team_size, r.registration_status, a.id as assignment_id, a.case_id, a.team_id as assigned_team_id,
+                  c.case_code, c.password_hash, c.status
+             from registrations r
+             left join team_case_assignments a on a.registration_id = r.id and a.status in ('assigned', 'started')
+             left join cases c on c.id = a.case_id
+            where r.registration_ref = $1
+            for update of r`,
+          [ref],
+        )
+      : { rows: [] as Record<string, unknown>[] };
+    const r = reg.rows[0] as
+      | { id: string; team_ref: string; team_size: number; registration_status: string; assignment_id: string | null; case_id: string | null; case_code: string | null; password_hash: string | null; status: string | null }
+      | undefined;
+    const pwOk = await checkPassword(body.case_password, r?.password_hash ?? undefined);
+    if (!r || !pwOk || r.registration_status === "withdrawn" || !r.case_id || !code || code !== r.case_code || r.status !== "published") throw fail();
 
-  const prior = await existing();
-  if (prior) return prior;
+    // A registration owns at most one team: rejoining as its head restores that head.
+    const existing = await tx.query(
+      `select t.id as team_id, t.team_code, t.team_name, p.id as player_id, p.display_name, p.role
+         from teams t join players p on p.team_id = t.id and p.role = 'head'
+        where t.registration_id = $1`,
+      [r.id],
+    );
+    if (existing.rows[0]) return { ...(existing.rows[0] as Omit<Joined, "replay">), replay: true };
 
-  try {
-    return await withTx<Joined>(async (tx) => {
-      let team: { id: string; team_code: string; team_name: string } | undefined;
-      for (let i = 0; i < 20 && !team; i++) {
-        const tc = generateTeamCode();
-        const r = await tx.query(
-          `insert into teams (case_id, team_code, team_name, paused_at)
-           values ($1, $2, $3, (select case when paused then now() end from game_control))
-           on conflict (team_code) do nothing returning id, team_code, team_name`,
-          [caseId, tc, teamNameIn ?? `${name}'s team`],
-        );
-        team = r.rows[0];
-      }
-      if (!team) throw new Error("could not allocate a team code");
-      const p = await tx.query(
-        "insert into players (team_id, display_name, role, last_seen_at) values ($1, $2, 'head', now()) returning id",
-        [team.id, name],
+    let team: { id: string; team_code: string; team_name: string } | undefined;
+    for (let i = 0; i < 20 && !team; i++) {
+      const ins = await tx.query(
+        `insert into teams (case_id, team_code, team_name, registration_id, paused_at)
+         values ($1, $2, $3, $4, (select case when paused then now() end from game_control))
+         on conflict (team_code) do nothing returning id, team_code, team_name`,
+        [r.case_id, generateTeamCode(), r.team_ref, r.id],
       );
-      const playerId: string = p.rows[0].id;
-      await tx.query("insert into team_progress (team_id) values ($1)", [team.id]);
-      await tx.query("insert into team_scores (team_id) values ($1)", [team.id]);
-      // A concurrent request with the same key blocks here until we commit, then conflicts.
-      const jr = await tx.query(
-        `insert into join_requests (idempotency_key, team_id, player_id) values ($1, $2, $3)
-         on conflict (idempotency_key) do nothing returning id`,
-        [key, team.id, playerId],
-      );
-      if (jr.rowCount === 0) throw new Replay();
-      return {
-        team_id: team.id,
-        team_code: team.team_code,
-        team_name: team.team_name,
-        player_id: playerId,
-        display_name: name,
-        role: "head",
-        replay: false,
-      };
-    });
-  } catch (e) {
-    if (e instanceof Replay) {
-      const again = await existing();
-      if (again) return again;
+      team = ins.rows[0];
     }
-    throw e;
-  }
+    if (!team) throw new Error("could not allocate a team code");
+    const p = await tx.query("insert into players (team_id, display_name, role, last_seen_at) values ($1, $2, 'head', now()) returning id", [team.id, name]);
+    const playerId: string = p.rows[0].id;
+    await tx.query("insert into team_progress (team_id) values ($1)", [team.id]);
+    await tx.query("insert into team_scores (team_id) values ($1)", [team.id]);
+    await tx.query("update team_case_assignments set team_id = $2, updated_at = now() where id = $1", [r.assignment_id, team.id]);
+    if (key) await tx.query("insert into join_requests (idempotency_key, team_id, player_id) values ($1, $2, $3) on conflict do nothing", [key, team.id, playerId]);
+    return { team_id: team.id, team_code: team.team_code, team_name: team.team_name, player_id: playerId, display_name: name, role: "head", replay: false };
+  });
 }
-
-const JOINED_BY_KEY = `
-  select t.id as team_id, t.case_id, t.team_code, t.team_name, p.id as player_id, p.display_name, p.role
-    from join_requests jr
-    join teams t on t.id = jr.team_id
-    join players p on p.id = jr.player_id
-   where jr.idempotency_key = $1`;
 
 // Investigators join (or rejoin) with team_code + display_name. Rejoining as the head additionally
 // requires the case password.
@@ -148,19 +123,17 @@ async function joinAsTeamMember(body: Record<string, unknown>): Promise<Joined> 
   return withTx(async (tx: PoolClient) => {
     // Row lock serializes concurrent joins to the same team, so counting is safe.
     const t = await tx.query(
-      `select t.id, t.team_code, t.team_name, c.status, c.password_hash
+      `select t.id, t.team_code, t.team_name, c.status, c.password_hash, coalesce(r.team_size, ${MAX_PLAYERS}) as team_size
          from teams t join cases c on c.id = t.case_id
+         left join registrations r on r.id = t.registration_id
         where t.team_code = $1 for update of t`,
       [code],
     );
     const team = t.rows[0];
-    if (!team || team.status !== "live") throw fail();
+    if (!team || team.status !== "published") throw fail();
 
     // Same display name (any case) = rejoin: same player, same role.
-    const ex = await tx.query(
-      "select id, display_name, role from players where team_id = $1 and lower(display_name) = lower($2)",
-      [team.id, name],
-    );
+    const ex = await tx.query("select id, display_name, role from players where team_id = $1 and lower(display_name) = lower($2)", [team.id, name]);
     if (ex.rows[0]) {
       if (ex.rows[0].role === "head" && !(await checkPassword(body.case_password, team.password_hash))) throw fail();
       return {
@@ -175,12 +148,10 @@ async function joinAsTeamMember(body: Record<string, unknown>): Promise<Joined> 
     }
 
     const n = await tx.query("select count(*)::int as n from players where team_id = $1", [team.id]);
-    if (n.rows[0].n >= MAX_PLAYERS) throw new HttpError(409, `This team is full (${MAX_PLAYERS} players max)`);
+    const cap = Math.min(MAX_PLAYERS, team.team_size as number);
+    if (n.rows[0].n >= cap) throw new HttpError(409, `This team is full (${cap} player${cap === 1 ? "" : "s"} registered)`);
 
-    const p = await tx.query(
-      "insert into players (team_id, display_name, role, last_seen_at) values ($1, $2, 'investigator', now()) returning id",
-      [team.id, name],
-    );
+    const p = await tx.query("insert into players (team_id, display_name, role, last_seen_at) values ($1, $2, 'investigator', now()) returning id", [team.id, name]);
     return {
       team_id: team.id,
       team_code: team.team_code,

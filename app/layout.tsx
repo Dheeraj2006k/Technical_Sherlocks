@@ -4,7 +4,7 @@ import "./design.css";
 
 const display = Playfair_Display({ variable: "--font-display", subsets: ["latin"], weight: ["600", "800"], display: "swap" });
 const sans = Inter({ variable: "--font-sans", subsets: ["latin"], display: "swap" });
-const mono = JetBrains_Mono({ variable: "--font-mono", subsets: ["latin"], display: "swap" });
+const mono = JetBrains_Mono({ variable: "--font-mono", subsets: ["latin"], display: "swap", preload: false });
 
 export const metadata: Metadata = {
   title: "Sherlock's Last Case",

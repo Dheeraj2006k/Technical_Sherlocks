@@ -16,6 +16,9 @@ export async function POST(req: Request) {
       if (!r.rows[0]) throw new HttpError(401, "Session no longer valid");
       if (r.rows[0].state !== "WAITING") return r.rows[0].state as string;
       await tx.query("update team_progress set state = 'PHASE_1', current_phase = 1 where team_id = $1", [s.team_id]);
+      // The clock starts when the head starts the investigation, not when the lobby opened.
+      await tx.query("update teams set started_at = now(), paused_total = interval '0' where id = $1", [s.team_id]);
+      await tx.query("update team_case_assignments set status = 'started', updated_at = now() where team_id = $1 and status = 'assigned'", [s.team_id]);
       return "PHASE_1";
     });
     after(() => pingTeam(s.team_id));

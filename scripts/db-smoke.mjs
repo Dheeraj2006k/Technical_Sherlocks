@@ -12,7 +12,7 @@ if (!url) {
   process.exit(1);
 }
 
-const pool = new pg.Pool({ connectionString: url, max: 1, ssl: { rejectUnauthorized: false } });
+const pool = new pg.Pool({ connectionString: url, max: 1 });
 let id;
 let ok = false;
 try {

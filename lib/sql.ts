@@ -2,9 +2,25 @@ import { HttpError } from "./http";
 
 export const MAX_SQL_LENGTH = 4000;
 
-// UX-layer pre-check only (PRD 6.1 layer 6): friendly messages for obvious mistakes. Safety does NOT
-// depend on it; the DB role, RLS gate, read-only transaction, timeout and cursor row cap do.
-// Allows a single trailing semicolon; WITH is accepted as well as SELECT so CTEs work.
+// Catalog / metadata probes (PRD 9.3: the console must not reveal locked tables through metadata). Row access to locked
+// evidence is blocked in the database itself (per-table RLS keys). This pre-check additionally refuses the obvious
+// catalog routes so the NAMES of locked evidence tables are not listed either. Quoted identifiers are still visible to
+// the regex (only single-quoted string literals and comments are stripped). It is a usability / defence-in-depth layer,
+// not the load-bearing boundary: Postgres cannot hide catalog rows per team.
+const CATALOG_RE =
+  /\b(pg_[a-z0-9_]*|information_schema|to_reg[a-z]*|has_[a-z_]*_privilege|obj_description|col_description|shobj_description|format_type|regclass|regnamespace|regproc|regtype)\b/i;
+
+export function touchesCatalog(sql: string): boolean {
+  const stripped = sql
+    .replace(/--[^\n]*/g, " ")
+    .replace(/\/\*[\s\S]*?\*\//g, " ")
+    .replace(/'(?:[^']|'')*'/g, "''");
+  return CATALOG_RE.test(stripped);
+}
+
+// UX-layer pre-check (PRD 6.1 layer 6): friendly messages for obvious mistakes. Safety does NOT depend on it; the DB
+// role, RLS gate, read-only transaction, timeout and cursor row cap do. Allows a single trailing semicolon; WITH is
+// accepted as well as SELECT so CTEs work.
 export function precheckSql(raw: unknown): string {
   if (typeof raw !== "string") throw new HttpError(400, "Enter a query to run.");
   let sql = raw.trim();
@@ -13,6 +29,7 @@ export function precheckSql(raw: unknown): string {
   if (sql.length > MAX_SQL_LENGTH) throw new HttpError(400, `Query is too long (max ${MAX_SQL_LENGTH} characters).`);
   if (sql.includes(";")) throw new HttpError(400, "Only one statement at a time (no semicolons).");
   if (!/^(select|with)\b/i.test(sql)) throw new HttpError(400, "Queries must start with SELECT (or WITH).");
+  if (touchesCatalog(sql)) throw new HttpError(400, "System tables and metadata aren't part of the evidence. Query the case tables directly.");
   return sql;
 }
 
@@ -32,5 +49,5 @@ export function classifyError(e: unknown): QueryErrorInfo {
   if (code === "53300" || code === "57P01" || code === "08006") {
     return { error_type: "unavailable", message: "The database is busy. Try again in a moment." };
   }
-  return { error_type: "other", message: "That query couldn't be run." };
+  return { error_type: "other", message: "The evidence database could not be reached just now. Try again in a few seconds, and tell an organizer if it keeps happening." };
 }

@@ -6,7 +6,8 @@ import { fmtClock, PHASES, phaseTitle } from "../phases";
 import { Avatar, Icon } from "./ui";
 import Lobby from "./Lobby";
 import SqlConsole from "./SqlConsole";
-import Tasks from "./Tasks";
+import Threads from "./Threads";
+import EvidenceBrowser from "./EvidenceBrowser";
 import EvidenceBoard from "./EvidenceBoard";
 import { PhaseStepper, Timeline } from "./Timeline";
 import { FinalDeduction, Resolution } from "./Deduction";
@@ -62,8 +63,8 @@ function CasePanel({ gs }: { gs: GameState }) {
     <aside className="casepanel" aria-label="Case panel">
       <header className="phase-banner">
         <p className="phase-no">{phase === 4 ? "Final deduction" : `Phase ${phase} of 3`}</p>
-        <h2 className="phase-name">{meta ? meta.title : "Name the culprit"}</h2>
-        <p className="phase-focus">{meta ? meta.focus : "Weigh every verified clue"}</p>
+        <h2 className="phase-name">{meta ? meta.title : "Name who and how"}</h2>
+        <p className="phase-focus">{meta ? meta.focus : "Who is responsible, and how"}</p>
       </header>
 
       {current?.clue_text && (
@@ -80,7 +81,7 @@ function CasePanel({ gs }: { gs: GameState }) {
       ))}
 
       <div className="block">
-        <h3 className="block-title">Unlocked evidence tables</h3>
+        <h3 className="block-title">Open evidence</h3>
         <ul className="chips">{gs.unlocked_tables.map((t) => <li key={t}>{t}</li>)}</ul>
       </div>
 
@@ -127,7 +128,10 @@ export function UnlockOverlay({ overlay, onDone }: { overlay: Overlay | null; on
 }
 
 export default function Game({ gs, at, mode, delta, act, notify, onLeave }: { gs: GameState; at: number; mode: ConnectionMode; delta: { n: number; id: number } | null; act: Act; notify: Notify; onLeave: () => void }) {
-  const [tab, setTab] = useState<"console" | "evidence">("console");
+  const isLogic = gs.case.track === "LOGIC";
+  const [tabChoice, setTab] = useState<"browser" | "console" | "evidence" | null>(null);
+  const tab = tabChoice ?? (isLogic ? "browser" : "console");
+  const answeredCount = gs.threads.flatMap((t) => t.questions).filter((q) => q.completed).length;
   const inGame = gs.state === "PHASE_1" || gs.state === "PHASE_2" || gs.state === "PHASE_3" || gs.state === "FINAL_DEDUCTION";
 
   return (
@@ -152,11 +156,19 @@ export default function Game({ gs, at, mode, delta, act, notify, onLeave }: { gs
               <CasePanel gs={gs} />
               <div className="center">
                 <div role="tablist" aria-label="Workspace" className="tabs inline">
-                  <button type="button" role="tab" id="tab-console" aria-selected={tab === "console"} aria-controls="pane-console" className={tab === "console" ? "on" : ""} onClick={() => setTab("console")}>SQL console</button>
+                  {isLogic && (
+                    <button type="button" role="tab" id="tab-browser" aria-selected={tab === "browser"} aria-controls="pane-browser" className={tab === "browser" ? "on" : ""} onClick={() => setTab("browser")}>Evidence browser</button>
+                  )}
+                  <button type="button" role="tab" id="tab-console" aria-selected={tab === "console"} aria-controls="pane-console" className={tab === "console" ? "on" : ""} onClick={() => setTab("console")}>{isLogic ? "SQL console (optional)" : "SQL console"}</button>
                   <button type="button" role="tab" id="tab-evidence" aria-selected={tab === "evidence"} aria-controls="pane-evidence" className={tab === "evidence" ? "on" : ""} onClick={() => setTab("evidence")}>
-                    Evidence board <span className="count">{gs.evidence.length}</span>
+                    Evidence board <span className="count">{answeredCount}</span>
                   </button>
                 </div>
+                {isLogic && (
+                  <div role="tabpanel" id="pane-browser" aria-labelledby="tab-browser" hidden={tab !== "browser"}>
+                    <EvidenceBrowser unlocked={gs.unlocked_tables} paused={gs.paused} />
+                  </div>
+                )}
                 <div role="tabpanel" id="pane-console" aria-labelledby="tab-console" hidden={tab !== "console"}>
                   <SqlConsole tables={gs.unlocked_tables} paused={gs.paused} />
                 </div>
@@ -164,7 +176,7 @@ export default function Game({ gs, at, mode, delta, act, notify, onLeave }: { gs
                   <EvidenceBoard gs={gs} />
                 </div>
               </div>
-              <Tasks gs={gs} act={act} notify={notify} />
+              <Threads gs={gs} act={act} notify={notify} />
             </div>
           </>
         )}

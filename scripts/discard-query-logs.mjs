@@ -9,7 +9,7 @@ import { loadEnvLocal } from './lib/env.mjs';
 
 loadEnvLocal(join(dirname(fileURLToPath(import.meta.url)), '..'));
 const yes = process.argv.includes('--yes');
-const client = new pg.Client({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
+const client = new pg.Client({ connectionString: process.env.DATABASE_URL });
 await client.connect();
 try {
   const c = await client.query('select (select count(*)::int from query_logs) as logs, (select count(*)::int from join_attempts) as attempts');

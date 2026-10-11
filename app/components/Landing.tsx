@@ -8,6 +8,7 @@ const REDUCED = () => typeof window !== "undefined" && window.matchMedia("(prefe
 
 export default function Landing({ onJoined }: { onJoined: () => void }) {
   const [mode, setMode] = useState<"head" | "investigator">("head");
+  const [regRef, setRegRef] = useState("");
   const [caseCode, setCaseCode] = useState("");
   const [password, setPassword] = useState("");
   const [teamCode, setTeamCode] = useState("");
@@ -34,13 +35,13 @@ export default function Landing({ onJoined }: { onJoined: () => void }) {
     setError("");
     const body =
       mode === "head"
-        ? { case_code: caseCode, case_password: password, display_name: name, idempotency_key: key }
+        ? { registration_ref: regRef, case_code: caseCode, case_password: password, display_name: name, idempotency_key: key }
         : { team_code: teamCode, display_name: name, ...(headPassword ? { case_password: headPassword } : {}) };
     const r = await post("/api/join", body);
     setBusy(false);
     if (!r.ok) {
       const msg = typeof r.data.error === "string" ? r.data.error : "";
-      if (r.status === 401) setError("Those credentials were not recognized. Check the code (and password) and try again.");
+      if (r.status === 401) setError("Those credentials were not recognized. Check your registration reference, the case code and the password your organizer gave you.");
       else if (r.status === 409) setError(msg || "That investigation team is full.");
       else if (r.status === 429) setError(`Too many attempts. Wait ${r.retryAfter ?? "a minute"} seconds and try again.`);
       else setError(msg || "Could not reach the investigation server. Try again.");
@@ -54,19 +55,19 @@ export default function Landing({ onJoined }: { onJoined: () => void }) {
   return (
     <main id="main" className="landing grid-bg">
       <section className="hero" aria-labelledby="hero-title">
-        <p className="eyebrow"><Icon name="magnifier" size={14} /> Techfest · SQL investigation</p>
+        <p className="eyebrow"><Icon name="magnifier" size={14} /> Techfest · Investigation</p>
         <h1 id="hero-title" className="hero-title">
           Sherlock&apos;s <span>Last Case</span>
         </h1>
         <p className="hero-sub">Every crime leaves a query.</p>
         <p className="hero-copy">
-          Your team gets a live evidence database, three phases of clues and one accusation. Query the records, connect the
-          evidence, name the culprit. Fastest correct team wins.
+          Your team gets a live evidence file, three phases of investigation threads and a final deduction. Follow the evidence,
+          answer the questions, name who is responsible and explain how. Highest score wins; speed breaks ties.
         </p>
         <ol className="how">
           <li><b>1</b> Form a team of up to three</li>
-          <li><b>2</b> Query the evidence with SQL</li>
-          <li><b>3</b> Name the culprit</li>
+          <li><b>2</b> Work the investigation threads</li>
+          <li><b>3</b> Make the final deduction</li>
         </ol>
         <div className="casefile" aria-hidden="true">
           <div className="casefile-tab">CASE FILE · 0001</div>
@@ -96,10 +97,14 @@ export default function Landing({ onJoined }: { onJoined: () => void }) {
         <form id="entry-form" role="tabpanel" aria-labelledby={mode === "head" ? "tab-head" : "tab-inv"} onSubmit={submit} className="stack">
           {mode === "head" ? (
             <>
-              <p className="hint">You are the team lead. Enter the case credentials your organizer gave you.</p>
+              <p className="hint">You are the team lead. Enter your registration reference and the case your organizer assigned to your team.</p>
+              <label className="field">
+                <span>Registration reference</span>
+                <input value={regRef} onChange={(e) => setRegRef(e.target.value)} placeholder="XXXX-XXXX" required autoComplete="off" autoCapitalize="characters" spellCheck={false} {...invalid} />
+              </label>
               <label className="field">
                 <span>Case code</span>
-                <input value={caseCode} onChange={(e) => setCaseCode(e.target.value)} placeholder="XXXX-XXXX" required autoComplete="off" autoCapitalize="characters" spellCheck={false} inputMode="text" {...invalid} />
+                <input value={caseCode} onChange={(e) => setCaseCode(e.target.value)} placeholder="SQL01 or LOG01" required autoComplete="off" autoCapitalize="characters" spellCheck={false} inputMode="text" {...invalid} />
               </label>
               <label className="field">
                 <span>Case password</span>
