@@ -42,7 +42,7 @@ if (main && player) {
 
 async function live() {
   if (!main || !player) return;
-  const a = new pg.Client({ connectionString: E.DATABASE_URL, ssl: { rejectUnauthorized: false } });
+  const a = new pg.Client({ connectionString: E.DATABASE_URL });
   a.on('error', () => {});
   try {
     await a.connect();
@@ -50,11 +50,11 @@ async function live() {
     add(true, 'DATABASE_URL connects and answers a query');
     const mig = await a.query("select count(*)::int n from schema_migrations").catch(() => null);
     add(Boolean(mig) && mig.rows[0].n >= 8, 'all migrations are applied (8 or more)', 'run: npm run db:migrate');
-    const cases = (await a.query("select count(*)::int total, count(*) filter (where status = 'live')::int live from cases")).rows[0];
-    add(cases.total >= 10, `cases installed (${cases.total} found, ${cases.live} live)`, 'run: node scripts/seed-cases.mjs');
+    const cases = (await a.query("select count(*)::int total, count(*) filter (where status in ('live','published'))::int live from cases")).rows[0];
+    add(cases.total >= 10, `cases installed (${cases.total} found, ${cases.live} published)`, 'run: node scripts/seed-cases.mjs');
     const sample = (await a.query("select c.id, c.slug, k.key from cases c join case_query_keys k on k.case_id = c.id and k.phase = 1 where c.slug <> 'stub' limit 1")).rows[0];
 
-    const p = new pg.Client({ connectionString: E.DATABASE_URL_PLAYER, ssl: { rejectUnauthorized: false } });
+    const p = new pg.Client({ connectionString: E.DATABASE_URL_PLAYER });
     p.on('error', () => {});
     try {
       await p.connect();

@@ -196,6 +196,7 @@ export const definition = {
   hook: HOOK,
   victimName: 'Leonard Voss',
   culpritName: CULPRIT_NAME,
+  meta: { area: 'prop room', item: 'Chalice', inspector: 'Helena Ross', inspectTime: '21:00', refillTime: '21:02', lot: '7QX-114', outsider: 'Priya Nair' },
   rosterNames: PEOPLE.filter((p) => p[5]).map((p) => p[1]),
   rosterRoles: Object.fromEntries(PEOPLE.filter((p) => p[5]).map((p) => [p[1], p[2]])),
   solution: {

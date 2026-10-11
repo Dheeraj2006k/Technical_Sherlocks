@@ -1,28 +1,41 @@
-// Generic case engine: installs any case definition and mechanically verifies the PRD section 9
-// validation checklist items that CAN be checked by machine.
+// Generic v5 case engine: installs any case definition on the shared investigation engine and mechanically verifies the
+// machine-checkable parts of the case validation checklist (PRD 14): scoring budget, structure, solo-solvability, evidence
+// unlock rules, unique answers and hints.
 //
-// A definition is plain data:
-//   { slug, title, hook, victimName, culpritName, rosterNames[],
-//     tables: [{ name, ddl, rows: [[...], ...] }],              // schema case_<slug>
-//     phases: [{ clue, tables: ['t1', ...] } x3],
-//     tasks:  [{ phase, difficulty, type, prompt, answer, concept, sql } x9] }
-// task.answer is the canonical text (for SINGLE_CHARACTER: the character's name); task.sql is a reference
-// query that returns exactly that answer using only tables unlocked at that phase.
+// A v5 definition is plain data:
+//   { slug, code ('SQL01'..'LOG10'), track ('SQL'|'LOGIC'), title, hook, victimName, culpritName, rosterNames[], rosterRoles{},
+//     solution{ motive, method, chain[] },
+//     tables:[{ name, ddl, columns, rows }],                         // schema case_<slug>
+//     phases:[{ clue, tables:[] } x3],                               // tables open for the whole phase
+//     threads:[{ key, phase, position, title, subject (character name|null), intro, outcomeType, outcomeText, required,
+//                prerequisite (thread key|null), unlocks:[{ table, when:'available'|'complete' }],
+//                questions:[{ title, prompt, type, answer, concept, sql, kind, label, difficulty, hints[4] }] }],
+//     story:[{ thread, title, body }],
+//     finalOptions:[{ label, correct }] (3-4, exactly one correct),
+//     finalPoints:{ culprit, mechanism } }
+// A question's `sql` is a reference query returning exactly its answer, using only tables unlocked by then. Every question
+// is worth 10 points (reward schedule 10/8/6/4/2 by hints used); questions + final components total exactly 100.
 import { randomUUID } from 'node:crypto';
 import bcrypt from 'bcryptjs';
-import { randomCaseCode } from '../lib/codes.mjs';
 import { provisionCase, schemaFor } from '../lib/provision.mjs';
 
 const CHUNK = 150;
+export const QUESTION_POINTS = 10;
+export const REWARD_SCHEDULE = [10, 8, 6, 4, 2];
+export const HINTS_PER_QUESTION = 4;
+export const TOTAL_POINTS = 100;
+
+export function allQuestions(def) {
+  return def.threads.flatMap((t) => t.questions.map((q, i) => ({ ...q, thread: t, index: i })));
+}
 
 export async function installCase(
   client,
   def,
-  { id = randomUUID(), slug = def.slug, caseCode, password, status = 'draft', title = def.title, bcryptCost = 10 } = {},
+  { id = randomUUID(), slug = def.slug, caseCode = def.code, password, status = 'draft', title = def.title, bcryptCost = 10 } = {},
 ) {
   const schema = schemaFor(slug);
   const q = (s) => client.escapeIdentifier(s);
-  const code = caseCode ?? randomCaseCode();
   const pw = password ?? randomUUID(); // unrecoverable unless the caller supplies one: use gen-case-credentials
   const hash = await bcrypt.hash(pw, bcryptCost);
 
@@ -30,21 +43,22 @@ export async function installCase(
   await client.query(`create schema ${q(schema)}`);
   for (const t of def.tables) {
     await client.query(`create table ${q(schema)}.${q(t.name)} (${t.ddl.replaceAll('{S}', q(schema))})`);
-    const width = t.rows[0].length;
     for (let i = 0; i < t.rows.length; i += CHUNK) {
       const part = t.rows.slice(i, i + CHUNK);
       const params = [];
       const tuples = part.map((row) => `(${row.map((v) => (params.push(v), `$${params.length}`)).join(', ')})`);
       const cols = t.columns ? `(${t.columns.map(q).join(', ')})` : '';
       await client.query(`insert into ${q(schema)}.${q(t.name)} ${cols} values ${tuples.join(', ')}`, params);
-      void width;
     }
   }
 
+  const fp = def.finalPoints ?? { culprit: 12, mechanism: 8 };
   await client.query(
-    `insert into cases (id, case_code, slug, password_hash, title, status, hook_text, solution_motive, solution_method, solution_chain)
-     values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
-    [id, code, slug, hash, title, status, def.hook, def.solution?.motive ?? null, def.solution?.method ?? null, JSON.stringify(def.solution?.chain ?? [])],
+    `insert into cases (id, case_code, slug, password_hash, title, status, hook_text, solution_motive, solution_method, solution_chain,
+                        game_track, target_duration_minutes, final_points_culprit, final_points_mechanism)
+     values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`,
+    [id, caseCode, slug, hash, title, status, def.hook, def.solution?.motive ?? null, def.solution?.method ?? null, JSON.stringify(def.solution?.chain ?? []),
+      def.track, def.targetMinutes ?? 18, fp.culprit, fp.mechanism],
   );
   for (let p = 1; p <= 3; p++) {
     await client.query('insert into case_phases (case_id, phase_number, clue_text, tables_unlocked) values ($1, $2, $3, $4)', [
@@ -57,80 +71,173 @@ export async function installCase(
     await client.query('insert into characters (id, case_id, name, role_in_story) values ($1, $2, $3, $4)', [cid, id, name, def.rosterRoles?.[name] ?? 'Person of interest']);
     characters.push({ id: cid, name });
   }
-  const tasks = [];
-  for (const task of def.tasks) {
-    const correct = task.type === 'SINGLE_CHARACTER' ? characters.find((c) => c.name === task.answer).id : task.answer;
+  const charId = (n) => {
+    const c = characters.find((x) => x.name === n);
+    if (!c) throw new Error(`${def.slug}: unknown character ${n}`);
+    return c.id;
+  };
+
+  // threads (two passes so prerequisites can point at any earlier thread)
+  const threadIds = new Map();
+  for (const th of def.threads) {
     const tid = randomUUID();
+    threadIds.set(th.key, tid);
     await client.query(
-      `insert into tasks (id, case_id, phase_number, difficulty, prompt_text, answer_type, correct_answer, sql_concept, title, evidence_kind, evidence_label)
-       values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
-      [tid, id, task.phase, task.difficulty, task.prompt, task.type, correct, task.concept, task.title ?? null, task.kind ?? null, task.label ?? null],
+      `insert into investigation_threads (id, case_id, phase_number, position, title, subject_character_id, intro_text, outcome_type, outcome_text, required)
+       values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+      [tid, id, th.phase, th.position, th.title, th.subject ? charId(th.subject) : null, th.intro ?? null, th.outcomeType ?? 'COMPLETED', th.outcomeText ?? null, th.required],
     );
-    tasks.push({ id: tid, phase: task.phase, difficulty: task.difficulty, answer_type: task.type, correct_answer: correct, answer_text: task.answer, sql: task.sql });
   }
-  const culpritId = characters.find((c) => c.name === def.culpritName).id;
+  for (const th of def.threads) {
+    if (th.prerequisite) await client.query('update investigation_threads set prerequisite_thread_id = $2 where id = $1', [threadIds.get(th.key), threadIds.get(th.prerequisite)]);
+    for (const u of th.unlocks ?? []) {
+      await client.query('insert into thread_evidence_tables (thread_id, table_name, unlock_condition) values ($1, $2, $3)', [threadIds.get(th.key), u.table, u.when]);
+    }
+  }
+
+  const tasks = [];
+  for (const th of def.threads) {
+    for (const [i, qn] of th.questions.entries()) {
+      const correct = qn.type === 'SINGLE_CHARACTER' ? charId(qn.answer) : qn.answer;
+      const tid = randomUUID();
+      await client.query(
+        `insert into tasks (id, case_id, phase_number, difficulty, prompt_text, answer_type, correct_answer, sql_concept, title, evidence_kind, evidence_label,
+                            thread_id, position, base_points, reward_schedule)
+         values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)`,
+        [tid, id, th.phase, qn.difficulty ?? null, qn.prompt, qn.type, correct, qn.concept ?? null, qn.title, qn.kind ?? null, qn.label ?? null,
+          threadIds.get(th.key), i + 1, QUESTION_POINTS, REWARD_SCHEDULE],
+      );
+      for (const [h, text] of qn.hints.entries()) {
+        await client.query('insert into task_hints (task_id, position, hint_text) values ($1, $2, $3)', [tid, h + 1, text]);
+      }
+      tasks.push({ id: tid, thread: th.key, phase: th.phase, answer_type: qn.type, correct_answer: correct, answer_text: qn.answer, sql: qn.sql, hints: qn.hints, title: qn.title });
+    }
+  }
+  for (const ev of def.story ?? []) {
+    await client.query('insert into story_events (case_id, trigger_thread_id, title, body) values ($1, $2, $3, $4)', [id, threadIds.get(ev.thread), ev.title, ev.body]);
+  }
+  const options = [];
+  for (const [i, o] of def.finalOptions.entries()) {
+    const oid = randomUUID();
+    await client.query("insert into final_options (id, case_id, component, position, label, is_correct) values ($1, $2, 'mechanism', $3, $4, $5)", [oid, id, i + 1, o.label, Boolean(o.correct)]);
+    options.push({ id: oid, label: o.label, correct: Boolean(o.correct) });
+  }
+  const culpritId = charId(def.culpritName);
   await client.query('update cases set culprit_character_id = $2 where id = $1', [id, culpritId]);
   await provisionCase(client, id);
-  return { caseId: id, slug, schema, caseCode: code, password: pw, characters, tasks, culpritId };
+  return { caseId: id, slug, schema, caseCode, password: pw, characters, tasks, culpritId, options, threadIds };
 }
 
 export async function removeCaseFully(client, caseId) {
   const row = (await client.query('select slug from cases where id = $1', [caseId])).rows[0];
   await client.query('delete from teams where case_id = $1', [caseId]);
+  await client.query('delete from team_case_assignments where case_id = $1', [caseId]);
   await client.query('delete from cases where id = $1', [caseId]);
   if (row) await client.query(`drop schema if exists ${client.escapeIdentifier(schemaFor(row.slug))} cascade`);
 }
 
-// --- machine-checkable parts of the PRD section 9 validation checklist -----------------------------
+// Tables a question may rely on: the phase tables up to its phase, plus unlocks of its own thread and of every required
+// thread of earlier phases and every prerequisite of its thread (those are guaranteed complete / available by then).
+export function tablesAvailableFor(def, thread) {
+  const set = new Set(def.phases.slice(0, thread.phase).flatMap((p) => p.tables));
+  const byKey = new Map(def.threads.map((t) => [t.key, t]));
+  const add = (t, complete) => {
+    for (const u of t.unlocks ?? []) if (u.when === 'available' || complete) set.add(u.table);
+  };
+  add(thread, false);
+  const walked = new Set([thread.key]);
+  for (let p = byKey.get(thread.prerequisite); p && !walked.has(p.key); p = byKey.get(p.prerequisite)) {
+    walked.add(p.key); // a cyclic definition is reported by the structure checks; never loop on it
+    add(p, true);
+  }
+  for (const t of def.threads) if (t.required && t.phase < thread.phase) add(t, true);
+  return set;
+}
+
+// --- machine-checkable parts of the case validation checklist ----------------------------------------------------
 // Runs against an installed copy of the case (as the DB owner) and returns [{ ok, label, detail }].
 export async function verifyDefinition(client, def, installed) {
   const out = [];
   const add = (ok, label, detail = '') => out.push({ ok, label, detail });
   const schema = schemaFor(installed.slug);
+  const qs = allQuestions(def);
 
-  // structure: 3 phases x (easy, medium, hard)
+  // identity and registry
+  add(/^(SQL|LOG)\d{2}$/.test(def.code) && (def.code.startsWith('SQL') ? def.track === 'SQL' : def.track === 'LOGIC'), 'case code matches its track', `${def.code}/${def.track}`);
+
+  // scoring: every question 10 points; questions + both final components = exactly 100
+  const questionTotal = qs.length * QUESTION_POINTS;
+  const fp = def.finalPoints ?? { culprit: 12, mechanism: 8 };
+  add(questionTotal + fp.culprit + fp.mechanism === TOTAL_POINTS, 'maximum score is exactly 100', `${questionTotal} + ${fp.culprit} + ${fp.mechanism}`);
+  add(qs.every((x) => x.hints?.length === HINTS_PER_QUESTION && x.hints.every((h) => h && h.length > 10)), 'every question has 4 hints');
+  add(new Set(qs.map((x) => x.prompt)).size === qs.length, 'question prompts are distinct');
+
+  // structure: every phase has a required thread; positions are sane; prerequisites point at earlier threads
+  const byKey = new Map(def.threads.map((t) => [t.key, t]));
+  add(byKey.size === def.threads.length, 'thread keys are unique');
   for (let p = 1; p <= 3; p++) {
-    const ds = def.tasks.filter((t) => t.phase === p).map((t) => t.difficulty).join(',');
-    add(ds === 'easy,medium,hard', `phase ${p} has exactly one easy, medium and hard task`, ds);
+    const ts = def.threads.filter((t) => t.phase === p);
+    add(ts.some((t) => t.required), `phase ${p} has at least one required thread`, `${ts.length} threads`);
   }
+  add(def.threads.every((t) => t.questions.length >= 1), 'every thread has at least one question');
+  add(def.threads.some((t) => !t.required), 'the case has at least one optional thread');
+  let acyclic = true;
+  for (const t of def.threads) {
+    const seen = new Set([t.key]);
+    for (let p = t.prerequisite ? byKey.get(t.prerequisite) : null; p; p = p.prerequisite ? byKey.get(p.prerequisite) : null) {
+      if (seen.has(p.key) || p.phase > t.phase) {
+        acyclic = false;
+        break;
+      }
+      seen.add(p.key);
+    }
+    if (t.prerequisite && !byKey.has(t.prerequisite)) acyclic = false;
+  }
+  add(acyclic, 'thread prerequisites are acyclic and never point at a later phase');
+  // a required thread must not depend on an optional one (otherwise skipping the optional thread would trap a solo player)
+  add(def.threads.every((t) => !t.required || !t.prerequisite || byKey.get(t.prerequisite).required), 'required threads never depend on optional threads (solo-completable)');
+  add(def.threads.every((t) => (t.outcomeText ?? '').length > 10), 'every thread has outcome text');
+  add((def.story ?? []).length >= 3 && def.story.every((s) => byKey.has(s.thread)), 'story events exist and point at real threads');
+
+  // roster, culprit and spoilers
   add(def.rosterNames.includes(def.culpritName) && !def.rosterNames.includes(def.victimName), 'roster contains the culprit and excludes the victim');
-  add(new Set(def.tasks.map((t) => t.type)).size >= 3, 'task types vary', [...new Set(def.tasks.map((t) => t.type))].join(','));
+  add(def.rosterNames.every((n) => def.rosterRoles?.[n]), 'every roster character has a public role');
+  add(!def.rosterNames.some((n) => /culprit|killer|murderer|guilty/i.test(def.rosterRoles?.[n] ?? '')), 'no role text spoils the culprit');
+  const lastQ = def.threads.filter((t) => t.phase === 3).flatMap((t) => t.questions).at(-1);
+  add(lastQ?.type === 'SINGLE_CHARACTER' && lastQ.answer === def.culpritName, 'the last question isolates the culprit');
 
-  // every phase's unlocked tables exist and have rows
+  // final deduction
+  const correct = def.finalOptions.filter((o) => o.correct);
+  add(def.finalOptions.length >= 3 && def.finalOptions.length <= 4 && correct.length === 1, 'final explanation has 3-4 options and exactly one correct', `${def.finalOptions.length} options, ${correct.length} correct`);
+  add(new Set(def.finalOptions.map((o) => o.label)).size === def.finalOptions.length && def.finalOptions.every((o) => o.label.length > 15), 'final options are distinct, written sentences');
+  add(Boolean(def.solution?.motive && def.solution?.method && def.solution?.chain?.length >= 3), 'the case has a motive, method and evidence chain for the resolution screen');
+
+  // evidence: every table is unlocked by a phase or a thread, has real data, and all unlock targets exist
   const existing = (await client.query('select tablename from pg_tables where schemaname = $1', [schema])).rows.map((r) => r.tablename);
-  const unlocked = def.phases.flatMap((p) => p.tables);
-  add(def.tables.every((t) => unlocked.includes(t.name)) && unlocked.every((n) => existing.includes(n)), 'every clue table is unlocked by exactly the phases that list it');
-  add(def.tables.every((t) => t.rows.length >= 8), 'every clue table has meaningful data (8+ rows)');
+  const unlockedBy = new Set([...def.phases.flatMap((p) => p.tables), ...def.threads.flatMap((t) => (t.unlocks ?? []).map((u) => u.table))]);
+  add(def.tables.every((t) => unlockedBy.has(t.name)) && [...unlockedBy].every((n) => existing.includes(n)), 'every evidence table is unlocked by a phase or thread, and every unlock names a real table');
+  add(def.tables.every((t) => t.rows.length >= 8), 'every evidence table has meaningful data (8+ rows)');
+  const keyed = (await client.query('select count(*)::int as n from case_table_keys where case_id = $1', [installed.caseId])).rows[0].n;
+  add(keyed === def.tables.length, 'every evidence table has its own gate key', `${keyed}/${def.tables.length}`);
 
-  // each task: reference SQL returns exactly one value equal to the stored answer, using only tables
-  // unlocked at that phase (static check on the SQL text) -> "solvable with only the tables unlocked"
-  for (const task of def.tasks) {
-    const label = `phase ${task.phase} ${task.difficulty} ${task.type}`;
-    const allowed = new Set(def.phases.slice(0, task.phase).flatMap((p) => p.tables));
-    const locked = def.tables.map((t) => t.name).filter((n) => !allowed.has(n) && new RegExp(`\\b${n}\\b`).test(task.sql));
-    add(locked.length === 0, `${label}: SQL uses only tables unlocked by then`, locked.join(','));
+  // each question: reference SQL yields exactly the intended unique answer using only tables unlocked by then
+  for (const qn of qs) {
+    const label = `${qn.thread.key} Q${qn.index + 1} (${qn.type})`;
+    const allowed = tablesAvailableFor(def, qn.thread);
+    const locked = def.tables.map((t) => t.name).filter((n) => !allowed.has(n) && new RegExp(`\\b${n}\\b`).test(qn.sql));
+    add(locked.length === 0, `${label}: solvable with only the tables unlocked by then`, locked.join(','));
     try {
-      // savepoints: the caller usually runs us inside a scratch transaction that it rolls back itself
       await client.query('savepoint vfy');
       await client.query(`set local search_path = ${client.escapeIdentifier(schema)}`);
-      const r = await client.query(task.sql);
+      const r = await client.query(qn.sql);
       await client.query('rollback to savepoint vfy');
       const vals = r.rows.map((row) => String(Object.values(row)[0]));
-      add(vals.length === 1 && vals[0] === task.answer, `${label}: reference SQL yields exactly the intended unique answer`, `got ${JSON.stringify(vals)}, want ${task.answer}`);
+      add(vals.length === 1 && vals[0] === qn.answer, `${label}: reference SQL yields exactly the intended unique answer`, `got ${JSON.stringify(vals)}, want ${qn.answer}`);
     } catch (e) {
       await client.query('rollback to savepoint vfy').catch(() => {});
       add(false, `${label}: reference SQL runs`, e.message);
     }
+    add(Boolean(qn.title && qn.kind && qn.label && qn.label.includes('{value}')), `${label}: has a title, evidence kind and evidence label`);
   }
-
-  // presentation + resolution content required by the UI (titles, evidence board, final reveal)
-  add(def.tasks.every((t) => t.title && t.kind && t.label && t.label.includes('{value}')), 'every task has a title, evidence kind and evidence label');
-  add(Boolean(def.solution?.motive && def.solution?.method && def.solution?.chain?.length >= 3), 'the case has a motive, method and evidence chain for the resolution screen');
-  add(def.rosterNames.every((n) => def.rosterRoles?.[n]), 'every roster character has a public role');
-  add(!def.rosterNames.some((n) => /culprit|killer|murderer/i.test(def.rosterRoles?.[n] ?? '')), 'no role text spoils the culprit');
-
-  // the culprit is uniquely determined by the data unlocked through phase 3 (the final task isolates one person)
-  const last = def.tasks.find((t) => t.phase === 3 && t.difficulty === 'hard');
-  add(last.type === 'SINGLE_CHARACTER' && last.answer === def.culpritName, 'the last hard task isolates the culprit');
   return out;
 }

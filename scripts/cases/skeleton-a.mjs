@@ -253,6 +253,7 @@ export function buildSkeletonA(theme) {
     hook: theme.hook,
     victimName: victim.name,
     culpritName: culprit.name,
+    meta: { area: A.toLowerCase().replaceAll('_', ' '), item, inspector: inspector.name, inspectTime: hhmm(I), refillTime: hhmm(modifiedAt), lot: lotB, outsider: outsider.name },
     rosterNames: P.slice(1).map((p) => p.name),
     rosterRoles: Object.fromEntries(P.slice(1).map((p) => [p.name, p.role])),
     solution: {

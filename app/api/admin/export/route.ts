@@ -10,27 +10,43 @@ const csv = (v: unknown) => {
   return /[",\n\r]/.test(safe) ? `"${safe.replace(/"/g, '""')}"` : safe;
 };
 
-// Leaderboard export (same ordering as /api/leaderboard) for the organizers.
+// Results export for the organizers: per-track ranking (same ordering as /api/leaderboard) with the score breakdown.
+// ?track=SQL|LOGIC limits it to one track.
 export async function GET(req: Request) {
   return api(async () => {
     await requireAdmin(req);
-    const r = await query(`
-      select t.team_name, c.title as case_title, sc.total_pts, sc.phase1_pts, sc.phase2_pts, sc.phase3_pts, sc.culprit_pts,
-             t.started_at, t.finished_at, cs.submitted_at as culprit_submitted_at, cs.is_correct as culprit_correct,
-             extract(epoch from (coalesce(t.finished_at, now()) - t.started_at - t.paused_total
-                                 - coalesce(now() - t.paused_at, interval '0')))::int as elapsed_s
-        from teams t
-        join team_scores sc on sc.team_id = t.id
-        join cases c on c.id = t.case_id
-        left join culprit_submission cs on cs.team_id = t.id
-       order by sc.total_pts desc, (case when cs.is_correct then cs.submitted_at end) asc nulls last,
-                t.finished_at asc nulls last, t.started_at asc`);
+    const raw = new URL(req.url).searchParams.get("track");
+    const track = raw === null ? null : raw.toUpperCase();
+    if (track !== null && track !== "SQL" && track !== "LOGIC") throw new HttpError(400, "track must be SQL or LOGIC");
+    const r = await query(
+      `select c.game_track as track, t.team_name, reg.registration_ref, c.case_code, c.title as case_title,
+              sc.total_pts, coalesce((sc.points_by_component ->> 'tasks')::int, 0) as question_pts,
+              coalesce((sc.points_by_component ->> 'culprit')::int, 0) as responsibility_pts,
+              coalesce((sc.points_by_component ->> 'mechanism')::int, 0) as explanation_pts,
+              coalesce((sc.points_by_component ->> 'penalties')::int, 0) as penalty_pts,
+              (select count(*)::int from team_hint_usage h where h.team_id = t.id) as hints_used,
+              t.started_at, t.finished_at,
+              (select max(f.resolved_at) from team_final_completions f where f.team_id = t.id) as last_final_resolved_at,
+              extract(epoch from (coalesce(t.finished_at, now()) - t.started_at - t.paused_total
+                                  - coalesce(now() - t.paused_at, interval '0')))::int as elapsed_s
+         from teams t
+         join team_scores sc on sc.team_id = t.id
+         join cases c on c.id = t.case_id
+         left join registrations reg on reg.id = t.registration_id
+        where ($1::text is null or c.game_track = $1)
+        order by c.game_track, sc.total_pts desc, t.finished_at asc nulls last, t.started_at asc`,
+      [track],
+    );
     if (r.rows.length === 0) throw new HttpError(404, "No teams");
     const cols = Object.keys(r.rows[0]);
     const lines = [["rank", ...cols].join(",")];
-    r.rows.forEach((row, i) => lines.push([i + 1, ...cols.map((c) => csv(row[c] instanceof Date ? row[c].toISOString() : row[c]))].join(",")));
+    const seen: Record<string, number> = {};
+    for (const row of r.rows) {
+      const rank = (seen[row.track] = (seen[row.track] ?? 0) + 1);
+      lines.push([rank, ...cols.map((c) => csv(row[c] instanceof Date ? row[c].toISOString() : row[c]))].join(","));
+    }
     return new NextResponse(lines.join("\n") + "\n", {
-      headers: { "Content-Type": "text/csv; charset=utf-8", "Content-Disposition": 'attachment; filename="leaderboard.csv"', "Cache-Control": "no-store" },
+      headers: { "Content-Type": "text/csv; charset=utf-8", "Content-Disposition": 'attachment; filename="results.csv"', "Cache-Control": "no-store" },
     });
   });
 }

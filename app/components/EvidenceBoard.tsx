@@ -1,20 +1,20 @@
-import type { Evidence, GameState } from "../types";
+import type { GameState, Question } from "../types";
 import { KIND_LABEL, PHASES } from "../phases";
 import { Avatar, Icon } from "./ui";
 
-const fill = (e: Evidence) => (e.label ?? "{value}").replace("{value}", e.value);
-
-// A visualization of what the team has ALREADY verified (solved tasks only). It never shows anything the
-// database has not unlocked: every card here comes from a task this team answered correctly.
+// What the team has ALREADY verified (answered questions) and the story that unfolded from it. Every card comes from a
+// question this team answered correctly, so the board never shows anything the investigation has not earned.
 export default function EvidenceBoard({ gs }: { gs: GameState }) {
   const reached = gs.state === "WAITING" ? 0 : gs.state === "PHASE_1" ? 1 : gs.state === "PHASE_2" ? 2 : 3;
-  const flagged = new Set(gs.evidence.filter((e) => e.kind === "PERSON" || e.kind === "MOTIVE").filter((e) => e.answer_type === "SINGLE_CHARACTER").map((e) => e.value));
+  const done = gs.threads.flatMap((t) => t.questions.filter((q) => q.completed).map((q) => ({ q, phase: t.phase })));
+  const flagged = new Set(done.filter((d) => d.q.answer_type === "SINGLE_CHARACTER" && d.q.answer).map((d) => d.q.answer as string));
+  const noteText = (q: Question) => `${q.title ?? "Finding"}: ${q.answer}`;
 
   return (
     <section className="board" aria-label="Evidence board">
       <header className="board-head">
         <h2 className="console-title">Evidence board</h2>
-        <span className="muted">{gs.evidence.length} item{gs.evidence.length === 1 ? "" : "s"} verified</span>
+        <span className="muted">{done.length} finding{done.length === 1 ? "" : "s"} verified</span>
       </header>
 
       <div className="suspects" aria-label="Persons of interest">
@@ -27,13 +27,22 @@ export default function EvidenceBoard({ gs }: { gs: GameState }) {
         ))}
       </div>
 
-      {gs.evidence.length === 0 && (
-        <p className="board-empty"><Icon name="pin" size={20} /> No evidence verified yet. Solve a task and it is pinned here.</p>
+      {gs.story.length > 0 && (
+        <div className="story" aria-label="How the story has unfolded">
+          <h3 className="lane-title">The story so far</h3>
+          <ol>
+            {gs.story.map((s) => (
+              <li key={s.title}><b>{s.title}</b><p>{s.body}</p></li>
+            ))}
+          </ol>
+        </div>
       )}
+
+      {done.length === 0 && <p className="board-empty"><Icon name="pin" size={20} /> Nothing verified yet. Answer a question and it is pinned here.</p>}
 
       <div className="lanes">
         {PHASES.map((p) => {
-          const items = gs.evidence.filter((e) => e.phase === p.n);
+          const items = done.filter((d) => d.phase === p.n);
           const locked = p.n > reached;
           return (
             <div key={p.n} className={`lane ${locked ? "locked" : ""}`}>
@@ -46,12 +55,12 @@ export default function EvidenceBoard({ gs }: { gs: GameState }) {
               ) : items.length === 0 ? (
                 <p className="lane-locked">Nothing verified in this phase yet.</p>
               ) : (
-                <ol className="thread">
-                  {items.map((e, i) => (
-                    <li key={e.task_id} className={`note kind-${(e.kind ?? "OBJECT").toLowerCase()} ${i % 2 ? "alt" : ""}`}>
+                <ol className="thread-notes">
+                  {items.map(({ q }, i) => (
+                    <li key={q.id} className={`note kind-${(q.kind ?? "OBJECT").toLowerCase()} ${i % 2 ? "alt" : ""}`}>
                       <i className="pin" aria-hidden="true" />
-                      <span className="note-kind">{KIND_LABEL[e.kind ?? "OBJECT"]} · {e.title ?? "Evidence"}</span>
-                      <p>{fill(e)}</p>
+                      <span className="note-kind">{KIND_LABEL[q.kind ?? "OBJECT"]}</span>
+                      <p>{noteText(q)}</p>
                     </li>
                   ))}
                 </ol>

@@ -1,18 +1,40 @@
-// Builds the app, starts it on a test port against the dev DB, runs the node:test suites, stops it.
+// Builds the app, starts it on a test port, runs the node:test suites, stops it.
 // Usage: node tests/run.mjs [--no-build] [tests/some.test.mjs ...]
+//
+// SAFETY: the suites create and delete teams/cases, so they refuse to run against a REMOTE database (which may be the
+// one the live site uses). Use `npm test` (isolated local Postgres), or set SLC_ALLOW_REMOTE_DB=1 deliberately.
 import { spawn, spawnSync } from 'node:child_process';
 import { readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { describeDatabase, parseEnvLocal } from '../scripts/lib/env.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const PORT = process.env.TEST_PORT ?? '3101';
 const SECRETS_FILE = join(tmpdir(), `slc-test-secrets-${process.pid}.txt`);
 writeFileSync(SECRETS_FILE, '');
 
+// Environment for every child process: process env first, then whatever the selected env file provides.
+const baseEnv = { ...process.env };
+for (const [k, v] of Object.entries(parseEnvLocal(root))) if (baseEnv[k] === undefined) baseEnv[k] = v;
+const db = describeDatabase(baseEnv.DATABASE_URL);
+if (!db.local && baseEnv.SLC_ALLOW_REMOTE_DB !== '1') {
+  console.error(`Refusing to run tests against a remote database (${db.host}).
+Run the isolated suite instead:  npm test
+(or, if you really mean it: SLC_ALLOW_REMOTE_DB=1 node tests/run.mjs)`);
+  process.exit(2);
+}
+const childEnv = { ...baseEnv, PGSSLMODE: db.local ? 'disable' : 'no-verify' };
+if (db.local) {
+  // a local run must not talk to any real Supabase project (realtime pings, browser realtime)
+  childEnv.NEXT_PUBLIC_SUPABASE_URL = '';
+  childEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY = '';
+  childEnv.SUPABASE_SERVICE_ROLE_KEY = '';
+}
+
 if (!process.argv.includes('--no-build')) {
-  const b = spawnSync('npm run build', { cwd: root, stdio: 'inherit', shell: true });
+  const b = spawnSync('npm run build', { cwd: root, stdio: 'inherit', shell: true, env: childEnv });
   if (b.status !== 0) process.exit(1);
 }
 
@@ -21,7 +43,7 @@ const server = spawn(`npx next start -p ${PORT}`, {
   cwd: root,
   shell: true,
   stdio: ['ignore', 'pipe', 'pipe'],
-  env: { ...process.env, JOIN_RATE_PER_MINUTE: '10', JOIN_RATE_PER_HOUR: '30' },
+  env: { ...childEnv, JOIN_RATE_PER_MINUTE: '10', JOIN_RATE_PER_HOUR: '30' },
 });
 let serverLog = '';
 server.stdout.on('data', (d) => (serverLog += d));
@@ -51,7 +73,7 @@ const t = spawnSync(`node --test --test-timeout=400000 --test-concurrency=1 ${fi
   cwd: root,
   stdio: 'inherit',
   shell: true,
-  env: { ...process.env, TEST_BASE_URL: `http://localhost:${PORT}`, TEST_SECRETS_FILE: SECRETS_FILE },
+  env: { ...childEnv, TEST_BASE_URL: `http://localhost:${PORT}`, TEST_SECRETS_FILE: SECRETS_FILE },
 });
 killServer();
 

@@ -15,7 +15,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import pg from 'pg';
-import { loadEnvLocal, parseEnvLocal } from './lib/env.mjs';
+import { envPath, loadEnvLocal, parseEnvLocal } from './lib/env.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 loadEnvLocal(root);
@@ -28,7 +28,7 @@ if (!process.env.DATABASE_URL) {
   process.exit(1);
 }
 
-const client = new pg.Client({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
+const client = new pg.Client({ connectionString: process.env.DATABASE_URL });
 await client.connect();
 let wroteEnv = false;
 try {
@@ -70,20 +70,20 @@ try {
     u.username = ROLE + suffix;
     u.password = password;
     const line = `DATABASE_URL_PLAYER=${u.toString()}`;
-    const envPath = join(root, '.env.local');
-    const text = existsSync(envPath) ? readFileSync(envPath, 'utf8') : '';
+    const target = envPath(root);
+    const text = existsSync(target) ? readFileSync(target, 'utf8') : '';
     const lines = text.split(/\r?\n/).filter((l) => !/^\s*DATABASE_URL_PLAYER\s*=/.test(l));
     while (lines.length && lines[lines.length - 1] === '') lines.pop();
     lines.push(line, '');
-    writeFileSync(envPath, lines.join('\n'));
+    writeFileSync(target, lines.join('\n'));
     wroteEnv = true;
   }
   console.log(`role ${ROLE}: ready (${exists ? 'existing' : 'created'}), settings applied`);
-  console.log(wroteEnv ? 'DATABASE_URL_PLAYER written to .env.local (value not shown)' : 'DATABASE_URL_PLAYER already present, unchanged');
+  console.log(wroteEnv ? 'DATABASE_URL_PLAYER written to the env file (value not shown)' : 'DATABASE_URL_PLAYER already present, unchanged');
   if (wroteEnv) {
     const u = new URL(process.env.DATABASE_URL);
     console.log(`  -> now uses host kind: ${/pooler\.supabase\.com$/.test(u.hostname) ? 'pooler' : 'direct'}, port ${u.port || '5432'}`);
-    console.log('  -> copy this value from .env.local into Vercel (DATABASE_URL_PLAYER) and redeploy');
+    console.log('  -> copy this value from your env file into Vercel (DATABASE_URL_PLAYER) and redeploy');
   }
 } catch (e) {
   console.error('setup failed:', e.message);

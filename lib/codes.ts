@@ -22,7 +22,15 @@ export function normalizeCode(raw: unknown, len: number): string | null {
   return s.length === len && CODE_RE.test(s) ? s : null;
 }
 
+// Case codes are catalogue codes (SQL01, LOG07): upper-cased and trimmed, never character-substituted.
+export function normalizeCaseCode(raw: unknown): string | null {
+  if (typeof raw !== "string" || raw.length > 40) return null;
+  const s = raw.toUpperCase().replace(/\s+/g, "");
+  return /^[A-Z0-9][A-Z0-9-]{2,15}$/.test(s) ? s : null;
+}
+
 export const generateTeamCode = () => randomCode(6);
+export const generateRegistrationRef = () => randomCode(8);
 
 export function formatCode(raw: string): string {
   const h = raw.length / 2;

@@ -2,12 +2,7 @@ import { HttpError } from "./http";
 
 export type AnswerType = "SINGLE_CHARACTER" | "NUMBER" | "TIME" | "TEXT";
 
-export const POINTS_PER_PHASE = 20;
 export const MAX_PLAYERS = 3;
-
-// Column names are whitelisted by phase number; never interpolate client input.
-export const CLEARED_COL: Record<number, string> = { 1: "phase1_cleared", 2: "phase2_cleared", 3: "phase3_cleared" };
-export const PTS_COL: Record<number, string> = { 1: "phase1_pts", 2: "phase2_pts", 3: "phase3_pts" };
 
 // Canonical form for exact-match grading; null = not a valid value of that type.
 export function normalize(type: string, raw: string): string | null {
@@ -39,12 +34,6 @@ export function grade(type: string, submitted: string, correct: string): boolean
   const a = normalize(type, submitted);
   const b = normalize(type, correct);
   return a !== null && b !== null && a === b;
-}
-
-export function currentPhaseOf(state: string): number {
-  const m = /^PHASE_([123])$/.exec(state);
-  if (!m) throw new HttpError(409, "No phase is currently active");
-  return Number(m[1]);
 }
 
 export function cleanName(v: unknown): string {

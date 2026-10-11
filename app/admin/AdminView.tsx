@@ -3,11 +3,19 @@
 import { useCallback, useEffect, useState } from "react";
 import { fmtClock } from "../phases";
 import { Icon, Modal, StatusPill, ToastRegion, type ToastItem } from "../components/ui";
+import Registrations from "./Registrations";
 
 type Team = {
   team_code: string;
   team_name: string;
+  case_code: string;
   case_title: string;
+  track: string;
+  connected: number;
+  threads_done: number;
+  threads_total: number;
+  hints_used: number;
+  wrong_answers: number;
   state: string;
   total_pts: number;
   players: number;
@@ -20,7 +28,9 @@ type Team = {
 type Detail = {
   team_name: string;
   players: { display_name: string; role: string }[];
-  submissions: { phase: number; difficulty: string; prompt_text: string; submitted_value: string; is_correct: boolean; submitted_at: string; player: string }[];
+  attempts: { thread: string | null; title: string | null; submitted_value: string; is_correct: boolean; hints_used: number; points_awarded: number; submitted_at: string; player: string }[];
+  hints: { title: string | null; position: number; opened_at: string; opened_by: string }[];
+  final_attempts: { component: string; is_correct: boolean; points_awarded: number; submitted_at: string }[];
   queries: { created_at: string; player: string | null; success: boolean; error_type: string | null; row_count: number | null; execution_time_ms: number | null }[];
 };
 type Confirm = { title: string; body: string; label: string; tone: "default" | "danger"; run: () => Promise<void> };
@@ -146,6 +156,8 @@ export default function AdminView() {
         <div className="mission-actions">
           <span className={`conn ${connected ? "live" : "reconnecting"}`} role="status"><i aria-hidden="true" /> {connected ? "Live" : "Reconnecting…"}</span>
           <a className="btn ghost sm" href="/api/admin/export">Export CSV</a>
+          <a className="btn ghost sm" href="/api/admin/export?track=SQL">SQL CSV</a>
+          <a className="btn ghost sm" href="/api/admin/export?track=LOGIC">Logic CSV</a>
           <a className="btn ghost sm" href="/leaderboard" target="_blank" rel="noreferrer">Open board</a>
           <button type="button" className="btn ghost sm" onClick={async () => { await post("/api/admin/logout", {}); setAuthed(false); }}>Sign out</button>
         </div>
@@ -205,6 +217,9 @@ export default function AdminView() {
                   <th scope="col">Team</th>
                   <th scope="col">Case</th>
                   <th scope="col">Phase</th>
+                  <th scope="col" className="num">Threads</th>
+                  <th scope="col" className="num">Hints</th>
+                  <th scope="col" className="num">Wrong</th>
                   <th scope="col" className="num">Score</th>
                   <th scope="col" className="num">Elapsed</th>
                   <th scope="col">Status</th>
@@ -215,9 +230,12 @@ export default function AdminView() {
               <tbody>
                 {teams.map((t) => (
                   <tr key={t.team_code}>
-                    <td><b className="team-name">{t.team_name}</b><span className="case-name mono">{t.team_code} · {t.players} player{t.players === 1 ? "" : "s"}</span></td>
-                    <td>{t.case_title}</td>
+                    <td><b className="team-name">{t.team_name}</b><span className="case-name mono">{t.team_code} · {t.connected}/{t.players} connected</span></td>
+                    <td><b>{t.case_code}</b> <span className="case-name">{t.track} · {t.case_title}</span></td>
                     <td>{STAGES.find((s) => s.key === t.state)?.label ?? t.state}</td>
+                    <td className="num">{t.threads_done}/{t.threads_total}</td>
+                    <td className="num">{t.hints_used}</td>
+                    <td className="num">{t.wrong_answers}</td>
                     <td className="num"><b>{t.total_pts}</b></td>
                     <td className="num mono">{fmtClock(t.elapsed_s)}</td>
                     <td>
@@ -254,18 +272,27 @@ export default function AdminView() {
           <p className="muted">{detail.d.players.map((p) => `${p.display_name} (${p.role})`).join(", ")}</p>
           <div className="inspect-grid">
             <div>
-              <h3 className="block-title">Submitted answers</h3>
+              <h3 className="block-title">Answer attempts</h3>
               <div className="table-wrap short">
                 <table className="lb compact">
                   <tbody>
-                    {detail.d.submissions.length === 0 && <tr><td className="muted">No answers yet.</td></tr>}
-                    {detail.d.submissions.map((s, i) => (
+                    {detail.d.attempts.length === 0 && <tr><td className="muted">No answers yet.</td></tr>}
+                    {detail.d.attempts.map((s, i) => (
                       <tr key={i}>
                         <td className="mono">{new Date(s.submitted_at).toLocaleTimeString()}</td>
-                        <td>P{s.phase} {s.difficulty}</td>
+                        <td>{s.title ?? s.thread ?? "Question"}</td>
                         <td>{s.player}</td>
                         <td className="mono">{s.submitted_value}</td>
-                        <td>{s.is_correct ? <StatusPill tone="green">correct</StatusPill> : <StatusPill tone="muted">wrong</StatusPill>}</td>
+                        <td>{s.is_correct ? <StatusPill tone="green">+{s.points_awarded}</StatusPill> : <StatusPill tone="muted">{s.points_awarded}</StatusPill>}</td>
+                        <td className="mono">{s.hints_used} hint{s.hints_used === 1 ? "" : "s"}</td>
+                      </tr>
+                    ))}
+                    {detail.d.final_attempts.map((f, i) => (
+                      <tr key={`f${i}`}>
+                        <td className="mono">{new Date(f.submitted_at).toLocaleTimeString()}</td>
+                        <td colSpan={3}>Final: {f.component}</td>
+                        <td>{f.is_correct ? <StatusPill tone="green">+{f.points_awarded}</StatusPill> : <StatusPill tone="muted">{f.points_awarded}</StatusPill>}</td>
+                        <td />
                       </tr>
                     ))}
                   </tbody>
@@ -294,6 +321,8 @@ export default function AdminView() {
           </div>
         </section>
       )}
+
+      <Registrations toast={toast} />
 
       <Modal open={confirm !== null} title={confirm?.title ?? ""} tone={confirm?.tone} onClose={() => setConfirm(null)}>
         <p>{confirm?.body}</p>

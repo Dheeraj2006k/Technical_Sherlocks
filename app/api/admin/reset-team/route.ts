@@ -1,15 +1,15 @@
-import { requireAdmin } from "@/lib/admin";
+import { audit, requireAdmin } from "@/lib/admin";
 import { normalizeCode } from "@/lib/codes";
 import { after } from "next/server";
 import { withTx } from "@/lib/db";
 import { api, HttpError, json, readBody } from "@/lib/http";
 import { pingTeam } from "@/lib/realtime";
 
-// Reset ONE team without touching any other.
-//   mode "state"  (default): wipe progress, answers, assignments, culprit and query logs; keep the team
-//                 code and players, so everyone can rejoin and start clean.
-//   mode "delete": remove the team entirely (players, progress, everything). Its sessions stop working
-//                 immediately and the code is freed.
+// Reset ONE team without touching any other. Every reset is written to admin_audit.
+//   mode "state"  (default): wipe progress, answers, hints, threads, final attempts and query logs; keep the team code,
+//                 players and case assignment, so everyone can rejoin and start clean.
+//   mode "delete": remove the team entirely (players, progress, everything). Its sessions stop working immediately, the
+//                 code is freed and the registration's case assignment returns to "assigned" so the head can join again.
 export async function POST(req: Request) {
   return api(async () => {
     await requireAdmin(req);
@@ -20,22 +20,40 @@ export async function POST(req: Request) {
 
     let teamId: string | null = null;
     await withTx(async (tx) => {
-      const t = await tx.query("select id from teams where team_code = $1 for update", [code]);
-      const id = t.rows[0]?.id;
-      if (!id) throw new HttpError(404, "Team not found");
+      const t = await tx.query("select id, registration_id, case_id, team_name from teams where team_code = $1 for update", [code]);
+      const row = t.rows[0];
+      if (!row) throw new HttpError(404, "Team not found");
+      const id: string = row.id;
       teamId = id;
-      // Same lock order as the gameplay routes (team_progress row first would also work; teams row
-      // is taken here and progress right after, and no gameplay route takes them in the other order).
       await tx.query("select 1 from team_progress where team_id = $1 for update", [id]);
 
+      await audit(tx, mode === "delete" ? "team_deleted" : "team_reset", {
+        registration_id: row.registration_id,
+        team_id: mode === "delete" ? null : id,
+        case_id: row.case_id,
+        details: { team_name: row.team_name, mode },
+      });
+
       if (mode === "delete") {
+        await tx.query(
+          "update team_case_assignments set status = 'assigned', team_id = null, updated_at = now() where team_id = $1 and status in ('assigned', 'started', 'completed')",
+          [id],
+        );
         await tx.query("delete from teams where id = $1", [id]);
         return;
       }
-      await tx.query("delete from task_submissions where team_id = $1", [id]);
-      await tx.query("delete from task_assignments where team_id = $1", [id]);
-      await tx.query("delete from culprit_submission where team_id = $1", [id]);
-      await tx.query("delete from query_logs where team_id = $1", [id]);
+      for (const table of [
+        "task_attempts",
+        "team_task_completions",
+        "team_hint_usage",
+        "team_thread_progress",
+        "thread_assignments",
+        "final_attempts",
+        "team_final_completions",
+        "query_logs",
+      ]) {
+        await tx.query(`delete from ${table} where team_id = $1`, [id]);
+      }
       await tx.query(
         `update team_progress set state = 'WAITING', current_phase = 1,
                 phase1_cleared = false, phase2_cleared = false, phase3_cleared = false
@@ -43,7 +61,9 @@ export async function POST(req: Request) {
         [id],
       );
       await tx.query(
-        "update team_scores set phase1_pts = 0, phase2_pts = 0, phase3_pts = 0, culprit_pts = 0, total_pts = 0 where team_id = $1",
+        `update team_scores set phase1_pts = 0, phase2_pts = 0, phase3_pts = 0, culprit_pts = 0, total_pts = 0,
+                points_by_component = '{}'::jsonb, updated_at = now()
+          where team_id = $1`,
         [id],
       );
       await tx.query(
@@ -52,6 +72,7 @@ export async function POST(req: Request) {
           where id = $1`,
         [id],
       );
+      await tx.query("update team_case_assignments set status = 'assigned', updated_at = now() where team_id = $1 and status in ('started', 'completed')", [id]);
     });
     if (mode === "state" && teamId) after(() => pingTeam(teamId as string));
     return json({ ok: true, mode });

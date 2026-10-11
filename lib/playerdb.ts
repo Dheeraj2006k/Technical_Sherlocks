@@ -1,8 +1,9 @@
+import { ensureSslMode } from "./ssl";
 import pg, { Pool, type PoolClient } from "pg";
 import Cursor from "pg-cursor";
 
-// Player SQL runs ONLY through this pool: the dedicated login role `player_exec` (SELECT-only grants,
-// RLS-subject, 3s statement timeout, read-only). Never the owner role, never the service key.
+// Player SQL (and the Evidence Browser) run ONLY through this pool: the dedicated login role `player_exec` (SELECT-only
+// grants, RLS-subject, 3s statement timeout, read-only). Never the owner role, never the service key.
 const g = globalThis as unknown as { __slcPlayerPool?: Pool };
 
 export const ROW_CAP = 200;
@@ -21,10 +22,10 @@ function playerPool(): Pool {
   if (!g.__slcPlayerPool) {
     const url = process.env.DATABASE_URL_PLAYER;
     if (!url) throw new PlayerDbUnavailable();
+    ensureSslMode(url);
     g.__slcPlayerPool = new Pool({
       connectionString: url,
       max: 2,
-      ssl: { rejectUnauthorized: false },
       connectionTimeoutMillis: 15000,
       idleTimeoutMillis: 10000,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -38,6 +39,7 @@ function playerPool(): Pool {
 export class PlayerDbUnavailable extends Error {}
 
 const quoteIdent = (s: string) => `"${s.replace(/"/g, '""')}"`;
+export const quoteId = quoteIdent;
 
 export type PlayerResult = { columns: string[]; rows: unknown[][]; truncated: boolean };
 
@@ -46,18 +48,18 @@ function plain(v: unknown): unknown {
   if (typeof v === "bigint") return v.toString();
   return v;
 }
+export const plainRow = (r: unknown[]) => r.map(plain);
 
 const sleepThen = <T>(ms: number, v: T) => new Promise<T>((r) => setTimeout(() => r(v), ms));
 
-// One read-only transaction: set the (non-forgeable) per-phase key, run the single statement
-// through an extended-protocol cursor (so exactly one statement is possible and no SQL wrapping can
-// be escaped), and read at most ROW_CAP + 1 rows.
+// One read-only transaction as player_exec with the per-table evidence keys of the team's unlocked tables set in
+// app.keys, search_path pinned to the case schema and a statement timeout. `work` runs inside it.
 //
-// Hardening around the connection itself: a player can make their own backend die
-// (pg_terminate_backend on their own pid). That surfaces as an 'error' event on a checked-out client,
-// which would crash the whole server if unhandled, so a listener is always attached; a deadline
-// guarantees the request finishes; and the client is destroyed (not reused) after any failure.
-export async function runPlayerQuery(schema: string, key: string, sql: string): Promise<PlayerResult> {
+// Hardening around the connection itself: a player can make their own backend die (pg_terminate_backend on their own
+// pid). That surfaces as an 'error' event on a checked-out client, which would crash the whole server if unhandled, so a
+// listener is always attached; a deadline guarantees the request finishes; and the client is destroyed (not reused)
+// after any failure.
+export async function playerTx<T>(schema: string, keys: string[], work: (client: PoolClient) => Promise<T>): Promise<T> {
   const client: PoolClient = await playerPool().connect();
   client.on("error", () => {});
   let released = false;
@@ -67,31 +69,16 @@ export async function runPlayerQuery(schema: string, key: string, sql: string): 
     client.release(destroy ? true : undefined);
   };
 
-  const work = (async (): Promise<PlayerResult> => {
+  const run = (async (): Promise<T> => {
     await client.query("begin read only");
     await client.query(`set local statement_timeout = '${STATEMENT_TIMEOUT_MS}ms'`);
     await client.query(`set local search_path = ${quoteIdent(schema)}`);
-    await client.query("select set_config('app.key', $1, true)", [key]);
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const cursor = client.query(new Cursor(sql, [], { rowMode: "array", types: types as any }));
-    let rows: unknown[][];
-    try {
-      rows = (await cursor.read(ROW_CAP + 1)) as unknown[][];
-    } finally {
-      await cursor.close().catch(() => {});
-    }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const fields: { name: string }[] = (cursor as any)._result?.fields ?? [];
+    await client.query("select set_config('app.keys', $1, true)", [keys.join(",")]);
+    const out = await work(client);
     await client.query("rollback");
-    const truncated = rows.length > ROW_CAP;
-    return {
-      columns: fields.map((f) => f.name),
-      rows: (truncated ? rows.slice(0, ROW_CAP) : rows).map((r) => r.map(plain)),
-      truncated,
-    };
+    return out;
   })();
-  work.catch(() => {}); // if the deadline wins, don't leave an unhandled rejection behind
+  run.catch(() => {}); // if the deadline wins, don't leave an unhandled rejection behind
 
   let timer: ReturnType<typeof setTimeout> | undefined;
   const deadline = new Promise<never>((_, reject) => {
@@ -99,7 +86,7 @@ export async function runPlayerQuery(schema: string, key: string, sql: string): 
   });
 
   try {
-    const result = await Promise.race([work, deadline]);
+    const result = await Promise.race([run, deadline]);
     release(false);
     return result;
   } catch (e) {
@@ -110,4 +97,27 @@ export async function runPlayerQuery(schema: string, key: string, sql: string): 
   } finally {
     if (timer) clearTimeout(timer);
   }
+}
+
+// The SQL console: the statement runs through an extended-protocol cursor (exactly one statement, no SQL wrapping to
+// escape) and at most ROW_CAP + 1 rows are read.
+export async function runPlayerQuery(schema: string, keys: string[], sql: string): Promise<PlayerResult> {
+  return playerTx(schema, keys, async (client) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const cursor = client.query(new Cursor(sql, [], { rowMode: "array", types: types as any }));
+    let rows: unknown[][];
+    try {
+      rows = (await cursor.read(ROW_CAP + 1)) as unknown[][];
+    } finally {
+      await cursor.close().catch(() => {});
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const fields: { name: string }[] = (cursor as any)._result?.fields ?? [];
+    const truncated = rows.length > ROW_CAP;
+    return {
+      columns: fields.map((f) => f.name),
+      rows: (truncated ? rows.slice(0, ROW_CAP) : rows).map(plainRow),
+      truncated,
+    };
+  });
 }

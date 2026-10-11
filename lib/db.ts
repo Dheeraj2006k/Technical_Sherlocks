@@ -1,3 +1,4 @@
+import { ensureSslMode } from "./ssl";
 import { Pool, type PoolClient, type QueryResult, type QueryResultRow } from "pg";
 
 // Transaction-mode pooler: tiny pool, never use named prepared statements
@@ -8,10 +9,10 @@ function pool(): Pool {
   if (!g.__slcPool) {
     const url = process.env.DATABASE_URL;
     if (!url) throw new Error("DATABASE_URL is not set");
+    ensureSslMode(url);
     g.__slcPool = new Pool({
       connectionString: url,
       max: 2,
-      ssl: { rejectUnauthorized: false },
       connectionTimeoutMillis: 15000,
       idleTimeoutMillis: 10000,
     });

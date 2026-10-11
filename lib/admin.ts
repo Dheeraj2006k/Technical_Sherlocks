@@ -65,3 +65,19 @@ export async function requireAdmin(req: Request): Promise<void> {
     if (origin && host && new URL(origin).host !== host) throw new HttpError(403, "Bad origin");
   }
 }
+
+// The deployment has one shared organizer password, so every admin action is attributed to this label in admin_audit.
+export const ADMIN_ACTOR = "organizer";
+
+type Tx = { query: (text: string, params?: unknown[]) => Promise<unknown> };
+
+export async function audit(
+  tx: Tx,
+  action: string,
+  fields: { registration_id?: string | null; team_id?: string | null; case_id?: string | null; details?: Record<string, unknown> } = {},
+) {
+  await tx.query(
+    "insert into admin_audit (action, actor, registration_id, team_id, case_id, details) values ($1, $2, $3, $4, $5, $6::jsonb)",
+    [action, ADMIN_ACTOR, fields.registration_id ?? null, fields.team_id ?? null, fields.case_id ?? null, JSON.stringify(fields.details ?? {})],
+  );
+}
