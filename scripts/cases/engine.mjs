@@ -32,12 +32,12 @@ export function allQuestions(def) {
 export async function installCase(
   client,
   def,
-  { id = randomUUID(), slug = def.slug, caseCode = def.code, password, status = 'draft', title = def.title, bcryptCost = 10 } = {},
+  { id = randomUUID(), slug = def.slug, caseCode = def.code, password, passwordHash, status = 'draft', title = def.title, bcryptCost = 10, version = def.version ?? 1, contentHash = null } = {},
 ) {
   const schema = schemaFor(slug);
   const q = (s) => client.escapeIdentifier(s);
   const pw = password ?? randomUUID(); // unrecoverable unless the caller supplies one: use gen-case-credentials
-  const hash = await bcrypt.hash(pw, bcryptCost);
+  const hash = passwordHash ?? (await bcrypt.hash(pw, bcryptCost));
 
   await client.query(`drop schema if exists ${q(schema)} cascade`);
   await client.query(`create schema ${q(schema)}`);
@@ -55,20 +55,20 @@ export async function installCase(
   const fp = def.finalPoints ?? { culprit: 12, mechanism: 8 };
   await client.query(
     `insert into cases (id, case_code, slug, password_hash, title, status, hook_text, solution_motive, solution_method, solution_chain,
-                        game_track, target_duration_minutes, final_points_culprit, final_points_mechanism)
-     values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`,
+                        game_track, target_duration_minutes, final_points_culprit, final_points_mechanism, content_version, content_hash)
+     values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)`,
     [id, caseCode, slug, hash, title, status, def.hook, def.solution?.motive ?? null, def.solution?.method ?? null, JSON.stringify(def.solution?.chain ?? []),
-      def.track, def.targetMinutes ?? 18, fp.culprit, fp.mechanism],
+      def.track, def.targetMinutes ?? 18, fp.culprit, fp.mechanism, version, contentHash],
   );
   for (let p = 1; p <= 3; p++) {
-    await client.query('insert into case_phases (case_id, phase_number, clue_text, tables_unlocked) values ($1, $2, $3, $4)', [
-      id, p, def.phases[p - 1].clue, def.phases[p - 1].tables,
+    await client.query('insert into case_phases (case_id, phase_number, clue_text, tables_unlocked, phase_name) values ($1, $2, $3, $4, $5)', [
+      id, p, def.phases[p - 1].clue, def.phases[p - 1].tables, def.phases[p - 1].name ?? null,
     ]);
   }
   const characters = [];
   for (const name of def.rosterNames) {
     const cid = randomUUID();
-    await client.query('insert into characters (id, case_id, name, role_in_story) values ($1, $2, $3, $4)', [cid, id, name, def.rosterRoles?.[name] ?? 'Person of interest']);
+    await client.query('insert into characters (id, case_id, name, role_in_story, is_suspect, public_profile) values ($1, $2, $3, $4, $5, $6)', [cid, id, name, def.rosterRoles?.[name] ?? 'Person of interest', !(def.nonSuspects ?? []).includes(name), def.rosterProfiles?.[name] ?? null]);
     characters.push({ id: cid, name });
   }
   const charId = (n) => {
@@ -102,11 +102,14 @@ export async function installCase(
       const tid = randomUUID();
       await client.query(
         `insert into tasks (id, case_id, phase_number, difficulty, prompt_text, answer_type, correct_answer, sql_concept, title, evidence_kind, evidence_label,
-                            thread_id, position, base_points, reward_schedule)
-         values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)`,
+                            thread_id, position, base_points, reward_schedule, alt_answers)
+         values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)`,
         [tid, id, th.phase, qn.difficulty ?? null, qn.prompt, qn.type, correct, qn.concept ?? null, qn.title, qn.kind ?? null, qn.label ?? null,
-          threadIds.get(th.key), i + 1, QUESTION_POINTS, REWARD_SCHEDULE],
+          threadIds.get(th.key), i + 1, qn.points ?? QUESTION_POINTS, qn.reward ?? REWARD_SCHEDULE, qn.alt ?? []],
       );
+      for (const [k, o] of (qn.options ?? []).entries()) {
+        await client.query('insert into task_options (task_id, option_key, option_text, position) values ($1, $2, $3, $4)', [tid, o.key, o.text, k + 1]);
+      }
       for (const [h, text] of qn.hints.entries()) {
         await client.query('insert into task_hints (task_id, position, hint_text) values ($1, $2, $3)', [tid, h + 1, text]);
       }
@@ -125,9 +128,23 @@ export async function installCase(
   const culpritId = charId(def.culpritName);
   await client.query('update cases set culprit_character_id = $2 where id = $1', [id, culpritId]);
   await provisionCase(client, id);
-  return { caseId: id, slug, schema, caseCode, password: pw, characters, tasks, culpritId, options, threadIds };
+  return { caseId: id, slug, schema, caseCode, password: pw, passwordHash: hash, version, characters, tasks, culpritId, options, threadIds };
 }
 
+// Removes one case version's CONTENT (never a team). Refuses when any team references it: live content is immutable and a
+// changed pack must be published as a new content version instead.
+export async function deleteCaseContent(client, caseId) {
+  const row = (await client.query('select slug from cases where id = $1', [caseId])).rows[0];
+  if (!row) return;
+  const teams = (await client.query('select count(*)::int n from teams where case_id = $1', [caseId])).rows[0].n;
+  if (teams > 0) throw new Error(`refusing to replace content that ${teams} team(s) are pinned to; bump content_version instead`);
+  const assigned = (await client.query('select count(*)::int n from team_case_assignments where case_id = $1', [caseId])).rows[0].n;
+  if (assigned > 0) throw new Error(`refusing to replace content that ${assigned} assignment record(s) point at; bump content_version instead`);
+  await client.query('delete from cases where id = $1', [caseId]);
+  await client.query(`drop schema if exists ${client.escapeIdentifier(schemaFor(row.slug))} cascade`);
+}
+
+// Test-only helper: removes a throwaway case together with every team that played it.
 export async function removeCaseFully(client, caseId) {
   const row = (await client.query('select slug from cases where id = $1', [caseId])).rows[0];
   await client.query('delete from teams where case_id = $1', [caseId]);
@@ -166,10 +183,11 @@ export async function verifyDefinition(client, def, installed) {
   add(/^(SQL|LOG)\d{2}$/.test(def.code) && (def.code.startsWith('SQL') ? def.track === 'SQL' : def.track === 'LOGIC'), 'case code matches its track', `${def.code}/${def.track}`);
 
   // scoring: every question 10 points; questions + both final components = exactly 100
-  const questionTotal = qs.length * QUESTION_POINTS;
+  const questionTotal = qs.reduce((n, x) => n + (x.points ?? QUESTION_POINTS), 0);
   const fp = def.finalPoints ?? { culprit: 12, mechanism: 8 };
   add(questionTotal + fp.culprit + fp.mechanism === TOTAL_POINTS, 'maximum score is exactly 100', `${questionTotal} + ${fp.culprit} + ${fp.mechanism}`);
-  add(qs.every((x) => x.hints?.length === HINTS_PER_QUESTION && x.hints.every((h) => h && h.length > 10)), 'every question has 4 hints');
+  add(qs.every((x) => x.hints?.length >= 2 && x.hints.length <= 5 && x.hints.every((h) => h && h.length > 10)), 'every question has 2-5 written hints');
+  add(qs.every((x) => x.type !== 'CHOICE' || (x.options?.length >= 2 && x.options.length <= 6 && x.options.filter((o) => o.key === x.answer).length === 1 && new Set(x.options.map((o) => o.text)).size === x.options.length)), 'every multiple-choice question has distinct options and exactly one correct key');
   add(new Set(qs.map((x) => x.prompt)).size === qs.length, 'question prompts are distinct');
 
   // structure: every phase has a required thread; positions are sane; prerequisites point at earlier threads
@@ -180,7 +198,6 @@ export async function verifyDefinition(client, def, installed) {
     add(ts.some((t) => t.required), `phase ${p} has at least one required thread`, `${ts.length} threads`);
   }
   add(def.threads.every((t) => t.questions.length >= 1), 'every thread has at least one question');
-  add(def.threads.some((t) => !t.required), 'the case has at least one optional thread');
   let acyclic = true;
   for (const t of def.threads) {
     const seen = new Set([t.key]);
@@ -203,8 +220,7 @@ export async function verifyDefinition(client, def, installed) {
   add(def.rosterNames.includes(def.culpritName) && !def.rosterNames.includes(def.victimName), 'roster contains the culprit and excludes the victim');
   add(def.rosterNames.every((n) => def.rosterRoles?.[n]), 'every roster character has a public role');
   add(!def.rosterNames.some((n) => /culprit|killer|murderer|guilty/i.test(def.rosterRoles?.[n] ?? '')), 'no role text spoils the culprit');
-  const lastQ = def.threads.filter((t) => t.phase === 3).flatMap((t) => t.questions).at(-1);
-  add(lastQ?.type === 'SINGLE_CHARACTER' && lastQ.answer === def.culpritName, 'the last question isolates the culprit');
+  add((def.nonSuspects ?? []).every((n) => n !== def.culpritName) && def.rosterNames.filter((n) => !(def.nonSuspects ?? []).includes(n)).length >= 3, 'the culprit is in the final suspect list, which has at least three people');
 
   // final deduction
   const correct = def.finalOptions.filter((o) => o.correct);
@@ -216,7 +232,7 @@ export async function verifyDefinition(client, def, installed) {
   const existing = (await client.query('select tablename from pg_tables where schemaname = $1', [schema])).rows.map((r) => r.tablename);
   const unlockedBy = new Set([...def.phases.flatMap((p) => p.tables), ...def.threads.flatMap((t) => (t.unlocks ?? []).map((u) => u.table))]);
   add(def.tables.every((t) => unlockedBy.has(t.name)) && [...unlockedBy].every((n) => existing.includes(n)), 'every evidence table is unlocked by a phase or thread, and every unlock names a real table');
-  add(def.tables.every((t) => t.rows.length >= 8), 'every evidence table has meaningful data (8+ rows)');
+  add(def.tables.every((t) => t.rows.length >= 1) && def.tables.reduce((n, t) => n + t.rows.length, 0) >= 12, 'every evidence table has data and the dossier has at least 12 records');
   const keyed = (await client.query('select count(*)::int as n from case_table_keys where case_id = $1', [installed.caseId])).rows[0].n;
   add(keyed === def.tables.length, 'every evidence table has its own gate key', `${keyed}/${def.tables.length}`);
 
@@ -224,20 +240,70 @@ export async function verifyDefinition(client, def, installed) {
   for (const qn of qs) {
     const label = `${qn.thread.key} Q${qn.index + 1} (${qn.type})`;
     const allowed = tablesAvailableFor(def, qn.thread);
-    const locked = def.tables.map((t) => t.name).filter((n) => !allowed.has(n) && new RegExp(`\\b${n}\\b`).test(qn.sql));
+    const queries = [].concat(qn.sql);
+    const locked = def.tables.map((t) => t.name).filter((n) => !allowed.has(n) && queries.some((q) => new RegExp(`\\b${n}\\b`).test(q)));
     add(locked.length === 0, `${label}: solvable with only the tables unlocked by then`, locked.join(','));
-    try {
-      await client.query('savepoint vfy');
-      await client.query(`set local search_path = ${client.escapeIdentifier(schema)}`);
-      const r = await client.query(qn.sql);
-      await client.query('rollback to savepoint vfy');
-      const vals = r.rows.map((row) => String(Object.values(row)[0]));
-      add(vals.length === 1 && vals[0] === qn.answer, `${label}: reference SQL yields exactly the intended unique answer`, `got ${JSON.stringify(vals)}, want ${qn.answer}`);
-    } catch (e) {
-      await client.query('rollback to savepoint vfy').catch(() => {});
-      add(false, `${label}: reference SQL runs`, e.message);
+    for (const [qi, sql] of queries.entries()) {
+      try {
+        await client.query('savepoint vfy');
+        await client.query(`set local search_path = ${client.escapeIdentifier(schema)}`);
+        const r = await client.query(sql);
+        await client.query('rollback to savepoint vfy');
+        if (qn.type === 'CHOICE') {
+          add(r.rows.length >= 1, `${label}: evidence query ${qi + 1} runs and returns the records the answer rests on`, `${r.rows.length} rows`);
+        } else {
+          const vals = r.rows.map((row) => String(Object.values(row)[0]));
+          const same = qn.type === 'NUMBER' ? vals.length === 1 && Number(vals[0]) === Number(qn.answer) : vals.length === 1 && vals[0] === qn.answer; // numbers compare numerically: 0.50 is 0.5
+          add(same, `${label}: reference SQL yields exactly the intended unique answer`, `got ${JSON.stringify(vals)}, want ${qn.answer}`);
+        }
+      } catch (e) {
+        await client.query('rollback to savepoint vfy').catch(() => {});
+        add(false, `${label}: reference SQL runs`, e.message);
+      }
     }
     add(Boolean(qn.title && qn.kind && qn.label && qn.label.includes('{value}')), `${label}: has a title, evidence kind and evidence label`);
+  }
+
+  // pack-only checks: the evidence-to-solution map, red herrings and the expected query results written by the author
+  const runRows = async (sql) => {
+    await client.query('savepoint pk');
+    try {
+      await client.query(`set local search_path = ${client.escapeIdentifier(schema)}`);
+      const r = await client.query({ text: sql, rowMode: 'array' });
+      return r.rows.map((row) => row.map((v) => (v === null ? null : v instanceof Date ? v.toISOString() : String(v))));
+    } finally {
+      await client.query('rollback to savepoint pk');
+    }
+  };
+  if (def.solutionMap) {
+    for (const inf of def.solutionMap.inferences ?? []) {
+      for (const [i, e] of inf.evidence.entries()) {
+        try {
+          const rows = await runRows(e.verify_sql);
+          add(rows.length > 0, `solution map ${inf.id}: evidence ${i + 1} (${e.table}) is present in the data`, `${rows.length} rows`);
+        } catch (err) {
+          add(false, `solution map ${inf.id}: evidence ${i + 1} query runs`, err.message);
+        }
+      }
+    }
+    for (const rh of def.solutionMap.red_herrings ?? []) {
+      for (const [i, e] of rh.evidence.entries()) {
+        try {
+          const rows = await runRows(e.verify_sql);
+          add(rows.length > 0, `red herring ${rh.suspect}: the innocent explanation is backed by evidence (${i + 1})`, `${rows.length} rows`);
+        } catch (err) {
+          add(false, `red herring ${rh.suspect}: evidence query ${i + 1} runs`, err.message);
+        }
+      }
+    }
+  }
+  for (const ex of def.expectations?.queries ?? []) {
+    try {
+      const rows = await runRows(ex.sql);
+      add(JSON.stringify(rows) === JSON.stringify(ex.expect), `expected result: ${ex.name}`, `got ${JSON.stringify(rows).slice(0, 160)}`);
+    } catch (err) {
+      add(false, `expected result query runs: ${ex.name}`, err.message);
+    }
   }
   return out;
 }

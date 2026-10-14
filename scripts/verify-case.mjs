@@ -1,4 +1,4 @@
-// Mechanical validation of every case definition without keeping anything: each case is installed under a scratch slug
+// Database-backed validation of every case pack without keeping anything: each case is installed under a scratch slug
 // inside a transaction that is ALWAYS rolled back, then checked (scoring budget, structure, solo-solvability, evidence
 // unlock rules, unique answers, hints, final deduction).
 //   node scripts/verify-case.mjs [--only SQL03]
@@ -27,7 +27,7 @@ try {
     count++;
     await client.query('begin');
     try {
-      const installed = await installCase(client, def, { slug: `vfy${i}`, caseCode: `VFY${String(i).padStart(2, '0')}`, password: 'x', bcryptCost: 4 });
+      const installed = await installCase(client, def, { slug: `vfy${i}`, caseCode: `VFY${String(i).padStart(2, '0')}`, password: 'x', bcryptCost: 4, contentHash: def.contentHash });
       const results = await verifyDefinition(client, def, installed);
       const bad = results.filter((r) => !r.ok);
       console.log(`${bad.length ? 'FAIL' : 'ok  '} ${def.code} ${def.title} (${results.length} checks)`);

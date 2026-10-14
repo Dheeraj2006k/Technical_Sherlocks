@@ -47,6 +47,11 @@ function forceStop() {
       if (m) pids.add(Number(m[1]));
     }
   }
+  if (process.platform === 'win32') {
+    // orphaned children of this project's embedded Postgres keep its shared-memory block alive and block the next start
+    const ps = spawnSync('powershell', ['-NoProfile', '-Command', "Get-CimInstance Win32_Process | Where-Object { $_.Name -eq 'postgres.exe' -and $_.CommandLine -like '*embedded-postgres*' } | ForEach-Object { $_.ProcessId }"], { encoding: 'utf8' });
+    for (const line of (ps.stdout ?? '').split(LINE_BREAK)) if (/^\d+$/.test(line.trim())) pids.add(Number(line.trim()));
+  }
   for (const pid of pids) {
     if (!Number.isInteger(pid) || pid <= 0) continue;
     if (process.platform === 'win32') spawnSync('taskkill', ['/PID', String(pid), '/T', '/F'], { stdio: 'ignore' });

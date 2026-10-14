@@ -14,7 +14,13 @@
     "dev:local": "node scripts/local-db.mjs start",
     "check:env": "node scripts/check-env.mjs",
     "check:leaks": "node scripts/check-bundle-leaks.mjs",
-    "check:leaks:selftest": "node scripts/check-bundle-leaks.mjs --self-test"
+    "check:leaks:selftest": "node scripts/check-bundle-leaks.mjs --self-test",
+    "validate:cases": "node scripts/validate-cases.mjs",
+    "test:cases": "node tests/run-local.mjs tests/v5_cases.test.mjs tests/v5_packs.test.mjs tests/v5_versioning.test.mjs",
+    "db:seed": "node scripts/seed-cases.mjs",
+    "db:seed:dry": "node scripts/seed-cases.mjs --dry-run",
+    "case:lifecycle": "node scripts/case-lifecycle.mjs",
+    "case:retire-legacy": "node scripts/retire-legacy-cases.mjs"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

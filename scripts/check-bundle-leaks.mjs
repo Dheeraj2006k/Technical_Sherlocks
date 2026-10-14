@@ -108,6 +108,27 @@ if (errors.length) {
   process.exit(1);
 }
 
+// Private case-pack text (ground truth, per-question explanations) must never be shipped to the browser either.
+const casesDir = join(root, 'cases');
+try {
+  for (const dir of readdirSync(casesDir)) {
+    const code = dir.split('-')[0];
+    const read = (f) => {
+      try {
+        return JSON.parse(readFileSync(join(casesDir, dir, f), 'utf8'));
+      } catch {
+        return null;
+      }
+    };
+    const truth = read('ground-truth.json');
+    const tasks = read('tasks.json')?.tasks ?? [];
+    const texts = [truth?.explanation, truth?.method, truth?.motive, ...tasks.map((t) => t.explanation)];
+    for (const t of texts) if (typeof t === 'string' && t.length >= 40) needles.push({ label: `private case text (${code})`, text: t });
+  }
+} catch {
+  /* no cases directory: nothing to add */
+}
+
 if (!process.argv.includes('--no-build')) {
   const b = spawnSync('npm run build', { cwd: root, stdio: 'inherit', shell: true });
   if (b.status !== 0) {

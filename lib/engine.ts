@@ -160,7 +160,7 @@ export async function submitTask(s: Session, taskId: string, value: string, idem
 
     // The task must belong to this team's case and sit in a thread this team can currently work on.
     const t = await tx.query(
-      "select answer_type, correct_answer, reward_schedule, thread_id from tasks where id = $1 and case_id = $2",
+      "select answer_type, correct_answer, alt_answers, reward_schedule, thread_id from tasks where id = $1 and case_id = $2",
       [taskId, s.case_id],
     );
     const task = t.rows[0];
@@ -175,7 +175,7 @@ export async function submitTask(s: Session, taskId: string, value: string, idem
 
     const hints = await tx.query("select count(*)::int as n from team_hint_usage where team_id = $1 and task_id = $2", [s.team_id, taskId]);
     const hintsUsed: number = hints.rows[0].n;
-    const correct = grade(task.answer_type, value, task.correct_answer);
+    const correct = grade(task.answer_type, value, task.correct_answer, task.alt_answers ?? []);
 
     if (!correct) {
       const took = await penalty(tx, s.team_id);

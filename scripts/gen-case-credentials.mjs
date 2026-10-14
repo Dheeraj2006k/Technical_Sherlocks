@@ -3,10 +3,13 @@
 // the old one stops working immediately).
 //
 //   node scripts/gen-case-credentials.mjs SQL03            new password for one case
-//   node scripts/gen-case-credentials.mjs --all            new passwords for all 20 cases
-//   add --publish to also set status = 'published' (only cases that passed validation, status 'tested' or 'published')
+//   node scripts/gen-case-credentials.mjs --all            new passwords for the newest non-disabled version of every case
+//   add --version N to target one content version of one case
+//   add --publish to also publish (only a `tested` version of a pack-managed case; the database enforces the gates)
 //
-// Case CODES (SQL01..SQL10, LOG01..LOG10) are fixed catalogue codes and are never changed here.
+// DO NOT run this just to test: it invalidates the password the organizers already hold. New content versions inherit the
+// previous version's password automatically (scripts/seed-cases.mjs); issue a new password only for a case that has none.
+// Case CODES (SQL01..SQL05, LOG01..LOG05) are fixed catalogue codes and are never changed here.
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import bcrypt from 'bcryptjs';
@@ -19,7 +22,9 @@ loadEnvLocal(join(dirname(fileURLToPath(import.meta.url)), '..'));
 const args = process.argv.slice(2);
 const publish = args.includes('--publish');
 const all = args.includes('--all');
-const code = args.find((a) => !a.startsWith('--'))?.toUpperCase();
+const verIdx = args.indexOf('--version');
+const version = verIdx > -1 ? Number(args[verIdx + 1]) : null;
+const code = args.find((a, i) => !a.startsWith('--') && args[i - 1] !== '--version')?.toUpperCase();
 if (!all && !code) {
   console.error('usage: node scripts/gen-case-credentials.mjs <CASE_CODE | --all> [--publish]');
   process.exit(1);
@@ -38,19 +43,34 @@ const client = new pg.Client({ connectionString: process.env.DATABASE_URL });
 await client.connect();
 const rows = [];
 try {
-  const found = await client.query(all ? 'select id, case_code, title, status from cases order by case_code' : 'select id, case_code, title, status from cases where case_code = $1', all ? [] : [code]);
+  const found = await client.query(
+    `select id, case_code, title, status, content_version, content_hash from cases c
+      where ($1::text is null or case_code = $1) and ($2::int is null or content_version = $2)
+        and ($2::int is not null or content_version = (select max(content_version) from cases d where d.case_code = c.case_code and d.status <> 'disabled'))
+      order by case_code`,
+    [all ? null : code, version],
+  );
   if (found.rowCount === 0) {
     console.error('case not found');
     process.exit(1);
   }
   for (const c of found.rows) {
     if (publish && !['tested', 'published'].includes(c.status)) {
-      console.error(`skipping ${c.case_code}: status is ${c.status}; only validated (tested) cases can be published`);
+      console.error(`skipping ${c.case_code} v${c.content_version}: status is ${c.status}; only a tested version can be published (see scripts/case-lifecycle.mjs)`);
       continue;
     }
     const password = randomPassword();
     const hash = await bcrypt.hash(password, 10);
-    await client.query(`update cases set password_hash = $2${publish ? ", status = 'published'" : ''} where id = $1`, [c.id, hash]);
+    await client.query('begin');
+    try {
+      await client.query('update cases set password_hash = $2 where id = $1', [c.id, hash]);
+      if (publish && c.status !== 'published') await client.query("select transition_case_status($1, 'published', 'gen-case-credentials')", [c.id]);
+      await client.query('commit');
+    } catch (e) {
+      await client.query('rollback');
+      console.error(`skipping ${c.case_code} v${c.content_version}: ${e.message}`);
+      continue;
+    }
     rows.push({ code: c.case_code, title: c.title, password, status: publish ? 'published' : c.status });
   }
 } finally {
