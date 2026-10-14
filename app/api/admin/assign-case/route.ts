@@ -21,7 +21,11 @@ export async function POST(req: Request) {
       const reg = await tx.query("select id, registration_status from registrations where id = $1 for update", [registrationId]);
       if (!reg.rows[0]) throw new HttpError(404, "Registration not found");
       if (reg.rows[0].registration_status === "withdrawn") throw new HttpError(409, "This registration was withdrawn");
-      const c = await tx.query("select id, status, game_track from cases where case_code = $1", [code]);
+      // the newest version of the code, preferring the published one: draft / review / tested / disabled versions never qualify
+      const c = await tx.query(
+        "select id, status, game_track, content_version from cases where case_code = $1 order by (status = 'published') desc, content_version desc limit 1",
+        [code],
+      );
       if (!c.rows[0]) throw new HttpError(404, "Case not found");
       if (c.rows[0].status !== "published") throw new HttpError(409, `That case is ${c.rows[0].status}; only published cases can be assigned`);
       const caseId: string = c.rows[0].id;
@@ -49,7 +53,7 @@ export async function POST(req: Request) {
         registration_id: registrationId,
         team_id: existing?.id ?? null,
         case_id: caseId,
-        details: { case_code: code, previous_case_id: prev.rows[0]?.case_id ?? null },
+        details: { case_code: code, content_version: c.rows[0].content_version, previous_case_id: prev.rows[0]?.case_id ?? null },
       });
       return { track: c.rows[0].game_track as string, reassigned: Boolean(prev.rows[0]) };
     });

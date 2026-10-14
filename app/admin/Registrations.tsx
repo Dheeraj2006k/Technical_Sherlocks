@@ -17,7 +17,7 @@ type Reg = {
   team_state: string | null;
   players_joined: number | null;
 };
-type CaseRow = { case_code: string; title: string; track: string; status: string; active_assignments: number };
+type CaseRow = { case_code: string; title: string; track: string; status: string; content_version: number; validated: boolean; tested: boolean; active_assignments: number; teams_pinned: number };
 type Audit = { id: number; created_at: string; action: string; actor: string; team_ref: string | null; case_code: string | null };
 type Toast = (tone: "success" | "error" | "info", text: string) => void;
 
@@ -89,6 +89,15 @@ export default function Registrations({ toast }: { toast: Toast }) {
 
   const published = cases.filter((c) => c.status === "published");
 
+  async function setStatus(c: CaseRow, status: "published" | "disabled") {
+    const verb = status === "published" ? "publish" : "disable";
+    if (!window.confirm(`${verb === "publish" ? "Publish" : "Disable"} ${c.case_code} version ${c.content_version}? ${status === "disabled" ? "Teams already playing it are not affected; it can no longer be assigned." : "Any other published version of this case will be disabled for new assignments."}`)) return;
+    const r = await call("/api/admin/case-status", { case_code: c.case_code, content_version: c.content_version, status });
+    if (r.ok) toast("success", `${c.case_code} v${c.content_version} is now ${status}.`);
+    else toast("error", String(r.data.error ?? `Could not ${verb} that case.`));
+    load();
+  }
+
   return (
     <>
       <section className="panel" aria-labelledby="reg-title">
@@ -150,14 +159,33 @@ export default function Registrations({ toast }: { toast: Toast }) {
       </section>
 
       <section className="panel" aria-labelledby="cases-title">
-        <h2 id="cases-title" className="panel-title">Case catalogue</h2>
-        <ul className="chips">
-          {cases.map((c) => (
-            <li key={c.case_code} title={`${c.title} · ${c.status} · ${c.active_assignments} active`}>
-              {c.case_code} <em>{c.status}{c.active_assignments ? ` · ${c.active_assignments}` : ""}</em>
-            </li>
-          ))}
-        </ul>
+        <h2 id="cases-title" className="panel-title">Case catalogue and publication</h2>
+        <p className="muted">Lifecycle: draft, review, tested, published. Only a tested version can be published, and only a published version can be assigned. A version a team has started stays pinned to it.</p>
+        <div className="table-wrap">
+          <table className="lb admin-table" data-testid="case-catalogue">
+            <caption className="sr-only">Case versions</caption>
+            <thead>
+              <tr><th scope="col">Case</th><th scope="col">Version</th><th scope="col">Status</th><th scope="col">Checks</th><th scope="col">In use</th><th scope="col">Action</th></tr>
+            </thead>
+            <tbody>
+              {cases.map((c) => (
+                <tr key={`${c.case_code}-${c.content_version}`}>
+                  <td><b>{c.case_code}</b> <span className="case-name">{c.track} · {c.title}</span></td>
+                  <td className="mono">v{c.content_version}</td>
+                  <td><StatusPill tone={c.status === "published" ? "green" : c.status === "disabled" ? "muted" : "cyan"}>{c.status}</StatusPill></td>
+                  <td className="case-name">{c.validated ? "validated" : "not validated"} · {c.tested ? "human-tested" : "not human-tested"}</td>
+                  <td className="case-name">{c.active_assignments} assigned · {c.teams_pinned} team{c.teams_pinned === 1 ? "" : "s"}</td>
+                  <td>
+                    <div className="row-actions">
+                      {c.status === "tested" && <button type="button" className="btn ghost sm" onClick={() => setStatus(c, "published")}>Publish</button>}
+                      {c.status !== "disabled" && <button type="button" className="btn ghost sm" onClick={() => setStatus(c, "disabled")}>Disable</button>}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </section>
 
       <section className="panel" aria-labelledby="audit-title">

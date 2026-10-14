@@ -27,11 +27,15 @@ export function Avatar({ name, size = 40, online }: { name: string; size?: numbe
   );
 }
 
-type IconName = "magnifier" | "folder" | "pin" | "check" | "lock" | "user" | "clock" | "bolt" | "alert" | "copy" | "trophy" | "scales";
+type IconName = "help" | "book" | "magnifier" | "folder" | "pin" | "check" | "lock" | "user" | "clock" | "bolt" | "alert" | "copy" | "trophy" | "scales";
 
 export function Icon({ name, size = 18 }: { name: IconName; size?: number }) {
   const p = { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true, focusable: false };
   switch (name) {
+    case "help":
+      return (<svg {...p}><circle cx="12" cy="12" r="9" /><path d="M9.5 9.5a2.5 2.5 0 1 1 3.6 2.2c-.7.4-1.1 1-1.1 1.8M12 17v.01" /></svg>);
+    case "book":
+      return (<svg {...p}><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z" /><path d="M4 18.5A2.5 2.5 0 0 1 6.5 16H20" /></svg>);
     case "magnifier":
       return (<svg {...p}><circle cx="10.5" cy="10.5" r="6.5" /><path d="M15.5 15.5 21 21" /></svg>);
     case "folder":
@@ -74,12 +78,14 @@ export function Modal({
   children,
   onClose,
   tone = "default",
+  wide = false,
 }: {
   open: boolean;
   title: string;
   children: ReactNode;
   onClose: () => void;
   tone?: "default" | "danger";
+  wide?: boolean;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
@@ -89,7 +95,7 @@ export function Modal({
     if (!open && d.open) d.close();
   }, [open]);
   return (
-    <dialog ref={ref} className={`modal ${tone}`} aria-labelledby="modal-title" onCancel={(e) => { e.preventDefault(); onClose(); }} onClick={(e) => { if (e.target === ref.current) onClose(); }}>
+    <dialog ref={ref} className={`modal ${tone}${wide ? " wide" : ""}`} aria-labelledby="modal-title" onCancel={(e) => { e.preventDefault(); onClose(); }} onClick={(e) => { if (e.target === ref.current) onClose(); }}>
       <div className="modal-body">
         <h2 id="modal-title" className="modal-title">{title}</h2>
         {children}
@@ -117,4 +123,41 @@ export function ToastRegion({ toasts, dismiss }: { toasts: ToastItem[]; dismiss:
 
 export function StatusPill({ tone, children }: { tone: "green" | "amber" | "red" | "cyan" | "muted"; children: ReactNode }) {
   return <span className={`pill ${tone}`}>{children}</span>;
+}
+
+// Case text arrives as light markdown (paragraphs, "- " bullets, **bold**). Rendered as plain React nodes, never as HTML.
+function inline(text: string): ReactNode[] {
+  return text.split(/(\*\*[^*]+\*\*)/g).filter(Boolean).map((part, i) => (part.startsWith("**") && part.endsWith("**") && part.length > 4 ? <b key={i}>{part.slice(2, -2)}</b> : part));
+}
+
+export function proseBlocks(text: string): { kind: "p" | "ul"; lines: string[] }[] {
+  const out: { kind: "p" | "ul"; lines: string[] }[] = [];
+  for (const chunk of text.replace(/\r/g, "").split(/\n{2,}/)) {
+    const lines = chunk.split("\n").map((l) => l.trim()).filter(Boolean);
+    let group: { kind: "p" | "ul"; lines: string[] } | null = null;
+    for (const l of lines) {
+      const bullet = /^[-*]\s+/.test(l);
+      const kind = bullet ? "ul" : "p";
+      if (!group || group.kind !== kind) {
+        group = { kind, lines: [] };
+        out.push(group);
+      }
+      group.lines.push(bullet ? l.replace(/^[-*]\s+/, "") : l);
+    }
+  }
+  return out;
+}
+
+export function Prose({ text, className = "" }: { text: string; className?: string }) {
+  return (
+    <div className={`prose ${className}`}>
+      {proseBlocks(text).map((b, i) =>
+        b.kind === "ul" ? (
+          <ul key={i}>{b.lines.map((l, j) => <li key={j}>{inline(l)}</li>)}</ul>
+        ) : (
+          <p key={i}>{b.lines.map((l, j) => <span key={j}>{j > 0 && <br />}{inline(l)}</span>)}</p>
+        ),
+      )}
+    </div>
+  );
 }
