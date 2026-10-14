@@ -8,7 +8,7 @@ import pg from 'pg';
 import { describeDatabase } from '../scripts/lib/env.mjs';
 import { insertStubCase } from '../scripts/lib/stub-case.mjs';
 import { installCase, verifyDefinition } from '../scripts/cases/engine.mjs';
-import { CATALOGUE } from './helpers.mjs';
+import { FIXTURES } from './helpers.mjs';
 
 // Upgrade path: a database that already holds v4 data (migrations 001-008, a live case, a team mid-game) takes migration
 // 009 in place without losing anything. Runs only against the LOCAL database, in a throwaway database of its own.
@@ -88,7 +88,7 @@ test('a populated v4 database upgrades in place to v5: nothing is lost, the new 
 
     // a v5 catalogue case installs and validates beside the legacy data
     await after.query('begin');
-    const def = CATALOGUE.find((d) => d.code === 'LOG02');
+    const def = FIXTURES.find((d) => d.code === 'LOG02');
     const installed = await installCase(after, def, { slug: 'upgrade_check', password: 'x', bcryptCost: 4 });
     const bad = (await verifyDefinition(after, def, installed)).filter((r) => !r.ok);
     assert.deepEqual(bad, []);

@@ -1,6 +1,6 @@
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { db, makeGame, CATALOGUE, Client, makeTeam, answerValue, finishFinal, query, evidence, hint, submit, flattenQuestions } from './helpers.mjs';
+import { db, makeGame, FIXTURES, Client, makeTeam, answerValue, finishFinal, query, evidence, hint, submit, flattenQuestions } from './helpers.mjs';
 
 // Event-day load: ~35 players across 12 teams on both tracks, all active at once, then every team finishes.
 const pool = db();
@@ -9,7 +9,7 @@ const games = [];
 before(async () => {
   // six SQL and six Logic cases, each its own throwaway copy
   for (const code of ['SQL01', 'SQL02', 'SQL03', 'SQL04', 'SQL05', 'SQL06', 'LOG01', 'LOG02', 'LOG03', 'LOG04', 'LOG05', 'LOG06']) {
-    games.push(await makeGame(pool, CATALOGUE.find((d) => d.code === code)));
+    games.push(await makeGame(pool, FIXTURES.find((d) => d.code === code)));
   }
 });
 after(async () => {

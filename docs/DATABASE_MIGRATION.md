@@ -53,3 +53,25 @@ cases it should serve. `case_code` values that were rewritten by the seed script
 
 Everything is idempotent: `migrate` skips applied files, `setup-player-role` re-applies settings, and `seed-cases` replaces cases
 by id, slug and code.
+
+
+## Migrations 010-013 (this work)
+
+All additive; none rewrites team data.
+
+| # | What | Rollback / recovery |
+|---|---|---|
+| 010 | content versions (`unique(case_code, content_version)`), lifecycle (`review`, hashes, `transition_case_status`), team version pin, content-freeze triggers, `players.tour_state` | forward-fix only: restoring `cases_case_code_key` is unsafe once two versions exist |
+| 011 | `tasks.alt_answers`, `task_options` (CHOICE), `characters.is_suspect` | forward-fix; columns nullable/defaulted |
+| 012 | `case_phases.phase_name`, `characters.public_profile` | nullable; safe to leave in place |
+| 013 | revoke EXECUTE on lifecycle/trigger functions from PUBLIC, anon, authenticated | re-grant only if intentionally exposing them (do not) |
+
+Tested on a populated isolated local database (`tests/v5_migration.test.mjs`, `tests/v5_versioning.test.mjs`).
+
+### Production order (manual; not performed)
+1. Back up the database (provider snapshot).
+2. `npm run db:migrate` with the migration role (`SLC_ALLOW_REMOTE_DB=1`).
+3. `node scripts/seed-cases.mjs --dry-run`, review, then run without `--dry-run`. New versions land in `review`.
+4. Human review and blind playtest per case; record in `review.json`; `case-lifecycle.mjs ... tested`; Publish from Admin.
+5. `node scripts/retire-legacy-cases.mjs` (dry run), then `--apply` once no event team needs the old cases (disables only).
+6. `npm run check:env` against production, then the smoke checklist in `EVENT_RUNBOOK.md`.

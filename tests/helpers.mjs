@@ -7,14 +7,17 @@ import { loadEnvLocal } from '../scripts/lib/env.mjs';
 import { installCase, removeCaseFully } from '../scripts/cases/engine.mjs';
 import { CODE_ALPHABET } from '../scripts/lib/codes.mjs';
 import { DEFINITIONS } from '../scripts/cases/index.mjs';
+import { DEFINITIONS as FIXTURE_DEFINITIONS } from './fixtures/legacy/index.mjs';
 
 loadEnvLocal(join(dirname(fileURLToPath(import.meta.url)), '..'));
 
 export const BASE = process.env.TEST_BASE_URL ?? 'http://localhost:3101';
 
-// The generated catalogue (SQL01-SQL10, LOG01-LOG10); tests install throwaway copies of these.
+// The ten authored cases (SQL01-SQL05, LOG01-LOG05) loaded from cases/; tests install throwaway copies of these.
 export const CATALOGUE = DEFINITIONS;
-export const defByCode = (code) => DEFINITIONS.find((d) => d.code === code);
+// Engine/evidence/security/UI suites run on stable generated FIXTURES (tests/fixtures/legacy); the real catalogue is tested in v5_cases / v5_packs.
+export const FIXTURES = FIXTURE_DEFINITIONS;
+export const defByCode = (code) => FIXTURE_DEFINITIONS.find((d) => d.code === code);
 
 export function db() {
   return new pg.Pool({ connectionString: process.env.DATABASE_URL, max: 2 });
@@ -28,14 +31,14 @@ const record = (...parts) => {
 const randomRef = () => Array.from({ length: 8 }, () => CODE_ALPHABET[randomInt(CODE_ALPHABET.length)]).join('');
 
 // A throwaway published copy of a case definition: random slug, a TST-prefixed case code and a known password.
-export async function makeGame(pool, def, { status = 'published', caseCode } = {}) {
+export async function makeGame(pool, def, { status = 'published', caseCode, version, contentHash, slug: slugOverride } = {}) {
   const password = `pw-${randomUUID().slice(0, 8)}`;
-  const slug = `x${randomUUID().replace(/-/g, '').slice(0, 11)}`;
+  const slug = slugOverride ?? `x${randomUUID().replace(/-/g, '').slice(0, 11)}`;
   const code = caseCode ?? `TST${randomUUID().replace(/-/g, '').slice(0, 7).toUpperCase()}`;
   const c = await pool.connect();
   let info;
   try {
-    info = await installCase(c, def, { slug, password, status, caseCode: code, bcryptCost: 4, title: `TEST ${def.title}` });
+    info = await installCase(c, def, { slug, password, status, caseCode: code, bcryptCost: 4, title: `TEST ${def.title}`, ...(version !== undefined ? { version } : {}), ...(contentHash ? { contentHash } : {}) });
   } finally {
     c.release();
   }

@@ -57,3 +57,4 @@ Legend: COMPLETE (implemented and verified) · PARTIAL · MISSING · BLOCKED (ex
   repository will contain 20 *generated, machine-verified* cases that satisfy the structural rules; their story quality and
   variety are limited by the templates and need human review.
 * **Production migration and deployment** need the organizers' go-ahead (see ASSUMPTIONS_AND_DECISIONS.md).
+PRD addendum (help and onboarding) requirements, case packs, lifecycle, seeding and story visibility: Done. Human review and playtest, production migration, deploy and smoke: Open.

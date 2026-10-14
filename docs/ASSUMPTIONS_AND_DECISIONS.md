@@ -100,3 +100,21 @@ truncated at 50,000 characters; where the truncated part may have said something
     fallback and is tested locally.
 27. **v4 games in flight cannot continue after the migration.** v4 questions have no threads. Upgrade between events (see
     DATABASE_MIGRATION.md).
+
+
+## Decisions from the case-pack work
+
+- **Twelve cases, not ten.** The owner supplied twelve cases in `docs/*.zip` and asked for exactly those; this supersedes the earlier "exactly ten" rule and my authored cases. Catalogue = SQL01-06, LOG01-06, `content_version` 2.
+- **Scores.** Every case totals 100 but follows its source: SQL01-06 and LOG03-06 use 6 x 10 + 25 + 15; LOG01/02 have nine questions (45) with final components 35 + 20 and a scaled five-step reward ladder. Wrong committed answers cost 2.
+- **Answers.** Multiple-choice sources use CHOICE; typed sources use NUMBER/TIME/TEXT with `alt_answers` (e.g. SQL01 name lists in any order and separator).
+- **Edits to supplied data** (recorded because they change supplied content):
+  - SQL01 and SQL06 `staff_directory.known_context` stated conclusions in a table players can read; made neutral.
+  - SQL01: rear-door camera event C9 moved from displayed 21:40 to 21:36 (real 21:32) so corrected controller and camera times align, as the author notes request.
+  - SQL06: the RESTRICTED_AUTHOR private draft is not loaded into the player schema; PAY-712 and its ledger entry are credited to Asha Rao, matching the audit log, staff notes and answer key (the seed said Dev).
+  - SQL03: one wrong explanation option was lengthened to pass the minimum-length check.
+  - Timestamps are stored as IST wall-clock `timestamp` values.
+- **Small datasets** (SQL02-06 have 25-45 evidence rows) are a content gap the source authors noted; not padded.
+- **No human review or playtest is claimed.** All twelve are `review` with `publication_eligible: false`; the source packs list their own pending gates.
+- **Story visibility.** Hook, briefings and people are in a persistent banner and a Case File dialog, opened first on entering a case; the tour follows. Per-tab sessionStorage plus the player's own tour flag; no game state is touched.
+- **Table cap** raised from 16 to 18 evidence tables (SQL01 has 17).
+- **Function lockdown** (migration 013): Postgres grants EXECUTE to PUBLIC by default.

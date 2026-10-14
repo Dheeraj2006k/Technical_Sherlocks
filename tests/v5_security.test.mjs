@@ -317,6 +317,7 @@ test('every public table is locked down for Supabase roles (RLS on, no anon/auth
     const grants = (await pool.query("select count(*)::int n from information_schema.role_table_grants where grantee = $1 and table_schema = 'public'", [role])).rows[0].n;
     assert.equal(grants, 0, `${role} has no table grants`);
   }
-  const fns = (await pool.query("select count(*)::int n from pg_proc p join pg_namespace n on n.oid = p.pronamespace where n.nspname = 'public' and not exists (select 1 from pg_depend d where d.objid = p.oid and d.deptype = 'e')")).rows[0].n;
-  assert.equal(fns, 0, 'the application defines no database functions in the exposed public schema (only the pgcrypto extension does)');
+  // application functions (lifecycle + content-freeze triggers) exist in public but nobody except the owner may execute them
+  const exposed = (await pool.query("select p.proname from pg_proc p join pg_namespace n on n.oid = p.pronamespace where n.nspname = 'public' and not exists (select 1 from pg_depend d where d.objid = p.oid and d.deptype = 'e') and (has_function_privilege('public', p.oid, 'execute') or (exists (select 1 from pg_roles where rolname = 'anon') and has_function_privilege('anon', p.oid, 'execute')) or (exists (select 1 from pg_roles where rolname = 'authenticated') and has_function_privilege('authenticated', p.oid, 'execute')))")).rows;
+  assert.deepEqual(exposed, [], 'no application function is executable by PUBLIC, anon or authenticated');
 });

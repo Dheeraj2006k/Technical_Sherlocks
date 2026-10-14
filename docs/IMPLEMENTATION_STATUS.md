@@ -49,3 +49,12 @@ admin/pause/reset/export/recovery -> `v5_admin`, `v5_recovery`; presence/cleanup
 2. Have someone who does not know the answers play several cases; fix content.
 3. Run the realtime suite and `check:env` against the event Supabase project.
 4. Decide whether to hand-author distinct central tricks and larger dossiers.
+
+
+## Update: case packs, versions, onboarding, story
+
+Done and verified locally: twelve case packs validated (structural + database), version pinning and lifecycle, idempotent seeding, CHOICE answers, SQL Field Guide, guided tour, Help menu, prominent story (banner + Case File), admin case catalogue, function lockdown, leak scan of private pack text. Lint 0 errors, type check, build and the full test suite (unit, integration, E2E) pass; realtime tests are skipped locally.
+
+Not done: production audit, migration, seeding and deployment (blocked by permission controls); human review and blind playtest of every case (required before `tested`/`published`); Vercel production branch verification.
+
+PRD addendum (help and onboarding) requirements, case packs, lifecycle, seeding and story visibility: Done. Human review and playtest, production migration, deploy and smoke: Open.

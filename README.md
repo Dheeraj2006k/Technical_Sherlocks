@@ -5,7 +5,7 @@
 A competitive, browser-based **detective game** for a one-day Techfest. Teams of one to three investigate one of **twenty
 mysteries** on one of two tracks:
 
-* **SQL track** (`SQL01`-`SQL10`): query a live evidence database with SQL.
+* **SQL track** (`SQL01`-`SQL06`): query a live evidence database with SQL.
 * **Logic track** (`LOG01`-`LOG10`): browse, search, filter and sort the same kind of evidence in an **Evidence Browser**
   (no SQL needed; an optional SQL console is there from the start for those who want it).
 
@@ -43,7 +43,7 @@ npm install
 npm test                  # builds, starts an embedded LOCAL Postgres + the app on :3101, runs every suite
 npm run dev:local         # keeps the local Postgres running (env file: .env.localdb), then in another shell:
 SLC_ENV_FILE=.env.localdb npm run dev      # http://localhost:3000   (admin password: see .env.localdb)
-node scripts/local-db.mjs setup            # migrate + create player_exec + seed the 20 cases into the local DB
+node scripts/local-db.mjs setup            # migrate + create player_exec + seed the 12 case packs into the local DB
 node scripts/local-db.mjs reset            # wipe the local database
 ```
 
@@ -102,7 +102,7 @@ tables they have unlocked (they are in their own session) but cannot derive or f
 
 Twenty definitions in [scripts/cases](scripts/cases):
 
-* `SQL01`-`SQL10`: *Opening Night* (hand-authored) plus nine themed cases from one parametric skeleton (`skeleton-a.mjs`,
+* `SQL01`-`SQL06`: *Opening Night* (hand-authored) plus nine themed cases from one parametric skeleton (`skeleton-a.mjs`,
   `themes.mjs`), converted by `to-v5.mjs` into threads, hints, story events and a two-part final deduction.
 * `LOG01`-`LOG10`: ten Indian-set cases from a second skeleton (`skeleton-b.mjs`, `themes-b.mjs`) built around contradictions
   between statements and sightings.

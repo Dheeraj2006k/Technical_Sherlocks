@@ -61,6 +61,19 @@ const noOverflow = async (page, label) => {
 
 const questionsOf = (game) => game.def.threads.flatMap((t) => t.questions);
 
+// On first entry the case file opens, then the guided tour: close both so the test can play (their own behaviour is in the onboarding tests).
+async function dismissIntro(page) {
+  const close = page.getByTestId('case-file-close');
+  if (await close.waitFor({ timeout: 5000 }).then(() => true, () => false)) {
+    // the story is the first thing a player sees: the case file opens with the hook, and the banner stays on screen afterwards
+    assert.ok((await page.getByTestId('case-file').innerText()).length > 150, 'the case file shows the story');
+    await close.click();
+    await page.getByTestId('story-banner').waitFor();
+  }
+  const skip = page.getByRole('button', { name: /Skip tour/ });
+  if (await skip.waitFor({ timeout: 5000 }).then(() => true, () => false)) await page.keyboard.press('Escape'); // Esc always closes the tour
+}
+
 async function enterHead(page, game, reg, name) {
   await page.goto(BASE);
   await page.getByRole('heading', { name: "Sherlock's Last Case" }).waitFor();
@@ -152,6 +165,7 @@ test('UI: three browsers play a whole SQL case, landing to resolution to leaderb
     // ---------- start: everyone moves into phase 1, SQL console is the main tool
     await A.page.getByRole('button', { name: 'Start investigation' }).click();
     for (const p of [A, B, C]) await p.page.locator('.phase-no', { hasText: 'Phase 1 of 3' }).waitFor({ timeout: 10000 });
+    for (const p of [A, B, C]) await dismissIntro(p.page);
     await A.page.getByRole('heading', { name: 'SQL console' }).waitFor();
     assert.equal(await A.page.getByRole('tab', { name: 'Evidence browser' }).count(), 0, 'the SQL track keeps the SQL console as its tool');
     await A.page.locator('.thread-title', { hasText: S.def.threads[0].title }).first().waitFor();
@@ -282,6 +296,7 @@ test('UI (Logic track): the Evidence Browser searches, filters, sorts and pages;
     await page.getByText('Logic investigation').waitFor();
     await page.getByRole('button', { name: 'Start investigation' }).click();
     await page.locator('.phase-no', { hasText: 'Phase 1 of 3' }).waitFor({ timeout: 10000 });
+    await dismissIntro(page);
 
     // the browser is the default tool; the console is labelled optional
     await page.getByRole('heading', { name: 'Evidence Browser' }).waitFor();
@@ -352,6 +367,7 @@ test('UI (phone): join, lobby, threads, browser and final deduction work on a 39
     await page.screenshot({ path: join(shots, 'm2-lobby.png'), fullPage: true });
     await page.getByRole('button', { name: 'Start investigation' }).click();
     await page.locator('.phase-no', { hasText: 'Phase 1 of 3' }).waitFor({ timeout: 10000 });
+    await dismissIntro(page);
     await page.waitForTimeout(2800);
     await noOverflow(page, 'phase 1');
     const y = async (sel) => (await page.locator(sel).first().boundingBox()).y;
