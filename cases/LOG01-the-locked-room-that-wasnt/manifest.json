@@ -1,0 +1,26 @@
+{
+  "case_code": "LOG01",
+  "track": "LOGIC",
+  "title": "The Locked Room That Wasn't",
+  "slug": "the-locked-room-that-wasnt",
+  "content_version": 2,
+  "status": "review",
+  "duration_minutes": 18,
+  "recommended_team_size": 1,
+  "setting": "Annual college innovation showcase, Innovation Room B and the AV booth, before the 4:45 PM Aster demonstration",
+  "incident": "The working Aster prototype is gone from its display case in a room that appears to have been locked",
+  "source": {
+    "files": [
+      "docs/LOG01_The_Locked_Room_That_Wasnt.zip",
+      "docs/Sherlocks_Logic_Database_Pack.zip"
+    ],
+    "content_version": "0.1",
+    "original_release_status": "draft_not_seed_ready"
+  },
+  "reviewer": {
+    "author": "Supplied case content (docs/*.zip), packaged for the runtime by Claude Code",
+    "human_reviewer": null,
+    "note": "No human has reviewed or blind-playtested this version; see review.json"
+  },
+  "publication_eligible": false
+}

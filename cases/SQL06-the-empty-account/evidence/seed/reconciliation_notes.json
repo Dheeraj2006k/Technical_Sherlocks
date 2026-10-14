@@ -1,0 +1,8 @@
+{
+  "columns": ["note_id","created_at","author","topic","note_text","visibility"],
+  "rows": [
+    ["N1","2026-10-15 15:50:00","Dev Malhotra","reconciliation","PAY-712 was reversed; the replacement was a routine retry. Dashboard should be fine by morning.","TEAM_VISIBLE"],
+    ["N2","2026-10-15 16:05:00","Asha Rao","reconciliation","I did not submit PAY-712B. I was already off the finance workstation when it appeared.","TEAM_VISIBLE"],
+    ["N3","2026-10-15 16:20:00","Finance System","reconciliation","Balance widget reads ledger entries only; gateway settlements may not appear until next sync.","TEAM_VISIBLE"]
+  ]
+}

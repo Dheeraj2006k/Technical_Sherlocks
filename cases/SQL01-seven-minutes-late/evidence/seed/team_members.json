@@ -1,0 +1,15 @@
+{
+  "columns": ["member_id","full_name","team_name","role_title"],
+  "rows": [
+    ["M1","Arjun Varma","Team Pulse","Circuit designer"],
+    ["M10","Prof. Sandeep Menon","Faculty","Faculty coordinator"],
+    ["M2","Nikhil Reddy","Team Pulse","Software lead"],
+    ["M3","Kavya Iyer","Team Pulse","Power-system lead"],
+    ["M4","Rohit Kulkarni","Team Pulse","Team lead"],
+    ["M5","Sameer Khan","Team Pulse","Fabrication"],
+    ["M6","Meghana Rao","Team Pulse","Documentation"],
+    ["M7","Aditya Joshi","Fest Volunteers","Junior volunteer"],
+    ["M8","Priya Nair","Fest Operations","Stage coordinator"],
+    ["M9","Mahesh Anna","Engineering Block","Lab assistant"]
+  ]
+}

@@ -1,0 +1,215 @@
+{
+  "tasks": [
+    {
+      "key": "t1",
+      "thread": "t1",
+      "title": "THE CLEAREST CONTRADICTION",
+      "prompt": "What is the clearest contradiction in the first set of records?",
+      "answer_type": "CHOICE",
+      "answer": "B",
+      "options": [
+        {
+          "key": "A",
+          "text": "The QR code belongs to a second team."
+        },
+        {
+          "key": "B",
+          "text": "Team Orbit’s received invitation says 4:30 PM, while the signed master run sheet says 4:00 PM."
+        },
+        {
+          "key": "C",
+          "text": "Rohan changed Team Orbit’s check-in to 4:30 PM."
+        },
+        {
+          "key": "D",
+          "text": "The check-in desk disqualified Team Orbit."
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The contradiction: {value}",
+      "explanation": "The received invitation says 4:30 PM while the signed run sheet says 4:00 PM.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_1 where evidence_id in ('E01', 'E02', 'E03') order by evidence_id"
+      ]
+    },
+    {
+      "key": "t2",
+      "thread": "t1",
+      "title": "WHAT THE DUTY BOARD SHOWS",
+      "prompt": "What can the duty board establish at this stage?",
+      "answer_type": "CHOICE",
+      "answer": "A",
+      "options": [
+        {
+          "key": "A",
+          "text": "It identifies who had roles near the invitation and printer workflow, but does not prove who produced the altered copy."
+        },
+        {
+          "key": "B",
+          "text": "It proves Irfan changed the invitation."
+        },
+        {
+          "key": "C",
+          "text": "It proves Aanya never approached the printer."
+        },
+        {
+          "key": "D",
+          "text": "It proves Team Orbit changed its own invitation."
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The duty board: {value}",
+      "explanation": "The board shows roles and times, not who produced the altered copy.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_1 where evidence_id in ('E04') order by evidence_id"
+      ]
+    },
+    {
+      "key": "t3",
+      "thread": "t2",
+      "title": "THE OFFICIAL EMAIL",
+      "prompt": "What does the official email archive tell you about the version Team Orbit was originally sent?",
+      "answer_type": "CHOICE",
+      "answer": "C",
+      "options": [
+        {
+          "key": "A",
+          "text": "The official attachment contained 4:30 PM."
+        },
+        {
+          "key": "B",
+          "text": "The email was never delivered."
+        },
+        {
+          "key": "C",
+          "text": "The archived attachment contained 4:00 PM and QR ORB-041."
+        },
+        {
+          "key": "D",
+          "text": "The QR code was invalid."
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The version Orbit was sent: {value}",
+      "explanation": "The archived attachment says 4:00 PM and QR ORB-041.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_2 where evidence_id in ('E05') order by evidence_id"
+      ]
+    },
+    {
+      "key": "t4",
+      "thread": "t2",
+      "title": "PRINT QUEUE AND PHOTO",
+      "prompt": "Which conclusion is justified by the print queue and photograph together?",
+      "answer_type": "CHOICE",
+      "answer": "A",
+      "options": [
+        {
+          "key": "A",
+          "text": "An ANAIR-account print occurred at 3:51 PM, and Aanya is photographed collecting a sheet at the printer; neither record alone proves the sheet’s content."
+        },
+        {
+          "key": "B",
+          "text": "The print queue proves Aanya personally typed every word."
+        },
+        {
+          "key": "C",
+          "text": "The photograph proves the sheet was the official master run sheet."
+        },
+        {
+          "key": "D",
+          "text": "Irfan must have altered the invitation because he was assigned to the printer."
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "Print queue and photo: {value}",
+      "explanation": "An ANAIR print at 3:51 and Aanya at the tray at 3:54 together, with neither proving the page content alone.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_2 where evidence_id in ('E06', 'E08') order by evidence_id"
+      ]
+    },
+    {
+      "key": "t5",
+      "thread": "t3",
+      "title": "THE REJECTED PROOF",
+      "prompt": "Why is the rejected proof important?",
+      "answer_type": "CHOICE",
+      "answer": "D",
+      "options": [
+        {
+          "key": "A",
+          "text": "It proves Team Nova requested the change."
+        },
+        {
+          "key": "B",
+          "text": "It proves the QR code created a duplicate registration."
+        },
+        {
+          "key": "C",
+          "text": "It proves Rohan altered the master schedule."
+        },
+        {
+          "key": "D",
+          "text": "It links the 4:30 PM Orbit copy and reused QR to a discarded proof marked “duplicate QR OK” in handwriting consistent with Aanya’s shift note."
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The rejected proof: {value}",
+      "explanation": "The proof carries the wrong time and reused QR plus a note consistent with Aanya's shift note.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_3 where evidence_id in ('E09', 'E10') order by evidence_id"
+      ]
+    },
+    {
+      "key": "t6",
+      "thread": "t3",
+      "title": "THE BEST EXPLANATION",
+      "prompt": "Which explanation best accounts for the complete evidence set?",
+      "answer_type": "CHOICE",
+      "answer": "B",
+      "options": [
+        {
+          "key": "A",
+          "text": "Rohan accidentally changed Orbit’s check-in in the master schedule, and the printed invitation copied that change."
+        },
+        {
+          "key": "B",
+          "text": "Aanya deliberately produced a 4:30 PM copy using Orbit’s existing QR, intending to delay Orbit past sound check so Nova would keep the first demo slot; she left the master schedule unchanged."
+        },
+        {
+          "key": "C",
+          "text": "Meera altered her own invitation after arriving late."
+        },
+        {
+          "key": "D",
+          "text": "Irfan created a second Orbit registration, which caused the time mismatch."
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "Best explanation: {value}",
+      "explanation": "Only option B accounts for the wrong copy, the unchanged master, the reused QR and the stated motive.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_2 where evidence_id in ('E05', 'E06', 'E08') order by evidence_id",
+        "select evidence_id, title from evidence_phase_3 where evidence_id in ('E09', 'E10') order by evidence_id"
+      ]
+    }
+  ]
+}

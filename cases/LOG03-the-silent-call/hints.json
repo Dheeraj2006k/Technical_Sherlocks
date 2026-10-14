@@ -1,0 +1,53 @@
+{
+  "scoring": {
+    "reward_schedule": [
+      10,
+      8,
+      6,
+      4,
+      2
+    ],
+    "wrong_answer_penalty": 2,
+    "sql_errors_free": true,
+    "retries_allowed": true,
+    "each_component_awards_points_once": true
+  },
+  "hints": {
+    "t1": [
+      "Read the direction column, not just the time.",
+      "Compare the 4:11 entry with Karthik's claim.",
+      "An outgoing control-desk call is not a call from the faculty office.",
+      "The 4:11 call did not connect, so it cannot be the claimed confirmation."
+    ],
+    "t2": [
+      "Compare the time the cable was reported with the time it was checked.",
+      "Read the status recorded at 4:09 and 4:10.",
+      "The checklist says the cable was secured and tested before the cancellation entry.",
+      "The genuine earlier concern explains why someone might request a hold; it does not prove faculty cancellation."
+    ],
+    "t3": [
+      "Use Sana's account of the words spoken, not Karthik's later wording.",
+      "Notice the difference between “hold” and “cancel.”",
+      "The caller did not identify themselves or claim faculty authority.",
+      "The call requested a temporary hold pending a check, not a formal cancellation."
+    ],
+    "t4": [
+      "Check both phone systems.",
+      "A missed or zero-duration call is not proof that a conversation took place.",
+      "Neither system records a connected faculty-office call to Karthik before the announcement.",
+      "The claimed confirmation is unsupported by the independent logs."
+    ],
+    "t5": [
+      "Read all four steps on the procedure card.",
+      "A safety report is not the same as authorization to change the running order.",
+      "The policy requires verification and explicitly distinguishes a hold from a cancellation.",
+      "The rule against changing the running order before confirmed authorization was violated."
+    ],
+    "t6": [
+      "Consider the note's wording and where it appears on the running sheet.",
+      "The note links moving Pulse to a schedule dispute.",
+      "It says the safety concern is enough if marked faculty-approved.",
+      "Together with the unsupported announcement, the note supports knowing misrepresentation rather than a simple misunderstanding."
+    ]
+  }
+}

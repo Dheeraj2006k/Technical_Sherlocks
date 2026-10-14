@@ -1,0 +1,27 @@
+{
+  "culprit": {
+    "points": 35,
+    "note": "Pick the responsible person from the suspect list"
+  },
+  "mechanism": {
+    "points": 20,
+    "options": [
+      {
+        "label": "The trophy was taken by a photographer after the group photo and carried out of the venue.",
+        "correct": false
+      },
+      {
+        "label": "The trophy was diverted after being legitimately moved for photography; the unresolved engraving error gave the awards coordinator a reason to delay the presentation, and the return was not recorded.",
+        "correct": true
+      },
+      {
+        "label": "The trophy was never delivered to the event.",
+        "correct": false
+      },
+      {
+        "label": "The trophy was destroyed while the display stand was being moved.",
+        "correct": false
+      }
+    ]
+  }
+}

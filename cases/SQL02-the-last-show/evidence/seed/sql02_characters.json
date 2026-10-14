@@ -1,0 +1,11 @@
+{
+  "columns": ["character_id","display_name","role","public_profile"],
+  "rows": [
+    ["ARJ","Arjun Das","Backstage access marshal","Managed the staff-door access console."],
+    ["DEV","Dev Malhotra","Prop lead","Responsible for the original Starfall Mask and the backup prop."],
+    ["ISH","Isha Menon","Costume assistant","Worked near the stage-left wing."],
+    ["KAV","Kavya Sen","AV cue operator","Triggered the final reveal from the cue desk."],
+    ["NIK","Nikhil Rao","Lead performer","Performed the finale and argued against using the mask after rehearsal."],
+    ["SAN","Sana Iyer","Assistant stage manager","Recorded prop hand-offs and stage movement."]
+  ]
+}

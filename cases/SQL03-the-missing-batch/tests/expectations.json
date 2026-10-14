@@ -1,0 +1,31 @@
+{
+  "queries": [
+    {
+      "name": "only Nisha requested a reprint",
+      "sql": "select requested_by from sql03_print_jobs where batch_id = 'B-17R'",
+      "expect": [
+        [
+          "NISHA"
+        ]
+      ]
+    },
+    {
+      "name": "the original has exactly one sealed custody-in scan",
+      "sql": "select scanned_by from sql03_custody_scans where batch_id = 'B-17' and scan_type = 'CUSTODY_IN'",
+      "expect": [
+        [
+          "NISHA"
+        ]
+      ]
+    },
+    {
+      "name": "the reprint approval was rejected",
+      "sql": "select result from sql03_approval_audit where request_id = 'REQ-171' and action = 'REQUEST_REPRINT'",
+      "expect": [
+        [
+          "REJECTED"
+        ]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "victim": "The demo-room handover and Ishaan Rao’s reputation",
+  "culprit": "Maya Kapoor",
+  "motive": "To delay the demo-room handover after she found a token-list mismatch, and to deflect blame onto Ishaan.",
+  "method": "She took custody of Ishaan’s returned badge B-204 for a scan, entered the archive with it at 18:17, removed the access-token envelope, then amended the inventory note to say the return was unconfirmed.",
+  "explanation": "The evidence supports concealment and interference with the handover; it does not prove she meant to use the tokens.",
+  "timeline": [
+    {
+      "time": "17:24",
+      "event": "Dev accepts the signed return of B-204",
+      "evidence": "BC-03"
+    },
+    {
+      "time": "17:31",
+      "event": "Maya takes B-204 for a temporary scan",
+      "evidence": "BC-04, IN-01"
+    },
+    {
+      "time": "17:54",
+      "event": "Arjun’s cable is issued from the AV cabinet",
+      "evidence": "ER-01"
+    },
+    {
+      "time": "18:11",
+      "event": "Maya amends the note: return unconfirmed",
+      "evidence": "IN-02"
+    },
+    {
+      "time": "18:17",
+      "event": "B-204 enters the equipment archive",
+      "evidence": "DE-03"
+    },
+    {
+      "time": "18:21",
+      "event": "The envelope count is zero",
+      "evidence": "AI-03"
+    },
+    {
+      "time": "18:26",
+      "event": "Maya asks to hold the demo-room handover",
+      "evidence": "MSG-01"
+    },
+    {
+      "time": "18:51",
+      "event": "Maya tells Rhea that Ishaan must have kept his badge",
+      "evidence": "MSG-03"
+    }
+  ],
+  "causal_chain": [
+    "Ishaan returned B-204 and the desk signed for it at 17:24.",
+    "Maya took the badge afterwards and no return is recorded.",
+    "B-204 entered the archive at 18:17 and the envelope was gone by 18:21.",
+    "Maya’s note and message steer attention toward Ishaan and delay the handover."
+  ],
+  "resolution": {
+    "motive": "She wanted to delay the handover and avoid being the one who found the token mismatch.",
+    "method": "She used the borrowed badge to enter the archive, removed the envelope and edited the note to blame Ishaan.",
+    "chain": [
+      "The signed return at 17:24 proves Ishaan no longer held B-204.",
+      "Maya’s custody begins at 17:31 and the badge is never returned to the desk.",
+      "Her 18:11 note contradicts the signed return and Dev’s later verification.",
+      "Her 18:26 message asks to hold the handover, and her 18:51 message blames Ishaan."
+    ]
+  }
+}

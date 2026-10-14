@@ -1,0 +1,9 @@
+{
+  "columns": ["evidence_id","title","source_label","body"],
+  "rows": [
+    ["E09","The Booth Reflection Photo","Milan’s setup photograph, 3:50 PM","A reflection in the booth monitor shows Nisha at the workstation while the export progress bar is visible. The monitor’s filename field reads “Comet_Final_v7.mp4”. The photo cannot show the source filename or prove intent, but it places Nisha at the active export session."],
+    ["E10","The Rehearsal Cut’s End Card","Recovered preview frame","The short playback file’s final frame contains a rehearsal-only note: “Reveal animation still pending — do not use for judging.” The same wording appears in the rehearsal cut’s project notes. The submitted 2-minute file’s preview frame, preserved at upload, contains the finished reveal instead."],
+    ["E11","Nisha’s Cue Draft","AV clipboard, reverse side","A draft in Nisha’s handwriting reads: “If Comet misses reveal, hold scoring; Orbit can take the spare slot. Use the short render if timing gets tight.” It is timestamped 3:47 PM, two minutes before the short export. The note must be read with the export log and her presence at the workstation."],
+    ["E12","The Original Upload Still Exists","Kiosk archive and checksum comparison","The kiosk archive still holds Dev’s 2-minute file with checksum 91C4. The playback copy has checksum 7A20 and matches the 42-second rehearsal cut. The original was not corrupted or overwritten; a different export was placed in the playback package."]
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "columns": ["evidence_id","title","source_label","body"],
+  "rows": [
+    ["E","Temporary Movement Slip","Awards desk carbon-copy form","A movement slip was opened at 4:06 PM:\n\n- Item: Founders' Trophy\n- Reason: “Photo setup”\n- Destination field: “Photo Bay”\n- Return confirmation: blank\n- Initiated by: Kavya Sen\n\nThe form authorizes a temporary move for photography. It does not record that the trophy was returned to the display stand."],
+    ["F","Photographer's Statement","Naina's recorded interview","Naina says:\n\n*“I asked for the trophy to be brought to the awards table for a group photograph. I took the group shot at about 4:08. I saw the trophy on the table then. I did not take it away, and I did not ask anyone to store it.”*\n\nHer camera's timestamp confirms that the group photograph was taken at 4:08 PM. The photograph includes the trophy on the awards table, but the image does not show who carried it there."],
+    ["G","Storage Crate Register","Logistics desk record","- 4:07 PM — Grey crate G-14 assigned to banner hardware.\n- 4:11 PM — Sameer records G-14 as moved toward the storage area.\n- 4:19 PM — G-14 marked “returned to storage.”\n- The register does not list individual contents.\n- No one signed a content check at return."],
+    ["H","Engraving Proof","Vendor proof sheet found in the awards folder","The approved proof sheet displays the correct event title but lists the wrong winning team in the small nameplate text. A handwritten note beside it says:\n\n*“Check final plate before presentation.”*\n\nThe note is initialled “K.S.” The sheet does not show whether the error was corrected."],
+    ["I","Stage Volunteer Statement","Arjun's interview","Arjun says he moved only the empty display stand to make room for the photographer. He says the trophy was already on the awards table when he moved the stand. The photo timestamp supports the fact that the trophy was on the table at 4:08, but does not independently confirm the exact time Arjun moved the stand."]
+  ]
+}

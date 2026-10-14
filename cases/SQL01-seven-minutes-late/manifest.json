@@ -1,0 +1,26 @@
+{
+  "case_code": "SQL01",
+  "track": "SQL",
+  "title": "Seven Minutes Late",
+  "slug": "seven-minutes-late",
+  "content_version": 2,
+  "status": "review",
+  "duration_minutes": 20,
+  "recommended_team_size": 3,
+  "setting": "QUBIT engineering workshop, Pulse LED wall power-control cabinet, final night before the fest opens",
+  "incident": "Arjun Varma is found unconscious beside the damaged Pulse power-control cabinet at 9:52 PM and three systems disagree about the time",
+  "source": {
+    "files": [
+      "docs/SQL01_Seven_Minutes_Late.zip",
+      "docs/SQL01_Player_Release.zip"
+    ],
+    "content_version": "packaged",
+    "original_release_status": "CONTENT_PACKAGED_NOT_PRODUCTION_CERTIFIED"
+  },
+  "reviewer": {
+    "author": "Supplied case content (docs/*.zip), packaged for the runtime by Claude Code",
+    "human_reviewer": null,
+    "note": "No human has reviewed or blind-playtested this version; see review.json"
+  },
+  "publication_eligible": false
+}

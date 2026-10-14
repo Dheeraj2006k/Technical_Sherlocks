@@ -1,0 +1,27 @@
+{
+  "culprit": {
+    "points": 25,
+    "note": "Pick the responsible person from the suspect list"
+  },
+  "mechanism": {
+    "points": 15,
+    "options": [
+      {
+        "label": "Dev’s upload was corrupted, so the player automatically cut the demo short.",
+        "correct": false
+      },
+      {
+        "label": "Arjun replaced the file after collection, despite the intact seal record.",
+        "correct": false
+      },
+      {
+        "label": "Nisha exported the rehearsal cut under the final filename before sealing the drive, intending to disrupt Comet’s reveal so Orbit could use the spare slot.",
+        "correct": true
+      },
+      {
+        "label": "Tara accidentally copied the right file but wrote the wrong label.",
+        "correct": false
+      }
+    ]
+  }
+}

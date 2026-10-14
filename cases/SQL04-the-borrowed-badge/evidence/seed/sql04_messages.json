@@ -1,0 +1,9 @@
+{
+  "columns": ["message_id","sent_at","sender_id","recipient_id","channel","message_text"],
+  "rows": [
+    ["MSG-01","2026-10-16 18:26:00","MAYA","POOJA","EVENT_CHAT","Hold the demo-room handover until the token list is reconciled. Please do not issue the replacement list yet."],
+    ["MSG-02","2026-10-16 18:39:00","POOJA","MAYA","EVENT_CHAT","The envelope is missing. Was it moved during your archive count?"],
+    ["MSG-03","2026-10-16 18:51:00","MAYA","RHEA","EVENT_CHAT","The door log says B-204, so Ishaan must have kept his badge after all."],
+    ["MSG-04","2026-10-16 18:53:00","DEV","POOJA","EVENT_CHAT","B-204 was signed back in at 17:24. Maya took it for a scan after that."]
+  ]
+}

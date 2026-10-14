@@ -1,0 +1,151 @@
+{
+  "inferences": [
+    {
+      "id": "I1",
+      "claim": "The original batch was 12 badges for the Registration Desk.",
+      "tasks": [
+        "t1"
+      ],
+      "evidence": [
+        {
+          "table": "sql03_print_jobs",
+          "summary": "J-170 quantity 12, Registration Desk",
+          "verify_sql": "select job_id from sql03_print_jobs where job_id = 'J-170' and quantity = 12 and destination = 'Registration Desk'"
+        }
+      ]
+    },
+    {
+      "id": "I2",
+      "claim": "The 14:46 manifest is a plan, not a physical handoff.",
+      "tasks": [
+        "t2"
+      ],
+      "evidence": [
+        {
+          "table": "sql03_route_manifests",
+          "summary": "RM-17 PLANNED_ROUTE",
+          "verify_sql": "select manifest_id from sql03_route_manifests where manifest_id = 'RM-17' and manifest_type = 'PLANNED_ROUTE'"
+        }
+      ]
+    },
+    {
+      "id": "I3",
+      "claim": "Kabir only scanned an empty tote and never accepted B-17.",
+      "tasks": [
+        "t3"
+      ],
+      "evidence": [
+        {
+          "table": "sql03_custody_scans",
+          "summary": "CS-03 empty tote scan",
+          "verify_sql": "select scan_id from sql03_custody_scans where scan_id = 'CS-03' and package_state = 'EMPTY_TOTE'"
+        },
+        {
+          "table": "sql03_messages",
+          "summary": "M-05 Kabir says he never received a sealed sleeve",
+          "verify_sql": "select message_id from sql03_messages where message_id = 'M-05' and sender_id = 'KABIR'"
+        }
+      ]
+    },
+    {
+      "id": "I4",
+      "claim": "The reprint approval belongs to another order and was rejected.",
+      "tasks": [
+        "t4"
+      ],
+      "evidence": [
+        {
+          "table": "sql03_approval_audit",
+          "summary": "AA-02 APR-044 rejected",
+          "verify_sql": "select audit_id from sql03_approval_audit where audit_id = 'AA-02' and result = 'REJECTED'"
+        },
+        {
+          "table": "sql03_print_jobs",
+          "summary": "J-044 owns APR-044",
+          "verify_sql": "select job_id from sql03_print_jobs where job_id = 'J-044' and approval_ref = 'APR-044'"
+        }
+      ]
+    },
+    {
+      "id": "I5",
+      "claim": "Nisha held B-17 and requested B-17R.",
+      "tasks": [
+        "t5"
+      ],
+      "evidence": [
+        {
+          "table": "sql03_custody_scans",
+          "summary": "CS-02 custody in, Nisha",
+          "verify_sql": "select scan_id from sql03_custody_scans where scan_id = 'CS-02' and scanned_by = 'NISHA' and scan_type = 'CUSTODY_IN'"
+        },
+        {
+          "table": "sql03_print_jobs",
+          "summary": "J-171 requested by Nisha",
+          "verify_sql": "select job_id from sql03_print_jobs where job_id = 'J-171' and requested_by = 'NISHA'"
+        }
+      ]
+    },
+    {
+      "id": "I6",
+      "claim": "Her messages ask for the replacement to stand in for the original.",
+      "tasks": [
+        "t6"
+      ],
+      "evidence": [
+        {
+          "table": "sql03_messages",
+          "summary": "M-04 mark the replacement as the same batch",
+          "verify_sql": "select message_id from sql03_messages where message_id = 'M-04' and message_text ilike '%same batch%'"
+        },
+        {
+          "table": "sql03_custody_scans",
+          "summary": "CS-08 her incident note",
+          "verify_sql": "select scan_id from sql03_custody_scans where scan_id = 'CS-08' and scan_type = 'INCIDENT_NOTE'"
+        }
+      ]
+    }
+  ],
+  "red_herrings": [
+    {
+      "suspect": "Kabir Shah",
+      "why_suspicious": "The manifest names him as the planned runner and the original vanished on his route.",
+      "innocent_explanation": "The manifest is a plan; his only scan is an empty tote and his message says he never received a sealed sleeve.",
+      "evidence": [
+        {
+          "table": "sql03_route_manifests",
+          "verify_sql": "select manifest_id from sql03_route_manifests where manifest_id = 'RM-17' and note ilike '%not a physical custody acceptance%'"
+        },
+        {
+          "table": "sql03_custody_scans",
+          "verify_sql": "select scan_id from sql03_custody_scans where scan_id = 'CS-03' and note ilike '%not acceptance%'"
+        }
+      ]
+    },
+    {
+      "suspect": "Aarav Mehta",
+      "why_suspicious": "He printed both batches.",
+      "innocent_explanation": "He operated the printer; the original was requested by Dev and the reprint by Nisha, and he says he authorised neither.",
+      "evidence": [
+        {
+          "table": "sql03_messages",
+          "verify_sql": "select message_id from sql03_messages where message_id = 'M-06' and sender_id = 'AARAV'"
+        },
+        {
+          "table": "sql03_print_jobs",
+          "verify_sql": "select job_id from sql03_print_jobs where job_id = 'J-171' and printed_by = 'AARAV' and requested_by = 'NISHA'"
+        }
+      ]
+    },
+    {
+      "suspect": "Leena Das",
+      "why_suspicious": "She received the empty sleeve and opened the incident.",
+      "innocent_explanation": "Her desk receipt records an empty sleeve at 15:17, after the custody gap, and a counted replacement of 12 badges.",
+      "evidence": [
+        {
+          "table": "sql03_desk_receipts",
+          "verify_sql": "select receipt_id from sql03_desk_receipts where receipt_id = 'DR-17' and item_received = 'EMPTY_SLEEVE' and quantity_received = 0"
+        }
+      ]
+    }
+  ]
+}

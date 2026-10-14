@@ -1,0 +1,7 @@
+{
+  "columns": ["receipt_id","parcel_id","received_at","received_by","destination","contents_observed","note"],
+  "rows": [
+    ["RC-01","PX-41","2026-10-16 16:02:00","JOEL","Demo Desk","STAGE-CLIPS","Expected sensor module absent."],
+    ["RC-02","PX-14","2026-10-16 16:06:00","KARAN","Storage Bay","UNOPENED","Parcel arrived under swapped label; contents not verified."]
+  ]
+}

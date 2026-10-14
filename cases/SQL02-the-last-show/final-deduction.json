@@ -1,0 +1,27 @@
+{
+  "culprit": {
+    "points": 25,
+    "note": "Pick the responsible person from the suspect list"
+  },
+  "mechanism": {
+    "points": 15,
+    "options": [
+      {
+        "label": "Dev used the backup for the reveal and kept the original for a clasp repair, hiding the move so the producer would not cancel the finale.",
+        "correct": true
+      },
+      {
+        "label": "Dev stole the original to sell it and used the replica to cover the theft.",
+        "correct": false
+      },
+      {
+        "label": "Kavya swapped the masks at the AV booth to improve the camera shot.",
+        "correct": false
+      },
+      {
+        "label": "Nikhil removed the original after the rehearsal so he would not have to wear it.",
+        "correct": false
+      }
+    ]
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "victim": "The Aster project team",
+  "characters": [
+    {
+      "name": "Rohan Mehta",
+      "role": "Competing team leader",
+      "profile": "Competing team leader",
+      "suspect": true
+    },
+    {
+      "name": "Naina Rao",
+      "role": "Event photographer",
+      "profile": "Event photographer",
+      "suspect": true
+    },
+    {
+      "name": "Imran Shaikh",
+      "role": "Lab technician",
+      "profile": "Lab technician",
+      "suspect": true
+    },
+    {
+      "name": "Devika Nair",
+      "role": "Room key custodian",
+      "profile": "Room key custodian",
+      "suspect": true
+    },
+    {
+      "name": "Vikram Sethi",
+      "role": "Showcase coordinator",
+      "profile": "Showcase coordinator",
+      "suspect": true
+    },
+    {
+      "name": "Aditya Varma",
+      "role": "Aster's creator",
+      "profile": "Aster's creator",
+      "suspect": true
+    }
+  ]
+}

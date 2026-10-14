@@ -1,0 +1,11 @@
+{
+  "columns": ["assignment_id","character_id","duty","zone","valid_from","valid_to"],
+  "rows": [
+    ["RA01","DEV","Prop custody lead","PROP_BAY","2026-10-16 17:00:00","2026-10-16 21:00:00"],
+    ["RA02","NIK","Finale performer","STAGE_LEFT","2026-10-16 18:45:00","2026-10-16 19:20:00"],
+    ["RA03","KAV","Cue operation","AV_BOOTH","2026-10-16 17:30:00","2026-10-16 21:00:00"],
+    ["RA04","SAN","Stage movement logging","BACKSTAGE","2026-10-16 17:00:00","2026-10-16 21:00:00"],
+    ["RA05","ISH","Costume and quick changes","STAGE_LEFT","2026-10-16 18:00:00","2026-10-16 20:00:00"],
+    ["RA06","ARJ","Door access marshal","STAFF_DOOR","2026-10-16 17:00:00","2026-10-16 21:00:00"]
+  ]
+}

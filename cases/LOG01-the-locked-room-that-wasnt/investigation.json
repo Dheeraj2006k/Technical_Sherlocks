@@ -1,0 +1,83 @@
+{
+  "phases": [
+    {
+      "phase": 1,
+      "name": "Discovery",
+      "tables": [
+        "evidence_phase_1"
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "Investigation",
+      "tables": [
+        "evidence_phase_2"
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "Reconstruction",
+      "tables": [
+        "evidence_phase_3"
+      ]
+    }
+  ],
+  "threads": [
+    {
+      "key": "t1",
+      "phase": 1,
+      "position": 1,
+      "title": "The Locked Room",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Test the locked-room theory against the closure log, the movement notes and the photographs.",
+      "outcome_text": "The closure log shows when the room was reported closed, not when Aster was last present; Rohan has the clearest apparent motive but motive is not proof.",
+      "unlocks": []
+    },
+    {
+      "key": "t2",
+      "phase": 2,
+      "position": 1,
+      "title": "Investigation",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Identify which object is in the case and test Rohan's account and the equipment lead against independent records.",
+      "outcome_text": "The 4:18 photograph shows the replica, Rohan's account is testable but does not prove he removed Aster, and the AV booth case is the next lead.",
+      "unlocks": []
+    },
+    {
+      "key": "t3",
+      "phase": 3,
+      "position": 1,
+      "title": "Reconstruction",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Order the message, the draft, the photograph and the closure log and choose the hypothesis with the fewest unsupported assumptions.",
+      "outcome_text": "The substitution happened before closure and the evidence converges on Vikram Sethi.",
+      "unlocks": []
+    }
+  ],
+  "story_events": [
+    {
+      "thread": "t1",
+      "title": "A closure is not a presence check",
+      "body": "The closure log records that the room was reported closed at 4:20 PM, but it records a visual checklist, not a check that the genuine prototype was in the case. Rohan has the clearest apparent motive, yet motive is not proof, and the next useful step is to verify the object in the 4:18 photograph."
+    },
+    {
+      "thread": "t2",
+      "title": "The wrong object",
+      "body": "The enlarged 4:18 photograph lacks the blue inspection mark and has a solid indicator lens: the object in the case is the display replica. Rohan misled at first but his sighting of Vikram with a black case is confirmed by the equipment register. The returned case becomes the next lead to test."
+    },
+    {
+      "thread": "t3",
+      "title": "Before the room closed",
+      "body": "Aditya warned the team at 4:00 PM, Vikram drafted a security-incident delay at 4:14 PM, and the replica is in the 4:18 photograph. The fitted insert in the returned case supports, without proving, the removal. No single item captures Vikram taking Aster; the chain converges on him."
+    }
+  ]
+}

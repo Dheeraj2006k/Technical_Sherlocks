@@ -1,0 +1,15 @@
+{
+  "columns": ["camera_event_id","camera_at","camera_location","event_type","person_hint","linked_reference"],
+  "rows": [
+    ["C1","2026-10-16 20:16:00","Main Workshop Door","ENTRY","Mahesh Anna","W1"],
+    ["C10","2026-10-16 21:44:00","Rear Loading Door","MOTION","Unknown person leaving","REAR-2"],
+    ["C2","2026-10-16 20:22:00","Main Workshop Door","ENTRY","Kavya Iyer","W2"],
+    ["C3","2026-10-16 20:47:00","Main Workshop Door","EXIT","Kavya Iyer","W3"],
+    ["C4","2026-10-16 21:25:00","Main Workshop Door","ENTRY","Nikhil Reddy","W4"],
+    ["C5","2026-10-16 21:31:00","Main Workshop Door","EXIT","Nikhil Reddy","W5"],
+    ["C6","2026-10-16 21:38:00","Main Workshop Door","ENTRY","Sameer Khan","W6"],
+    ["C7","2026-10-16 21:43:00","Main Workshop Door","EXIT","Sameer Khan","W7"],
+    ["C8","2026-10-16 21:42:00","Main Workshop Door","ENTRY","Arjun Varma","W8"],
+    ["C9","2026-10-16 21:36:00","Rear Loading Door","MOTION","Unknown person carrying case","REAR-1"]
+  ]
+}

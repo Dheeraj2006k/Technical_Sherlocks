@@ -1,0 +1,53 @@
+{
+  "victim": "Team Northstar",
+  "characters": [
+    {
+      "name": "Devika Rao",
+      "role": "Results coordinator",
+      "profile": "Prepared the result packet and handled the final score summary. She says she was stuck at the covered loading bay during the rain and did not enter the judges' corridor after 3:10 PM.",
+      "suspect": true
+    },
+    {
+      "name": "Arjun Mehta",
+      "role": "Stage manager",
+      "profile": "Managed stage timing and says he was on the main stage rehearsing the award announcement from 3:18 to 3:36 PM.",
+      "suspect": true
+    },
+    {
+      "name": "Farah Khan",
+      "role": "Judge liaison",
+      "profile": "Carried documents between the judges and the event office. She says she delivered the original signed summary to the judges' office at 3:12 PM and did not retrieve it afterward.",
+      "suspect": true
+    },
+    {
+      "name": "Nikhil Verma",
+      "role": "AV technician",
+      "profile": "Worked near the loading bay and checked a power distribution unit after rainwater was reported near the outer cable cover.",
+      "suspect": true
+    },
+    {
+      "name": "Isha Reddy",
+      "role": "Registration lead",
+      "profile": "Managed the registration desk and used the office printer for badge reprints. She says she did not enter the judges' corridor that afternoon.",
+      "suspect": true
+    },
+    {
+      "name": "Kabir Shah",
+      "role": "Student team representative",
+      "profile": "Had challenged the preliminary tie-break result on behalf of his team. He says he remained in the public waiting area and did not have staff access.",
+      "suspect": true
+    },
+    {
+      "name": "Judge Leena",
+      "role": "Aster category judge",
+      "profile": "The Aster category judge who signed the original tie-break note.",
+      "suspect": false
+    },
+    {
+      "name": "Event secretary",
+      "role": "Results record custodian",
+      "profile": "Keeps the results record and the incident note.",
+      "suspect": false
+    }
+  ]
+}

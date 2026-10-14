@@ -1,0 +1,88 @@
+{
+  "phases": [
+    {
+      "phase": 1,
+      "name": "The Access Log",
+      "tables": [
+        "sql04_characters",
+        "sql04_archive_inventory",
+        "sql04_door_events",
+        "sql04_badge_registry"
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "The Borrowed Identity",
+      "tables": [
+        "sql04_badge_custody",
+        "sql04_equipment_requests"
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "What Was Really Taken?",
+      "tables": [
+        "sql04_inventory_notes",
+        "sql04_messages"
+      ]
+    }
+  ],
+  "threads": [
+    {
+      "key": "t1",
+      "phase": 1,
+      "position": 1,
+      "title": "The Access Log",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Find what is missing and what a door controller can actually tell you.",
+      "outcome_text": "The access-token envelope is gone, and the door log proves a badge was used, not who carried it.",
+      "unlocks": []
+    },
+    {
+      "key": "t2",
+      "phase": 2,
+      "position": 1,
+      "title": "The Borrowed Identity",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Follow B-204 through checkout, return and the next custody event, and test the cable request.",
+      "outcome_text": "Ishaan returned the badge before the entry, and the cable request does not link Arjun to the archive.",
+      "unlocks": []
+    },
+    {
+      "key": "t3",
+      "phase": 3,
+      "position": 1,
+      "title": "What Was Really Taken?",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Compare the inventory notes and messages with the badge custody trail.",
+      "outcome_text": "Maya’s custody, amended note and messages fit together and explain the interference.",
+      "unlocks": []
+    }
+  ],
+  "story_events": [
+    {
+      "thread": "t1",
+      "title": "A badge, not a face",
+      "body": "The archive count drops from one to zero between 18:05 and 18:21. The controller logs badge B-204 entering at 18:17 and notes that it records the badge ID only."
+    },
+    {
+      "thread": "t2",
+      "title": "Signed back in",
+      "body": "Dev accepts the signed return of B-204 at 17:24. Maya takes the badge for a temporary scan at 17:31 and no return to the desk follows. Arjun’s cable came from the AV cabinet."
+    },
+    {
+      "thread": "t3",
+      "title": "An amended note",
+      "body": "At 18:11 Maya amends the note to say the return is unconfirmed. Dev’s later verification says the signed return was accepted at 17:24 and that the later note conflicts with the desk record."
+    }
+  ]
+}

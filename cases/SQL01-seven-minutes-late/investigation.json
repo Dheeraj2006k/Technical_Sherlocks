@@ -1,0 +1,97 @@
+{
+  "phases": [
+    {
+      "phase": 1,
+      "name": "Who Was Still There?",
+      "tables": [
+        "team_members",
+        "workshop_access_log",
+        "equipment_checkout",
+        "initial_statements",
+        "fest_activity_log",
+        "maintenance_reports"
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "The Fault and the Alibi",
+      "tables": [
+        "report_notifications",
+        "notification_activity",
+        "nikhil_device_activity",
+        "staff_directory"
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "Seven Minutes Late",
+      "tables": [
+        "power_controller_log",
+        "corridor_camera_events",
+        "building_access_points",
+        "security_configuration",
+        "component_inventory",
+        "rohit_fest_tasks",
+        "rohit_messages"
+      ]
+    }
+  ],
+  "threads": [
+    {
+      "key": "t1",
+      "phase": 1,
+      "position": 1,
+      "title": "Who Was Still There?",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Find who was in the workshop and which entry records are RFID-backed.",
+      "outcome_text": "Five Team Pulse members appear after 9:20 PM, and three had main-door RFID entries before Arjun was found.",
+      "unlocks": []
+    },
+    {
+      "key": "t2",
+      "phase": 2,
+      "position": 1,
+      "title": "The Fault and the Alibi",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "See who received the fault report and test Nikhil’s account against independent records.",
+      "outcome_text": "Nikhil’s laptop and badge records place him in Seminar Hall 2, and the warning was delivered to Rohit, Arjun and Kavya.",
+      "unlocks": []
+    },
+    {
+      "key": "t3",
+      "phase": 3,
+      "position": 1,
+      "title": "Seven Minutes Late",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Correct the controller and camera clocks and match the events across systems.",
+      "outcome_text": "The corrected controller and camera times agree at 21:32, and the rear door explains the missing RFID entry.",
+      "unlocks": []
+    }
+  ],
+  "story_events": [
+    {
+      "thread": "t1",
+      "title": "Three entries",
+      "body": "Nikhil, Sameer and Arjun have RFID entries on the main workshop door after 21:20. Kavya had already left at 20:43 after disconnecting Module 04 and filing her report."
+    },
+    {
+      "thread": "t2",
+      "title": "Who was told",
+      "body": "The Module 04 warning was delivered to Rohit, Arjun and Kavya at 20:47 and opened by each of them. Nikhil’s device and badge records place him in Seminar Hall 2 from 21:42."
+    },
+    {
+      "thread": "t3",
+      "title": "Three clocks",
+      "body": "The workshop log is the reference clock. The controller runs 3 minutes slow and the corridor camera 4 minutes fast. Corrected, the controller ON at 21:29 and the rear-door motion at displayed 21:36 are both 21:32."
+    }
+  ]
+}

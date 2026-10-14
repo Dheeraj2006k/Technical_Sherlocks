@@ -1,0 +1,26 @@
+{
+  "case_code": "LOG02",
+  "track": "LOGIC",
+  "title": "The Vanishing Trophy",
+  "slug": "the-vanishing-trophy",
+  "content_version": 2,
+  "status": "review",
+  "duration_minutes": 18,
+  "recommended_team_size": 1,
+  "setting": "QUBIT closing ceremony preparation, awards table, photo bay and storage area, before the 5:00 PM presentation",
+  "incident": "The QUBIT Founders' Trophy is reported missing from its display stand at 4:25 PM",
+  "source": {
+    "files": [
+      "docs/LOG02_The_Vanishing_Trophy.zip",
+      "docs/Sherlocks_Logic_Database_Pack.zip"
+    ],
+    "content_version": "0.1",
+    "original_release_status": "draft_not_seed_ready"
+  },
+  "reviewer": {
+    "author": "Supplied case content (docs/*.zip), packaged for the runtime by Claude Code",
+    "human_reviewer": null,
+    "note": "No human has reviewed or blind-playtested this version; see review.json"
+  },
+  "publication_eligible": false
+}

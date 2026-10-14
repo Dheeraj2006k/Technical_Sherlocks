@@ -1,0 +1,11 @@
+{
+  "columns": ["entry_id","posted_at","account_code","entry_type","amount","reference_code","entered_by","description","status"],
+  "rows": [
+    ["L001","2026-10-15 10:00:00","QPF","CREDIT","42000.00","GRANT-441","System","QUBIT prototype grant","POSTED"],
+    ["L002","2026-10-15 12:12:00","QPF","DEBIT","18000.00","PAY-710","Asha Rao","Sensor kits — approved purchase","POSTED"],
+    ["L003","2026-10-15 14:03:00","QPF","DEBIT","12000.00","PAY-711","Asha Rao","Venue and power distribution","POSTED"],
+    ["L004","2026-10-15 15:41:00","QPF","DEBIT","12000.00","PAY-712","Asha Rao","Emergency equipment reserve","POSTED"],
+    ["L005","2026-10-15 15:43:00","QPF","REVERSAL","12000.00","PAY-712-R","System","Reversal initiated for PAY-712","POSTED"],
+    ["L006","2026-10-15 15:44:00","QPF","DEBIT","12000.00","PAY-712B","Dev Malhotra","Replacement reserve transfer","POSTED"]
+  ]
+}

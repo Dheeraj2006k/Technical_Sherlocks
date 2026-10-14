@@ -1,0 +1,9 @@
+{
+  "columns": ["request_id","requested_at","requested_by","payee","amount","purpose","approval_code","request_status","submitted_channel"],
+  "rows": [
+    ["PAY-710","2026-10-15 11:55:00","Asha Rao","CircuitCart Supplies","18000.00","Sensor kits","APR-101","PAID","FINANCE_PORTAL"],
+    ["PAY-711","2026-10-15 13:40:00","Asha Rao","MGIT Venue Services","12000.00","Venue and power distribution","APR-102","PAID","FINANCE_PORTAL"],
+    ["PAY-712","2026-10-15 15:30:00","Asha Rao","Northstar Equipment","12000.00","Emergency equipment reserve","APR-103","REVERSED","FINANCE_PORTAL"],
+    ["PAY-712B","2026-10-15 15:42:00","Dev Malhotra","Northstar Equipment","12000.00","Replacement reserve transfer","APR-103","PAID","MANUAL_OVERRIDE"]
+  ]
+}

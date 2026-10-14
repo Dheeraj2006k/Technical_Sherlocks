@@ -1,0 +1,15 @@
+{
+  "columns": ["event_id","event_time","credential_id","assigned_character_id","zone","event_type","note"],
+  "rows": [
+    ["AC01","2026-10-16 18:42:00","BDG-11","NIK","BACKSTAGE","ENTRY","Performer entered before sound check."],
+    ["AC02","2026-10-16 18:49:00","BDG-11","NIK","STAGE_LEFT","ENTRY","Credential accepted at stage-left door."],
+    ["AC03","2026-10-16 18:54:00","BDG-11","NIK","STAGE_LEFT","EXIT","Credential exited toward stage; stage manager call sheet confirms he was onstage from 18:55."],
+    ["AC04","2026-10-16 18:56:00","BDG-23","DEV","PROP_BAY","ENTRY","Prop lead entered prop bay."],
+    ["AC05","2026-10-16 19:01:00","BDG-23","DEV","PROP_BAY","EXIT","Prop lead exited prop bay."],
+    ["AC06","2026-10-16 18:58:00","BDG-31","KAV","AV_BOOTH","ENTRY","Cue operator at console; not a prop-bay credential."],
+    ["AC07","2026-10-16 18:59:00","BDG-42","SAN","BACKSTAGE","ENTRY","Assistant stage manager returned from stage-left."],
+    ["AC08","2026-10-16 19:00:00","BDG-52","ISH","STAGE_LEFT","ENTRY","Costume assistant entered for quick-change reset."],
+    ["AC09","2026-10-16 19:02:00","BDG-62","ARJ","STAFF_DOOR","ENTRY","Marshal opened staff door for a delivery; delivery manifest lists only fabric rolls."],
+    ["AC10","2026-10-16 19:03:00","BDG-62","ARJ","STAFF_DOOR","EXIT","Marshal closed staff door after delivery."]
+  ]
+}

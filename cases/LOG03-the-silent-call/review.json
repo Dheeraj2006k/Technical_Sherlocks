@@ -1,0 +1,40 @@
+{
+  "automated": {
+    "status": "run npm run validate:cases and npm test; results are not recorded here"
+  },
+  "human_review": {
+    "completed": false,
+    "reviewer": null,
+    "date": null,
+    "content_hash": null
+  },
+  "blind_playtest": {
+    "completed": false,
+    "participants": 0,
+    "content_hash": null,
+    "measured_minutes": null
+  },
+  "source_release_gates": [
+    {
+      "gate": "content_review",
+      "status": "pass"
+    },
+    {
+      "gate": "call_log_consistency",
+      "status": "pending"
+    },
+    {
+      "gate": "answer_key_security",
+      "status": "pending"
+    },
+    {
+      "gate": "two_player_shared_state",
+      "status": "pending"
+    },
+    {
+      "gate": "duo_playtest",
+      "status": "pending"
+    }
+  ],
+  "notes": "Content supplied by the repository owner in docs/*.zip and packaged for the runtime. The source packs state their own release gates (listed above) are still pending. Do not mark this version tested until a human review and a blind playtest are recorded for the exact content hash."
+}

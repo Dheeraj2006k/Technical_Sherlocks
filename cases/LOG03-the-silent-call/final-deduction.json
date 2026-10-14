@@ -1,0 +1,27 @@
+{
+  "culprit": {
+    "points": 25,
+    "note": "Pick the responsible person from the suspect list"
+  },
+  "mechanism": {
+    "points": 15,
+    "options": [
+      {
+        "label": "The faculty office connected to Karthik and officially cancelled Pulse.",
+        "correct": false
+      },
+      {
+        "label": "A real but already addressed cable concern prompted an unidentified caller to request a temporary hold; Karthik turned that unconfirmed request into a false claim of faculty cancellation.",
+        "correct": true
+      },
+      {
+        "label": "Dev cancelled his own team's demonstration to gain attention.",
+        "correct": false
+      },
+      {
+        "label": "There was never any cable concern, and all safety records were fabricated.",
+        "correct": false
+      }
+    ]
+  }
+}

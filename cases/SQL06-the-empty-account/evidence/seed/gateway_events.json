@@ -1,0 +1,9 @@
+{
+  "columns": ["event_id","event_at","reference_code","event_type","gateway_status","amount","destination_fingerprint","terminal_id","operator_note"],
+  "rows": [
+    ["G1","2026-10-15 15:41:10","PAY-712","TRANSFER","REJECTED","12000.00","DEST-NORTH-44","GW-2","Original request rejected by destination validation"],
+    ["G2","2026-10-15 15:43:22","PAY-712-R","REVERSAL","ACCEPTED","12000.00","DEST-NORTH-44","GW-2","Reversal returned funds to ledger"],
+    ["G3","2026-10-15 15:44:09","PAY-712B","TRANSFER","ACCEPTED","12000.00","DEST-NORTH-84","GW-2","Manual override; destination differs from original"],
+    ["G4","2026-10-15 15:45:02","PAY-712B","SETTLEMENT","SETTLED","12000.00","DEST-NORTH-84","GW-2","Settlement confirmation"]
+  ]
+}

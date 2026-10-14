@@ -1,0 +1,47 @@
+{
+  "scoring": {
+    "reward_schedule": [
+      10,
+      8,
+      6,
+      4,
+      2
+    ],
+    "wrong_answer_penalty": 2,
+    "sql_errors_free": true,
+    "retries_allowed": true,
+    "each_component_awards_points_once": true
+  },
+  "hints": {
+    "t1": [
+      "First identify the Team Pulse members.",
+      "Filter activity records by person and timestamp; do not treat block presence as workshop presence.",
+      "Filter the fest activity and access records by Team Pulse membership and the time window."
+    ],
+    "t2": [
+      "Use workshop access, not building activity.",
+      "Filter to ENTRY events in the relevant time range, then compare against the team roster.",
+      "Limit workshop_access_log to ENTRY events after 21:20 and before the incident."
+    ],
+    "t3": [
+      "A single statement is not an alibi.",
+      "Compare device activity and fest attendance records for Nikhil in Seminar Hall 2.",
+      "Compare his device activity with fest activity; seek independent sources, not duplicate rows."
+    ],
+    "t4": [
+      "The report is keyed by component code.",
+      "Look for MODULE_04 and read the report text and status.",
+      "Read maintenance_reports for MODULE_04."
+    ],
+    "t5": [
+      "Do not sort raw timestamps from different systems as if their clocks agree.",
+      "The controller is three minutes slow, so add three minutes.",
+      "The controller clock is three minutes slow; add three minutes to its displayed 21:29 timestamp."
+    ],
+    "t6": [
+      "The missing RFID event may be explained by the door's design.",
+      "Find the entrance whose access method does not create RFID events.",
+      "Check building_access_points and security_configuration."
+    ]
+  }
+}

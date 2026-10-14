@@ -1,0 +1,47 @@
+{
+  "scoring": {
+    "reward_schedule": [
+      10,
+      8,
+      6,
+      4,
+      2
+    ],
+    "wrong_answer_penalty": 2,
+    "sql_errors_free": true,
+    "retries_allowed": true,
+    "each_component_awards_points_once": true
+  },
+  "hints": {
+    "t1": [
+      "Start with the inventory checks and read them in time order.",
+      "Compare the pre-show check, the post-finale check and the later check in the repair case.",
+      "Look at which item the display-stand check describes, and where the original turns up afterwards."
+    ],
+    "t2": [
+      "The duty is written in the role assignments table.",
+      "Filter role_assignments on the duty text and join to characters for the name.",
+      "Responsibility for a prop is not proof that the person swapped it."
+    ],
+    "t3": [
+      "List Nikhil’s access events in order, then the original mask’s movements.",
+      "Compare the time he left stage-left with the time the original returned to the prop bay.",
+      "Read the note on his exit event: it names where he was from 18:55."
+    ],
+    "t4": [
+      "Filter the movements to both mask items and order them by time.",
+      "Line the movements up with the inventory checks for the same items.",
+      "Find the 18:57 return of the original, then the 18:59 move of the replica, then the 19:08 check."
+    ],
+    "t5": [
+      "A cue log records what was cued, not who handled a prop.",
+      "Join the cue log to characters, then read Kavya’s own access events.",
+      "Her only credential events are at the AV booth, never the prop bay."
+    ],
+    "t6": [
+      "Follow the original mask through the movements, then read Dev’s messages.",
+      "The movement to Repair Case 2 happened after the incident was filed.",
+      "Read the 18:58 direct message and the 19:16 follow-up together."
+    ]
+  }
+}

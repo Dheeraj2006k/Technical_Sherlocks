@@ -1,0 +1,8 @@
+{
+  "columns": ["approval_code","approver","approved_at","amount_limit","approved_payee","approved_purpose","status"],
+  "rows": [
+    ["APR-101","Dr Meera Iyer","2026-10-15 11:30:00","20000.00","CircuitCart Supplies","Sensor kits","VALID"],
+    ["APR-102","Dr Meera Iyer","2026-10-15 13:15:00","15000.00","MGIT Venue Services","Venue and power distribution","VALID"],
+    ["APR-103","Dr Meera Iyer","2026-10-15 14:00:00","12000.00","Northstar Equipment","Emergency equipment reserve","VALID"]
+  ]
+}

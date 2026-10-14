@@ -1,0 +1,70 @@
+{
+  "victim": "The Starfall Mask and the finale audience",
+  "culprit": "Dev Malhotra",
+  "motive": "Dev feared the producer would pull the finale if they heard the original mask’s clasp had cracked.",
+  "method": "He returned the original to the prop bay at 18:57, moved the replica to the stage-left wing at 18:59, told Sana not to inform the producer until after the show, and later moved the original into Repair Case 2 without logging the reason.",
+  "explanation": "A concealed repair decision, not a permanent theft. The original is found in Repair Case 2 once Dev admits the unlogged move.",
+  "timeline": [
+    {
+      "time": "18:34",
+      "event": "Original present on the prop stand",
+      "evidence": "IC01"
+    },
+    {
+      "time": "18:55",
+      "event": "Original last independently seen at stage-left; Nikhil goes onstage",
+      "evidence": "IC02, AC03"
+    },
+    {
+      "time": "18:57",
+      "event": "Dev returns the original to the prop bay",
+      "evidence": "PM04"
+    },
+    {
+      "time": "18:58",
+      "event": "Dev tells Sana to use the backup and not update the producer",
+      "evidence": "MSG03"
+    },
+    {
+      "time": "18:59",
+      "event": "Dev moves the replica to the stage-left wing",
+      "evidence": "PM05"
+    },
+    {
+      "time": "19:05",
+      "event": "CUE-17 plans the original but shows the replica",
+      "evidence": "CU02"
+    },
+    {
+      "time": "19:08",
+      "event": "Post-finale check finds the replica on the stand",
+      "evidence": "IC03"
+    },
+    {
+      "time": "19:14",
+      "event": "Dev moves the original to Repair Case 2",
+      "evidence": "PM07"
+    },
+    {
+      "time": "19:16",
+      "event": "Dev admits the unlogged move",
+      "evidence": "MSG06"
+    }
+  ],
+  "causal_chain": [
+    "The original’s clasp snagged in rehearsal and Dev took it back to the prop bay.",
+    "Dev put the replica forward and told Sana to keep the producer out of the loop.",
+    "The cue ran on schedule with the wrong item because nobody else knew.",
+    "The original was moved into a repair case and only disclosed after the mismatch was raised."
+  ],
+  "resolution": {
+    "motive": "He wanted the finale to go ahead and feared the producer would cancel it over a cracked clasp.",
+    "method": "He used the backup mask for the reveal and kept the original in a repair case, without logging the move.",
+    "chain": [
+      "Dev holds the prop custody duty (RA01).",
+      "He handled the original’s 18:57 return and the replica’s 18:59 move, and the later repair-case move.",
+      "His 18:58 message tells Sana to hold back the producer; his 19:16 message admits the move.",
+      "Nikhil, Kavya and Arjun have no movement of either mask."
+    ]
+  }
+}

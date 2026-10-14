@@ -1,0 +1,7 @@
+{
+  "columns": ["parcel_id","packed_contents","intended_destination","packed_at","packed_by","note"],
+  "rows": [
+    ["PX-14","SENSOR-MODULE","Demo Desk","2026-10-16 15:12:00","RAVI","Prototype sensor module expected for final demo."],
+    ["PX-41","STAGE-CLIPS","Storage Bay","2026-10-16 15:18:00","RAVI","Box of spare stage clips."]
+  ]
+}

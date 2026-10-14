@@ -1,0 +1,10 @@
+{
+  "columns": ["statement_id","person_name","recorded_at","statement_text","statement_type"],
+  "rows": [
+    ["S1","Nikhil Reddy","2026-10-16 22:02:00","I went back for my laptop charger. Arjun wasn't there when I left.","WITNESS"],
+    ["S2","Sameer Khan","2026-10-16 22:04:00","I collected the soldering station and left.","WITNESS"],
+    ["S3","Kavya Iyer","2026-10-16 22:06:00","I disconnected Module 04 after it overheated and logged a report.","WITNESS"],
+    ["S4","Rohit Kulkarni","2026-10-16 22:08:00","I checked for a spare module, found none, and returned to the auditorium.","WITNESS"],
+    ["S5","Priya Nair","2026-10-16 22:10:00","The full-brightness demo was expected at 10 PM.","WITNESS"]
+  ]
+}

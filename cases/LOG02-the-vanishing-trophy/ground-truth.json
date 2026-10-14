@@ -1,0 +1,65 @@
+{
+  "victim": "QUBIT Founders' Trophy",
+  "motive": "The engraved nameplate showed the wrong winning team. Kavya feared presenting it would expose the mistake and disrupt the closing ceremony, so she bought time for the engraving to be corrected.",
+  "method": "After the trophy was legitimately moved for the 4:08 PM group photograph, Kavya did not record its return, used the movement gap and the grey crate route to divert it, and drafted a presentation delay at 4:17 PM before the loss was reported at 4:25 PM.",
+  "explanation": "The movement slip she opened at 4:06 PM has a blank return confirmation, the trophy was last confirmed on the awards table at 4:08, and a crate fitted for the trophy was moved at 4:11 with no content check. Her folder holds the wrong-team engraving proof and an unsubmitted correction form, she called the vendor at 4:12, and she drafted a delay at 4:17 before the trophy was reported missing. The trophy's exact final location is not proven by the records.",
+  "timeline": [
+    {
+      "time": "3:40 PM",
+      "event": "The trophy is placed on the display stand",
+      "evidence": "A"
+    },
+    {
+      "time": "4:06 PM",
+      "event": "Kavya opens a temporary movement slip for photo setup; return confirmation left blank",
+      "evidence": "E"
+    },
+    {
+      "time": "4:08 PM",
+      "event": "Naina's group photograph shows the trophy on the awards table",
+      "evidence": "B, F"
+    },
+    {
+      "time": "4:11 PM",
+      "event": "Sameer moves grey crate G-14 toward storage",
+      "evidence": "C, G"
+    },
+    {
+      "time": "4:12 PM",
+      "event": "Kavya calls the engraving vendor for 46 seconds",
+      "evidence": "M"
+    },
+    {
+      "time": "4:17 PM",
+      "event": "Kavya drafts a note saying the presentation may need a short delay",
+      "evidence": "L"
+    },
+    {
+      "time": "4:25 PM",
+      "event": "The missing trophy is reported",
+      "evidence": "A"
+    },
+    {
+      "time": "4:32 PM",
+      "event": "A search of the venue does not find the trophy; G-14 is located and its compartment is empty",
+      "evidence": "N, K"
+    }
+  ],
+  "causal_chain": [
+    "The trophy was legitimately moved for a photograph and its return was never recorded.",
+    "A crate fitted for the trophy moved to storage minutes later with no content check.",
+    "The wrong-team engraving gave Kavya a reason to delay the presentation.",
+    "She called the vendor and drafted a delay before the loss was reported."
+  ],
+  "resolution": {
+    "motive": "The nameplate named the wrong winning team and Kavya wanted time to correct the engraving before the mistake became public.",
+    "method": "She used the authorised photo movement as cover, never recorded the trophy's return, and drafted a delay before the trophy was reported missing.",
+    "chain": [
+      "The slip opened by Kavya authorised only a photo move; its return confirmation is blank.",
+      "The trophy was last confirmed on the awards table at 4:08 PM, and crate G-14 moved at 4:11 PM with no content check.",
+      "Her folder holds the wrong-team engraving proof and an unsubmitted correction form; she called the vendor at 4:12 PM.",
+      "She drafted a delay at 4:17 PM, eight minutes before the loss was reported."
+    ]
+  },
+  "culprit": "Kavya Sen"
+}

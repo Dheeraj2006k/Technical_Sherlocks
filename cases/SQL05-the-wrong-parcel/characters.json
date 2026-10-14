@@ -1,0 +1,35 @@
+{
+  "victim": "The prototype demo team",
+  "characters": [
+    {
+      "name": "Joel D'Souza",
+      "role": "Demo desk receiver",
+      "profile": "Demo desk receiver",
+      "suspect": true
+    },
+    {
+      "name": "Karan Shah",
+      "role": "Storage bay attendant",
+      "profile": "Storage bay attendant",
+      "suspect": false
+    },
+    {
+      "name": "Mira Patel",
+      "role": "Prototype team lead",
+      "profile": "Prototype team lead",
+      "suspect": true
+    },
+    {
+      "name": "Ravi Menon",
+      "role": "Dispatch clerk",
+      "profile": "Dispatch clerk",
+      "suspect": true
+    },
+    {
+      "name": "Sana Qureshi",
+      "role": "Courier handoff coordinator",
+      "profile": "Courier handoff coordinator",
+      "suspect": true
+    }
+  ]
+}

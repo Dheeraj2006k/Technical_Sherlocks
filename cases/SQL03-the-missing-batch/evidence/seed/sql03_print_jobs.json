@@ -1,0 +1,8 @@
+{
+  "columns": ["job_id","batch_id","requested_by","printed_by","created_at","quantity","destination","approval_ref","job_status","note"],
+  "rows": [
+    ["J-044","L-04","TARA","AARAV","2026-10-16 11:10:00",40,"Volunteer Desk","APR-044","CLOSED","Unrelated lanyard order; approval reference APR-044 belongs here."],
+    ["J-170","B-17","DEV","AARAV","2026-10-16 14:32:00",12,"Registration Desk","APR-170","PRINTED","Original finalist badge batch."],
+    ["J-171","B-17R","NISHA","AARAV","2026-10-16 15:02:00",12,"Registration Desk","APR-044","PRINTED","Replacement batch requested after the original was put on hold."]
+  ]
+}

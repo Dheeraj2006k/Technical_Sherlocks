@@ -1,0 +1,60 @@
+{
+  "victim": "The prototype demo team",
+  "culprit": "Ravi Menon",
+  "motive": "To delay the demo and buy time to find the missing calibration sheet.",
+  "method": "He changed the parcel codes of PX-14 and PX-41 in opposite directions and swapped their destinations before dispatch, so the label-based route sent the sensor module to storage.",
+  "explanation": "The records support a deliberate label swap and concealment, not theft or damage; the module’s final location is not proven beyond its recorded route to the Storage Bay.",
+  "timeline": [
+    {
+      "time": "15:12",
+      "event": "PX-14 is expected at the Demo Desk with the sensor module",
+      "evidence": "EX-01"
+    },
+    {
+      "time": "15:29",
+      "event": "Ravi changes PX-14’s parcel code to PX-41",
+      "evidence": "LA-02"
+    },
+    {
+      "time": "15:31",
+      "event": "Ravi changes PX-41’s parcel code to PX-14",
+      "evidence": "LA-03"
+    },
+    {
+      "time": "15:38",
+      "event": "Dispatch scans read labels, not contents",
+      "evidence": "RS-01, RS-02"
+    },
+    {
+      "time": "16:02",
+      "event": "Joel receives stage clips at the Demo Desk",
+      "evidence": "RC-01"
+    },
+    {
+      "time": "16:05",
+      "event": "The dashboard marks PX-14 delivered to Storage Bay",
+      "evidence": "RS-05"
+    },
+    {
+      "time": "16:07",
+      "event": "Ravi tells Sana the demo has to wait while he looks for the calibration sheet",
+      "evidence": "MSG-01"
+    }
+  ],
+  "causal_chain": [
+    "The right parcels were packed for the right places.",
+    "Ravi changed both parcel codes in opposite directions and swapped the destinations.",
+    "The scanner followed the labels, so the dashboard reported a delivery.",
+    "His message gives the aim: delay until he finds the calibration sheet."
+  ],
+  "resolution": {
+    "motive": "He needed time to find the calibration sheet before the module was tested.",
+    "method": "He swapped the parcel codes and destinations so that label-based routing sent the sensor module to storage.",
+    "chain": [
+      "The expectation and the receipt disagree: PX-14 expected, PX-41 received.",
+      "The audit shows reciprocal code changes by Ravi alone.",
+      "The scanner and dashboard read labels, not contents.",
+      "His 16:07 message states the reason."
+    ]
+  }
+}

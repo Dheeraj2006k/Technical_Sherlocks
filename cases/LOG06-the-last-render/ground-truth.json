@@ -1,0 +1,65 @@
+{
+  "victim": "Team Comet",
+  "motive": "To disrupt Team Comet's reveal so that Team Orbit could take the spare slot, as the cue draft states.",
+  "method": "Nisha Rao exported the 42-second rehearsal cut as Comet_Final_v7.mp4 at 3:49 PM from her workstation session, before the playback drive was sealed; the drive was handed over and returned with its seal intact.",
+  "explanation": "Dev's correct two-minute file (checksum 91C4) is still in the kiosk archive. The playback copy is 42 seconds with checksum 7A20 and matches the rehearsal cut. The export audit attributes that file to Nisha's account at 3:49 PM, Milan's photo at 3:50 PM places her at the workstation during the export, and her cue draft written two minutes earlier says to use the short render so Orbit can take the spare slot.",
+  "timeline": [
+    {
+      "time": "3:30 PM",
+      "event": "The run sheet is signed: Comet 4:20-4:22, cue COMET_FINAL 2:00",
+      "evidence": "E02"
+    },
+    {
+      "time": "3:36 PM",
+      "event": "Dev uploads Comet_Final_v7.mp4, 2:00, checksum 91C4",
+      "evidence": "E03, E12"
+    },
+    {
+      "time": "3:44 PM",
+      "event": "Tara's label sheet correctly describes the 2:00 file",
+      "evidence": "E08"
+    },
+    {
+      "time": "3:47 PM",
+      "event": "Nisha's cue draft: use the short render if timing gets tight",
+      "evidence": "E11"
+    },
+    {
+      "time": "3:49 PM",
+      "event": "A 42-second file named Comet_Final_v7.mp4 is exported from the rehearsal cut under Nisha's account",
+      "evidence": "E07"
+    },
+    {
+      "time": "3:50 PM",
+      "event": "A reflection photo shows Nisha at the workstation during the export",
+      "evidence": "E09"
+    },
+    {
+      "time": "4:02 PM",
+      "event": "Arjun signs for the sealed drive (seal AV-17)",
+      "evidence": "E05"
+    },
+    {
+      "time": "4:20 PM",
+      "event": "The demo plays for 42 seconds",
+      "evidence": "E01, E06"
+    }
+  ],
+  "causal_chain": [
+    "Dev submitted a correct two-minute file that still exists unchanged.",
+    "A different 42-second file with the same name was exported from the rehearsal cut before the drive was sealed.",
+    "The export ran under Nisha's account while she was photographed at the workstation.",
+    "Her own draft states the plan to use the short render and let Orbit take the slot."
+  ],
+  "resolution": {
+    "motive": "Nisha wanted Team Comet's reveal to fail so Team Orbit could use the spare slot.",
+    "method": "She exported the 42-second rehearsal cut under the final filename before the playback drive was sealed, so the player ran the wrong file while the real upload stayed intact.",
+    "chain": [
+      "Dev's two-minute file (checksum 91C4) was submitted on time and is still in the archive.",
+      "The playback copy is 42 seconds with checksum 7A20 and matches the rehearsal cut; the drive was sealed after the export and returned unopened.",
+      "The export is under Nisha's account and Milan's photo places her at the workstation at 3:50 PM.",
+      "Her cue draft, written two minutes earlier, says to use the short render so Orbit can take the spare slot."
+    ]
+  },
+  "culprit": "Nisha Rao"
+}

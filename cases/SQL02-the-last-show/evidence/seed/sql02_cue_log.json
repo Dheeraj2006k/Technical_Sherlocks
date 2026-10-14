@@ -1,0 +1,8 @@
+{
+  "columns": ["cue_event_id","event_time","cue_code","operator_id","planned_item_id","observed_item_id","result","note"],
+  "rows": [
+    ["CU01","2026-10-16 18:45:00","CUE-12","KAV","MASK-REPL","MASK-REPL","REHEARSAL","Camera rehearsal used the backup; this is why some footage shows the replica."],
+    ["CU02","2026-10-16 19:05:00","CUE-17","KAV","MASK-ORIG","MASK-REPL","EXECUTED","Cue operator followed the run sheet; visual cue cannot establish who supplied the item."],
+    ["CU03","2026-10-16 19:07:00","CUE-18","KAV","MASK-ORIG","MASK-REPL","POSTSHOW_CHECK","Operator flagged mismatch after finale; no evidence operator had prop-bay access."]
+  ]
+}

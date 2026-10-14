@@ -1,0 +1,47 @@
+{
+  "scoring": {
+    "reward_schedule": [
+      10,
+      8,
+      6,
+      4,
+      2
+    ],
+    "wrong_answer_penalty": 2,
+    "sql_errors_free": true,
+    "retries_allowed": true,
+    "each_component_awards_points_once": true
+  },
+  "hints": {
+    "t1": [
+      "Start with the expected delivery, not the route scans.",
+      "Filter delivery_expectations to the row EX-01.",
+      "Read the parcel id and the expected contents together."
+    ],
+    "t2": [
+      "A receipt describes what the receiver actually observed.",
+      "Filter receipts to the row RC-01 and read contents_observed.",
+      "Compare the parcel and contents with what EX-01 expected."
+    ],
+    "t3": [
+      "Inspect the label changes made before dispatch.",
+      "Filter label_audit to field_changed = PARCEL_CODE and order by time.",
+      "Compare both parcels’ old and new values: one moves to the other’s code."
+    ],
+    "t4": [
+      "The dashboard is built from scan records, not from opening parcels.",
+      "Read the note column of the route scans, in time order.",
+      "The scanner reads the current label destination and never the contents."
+    ],
+    "t5": [
+      "Trace the audit actor, not the person who received the parcel.",
+      "Order label_audit by event time and look at actor_id on the PARCEL_CODE rows.",
+      "Both code changes name the same actor."
+    ],
+    "t6": [
+      "Explain the reciprocal swap, the route result and the calibration-sheet message together.",
+      "Join the label audit and route scans, then read the messages sent by the actor.",
+      "Do not claim the module was recovered: the records only show its route to the Storage Bay."
+    ]
+  }
+}

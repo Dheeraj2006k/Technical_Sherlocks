@@ -1,0 +1,11 @@
+{
+  "columns": ["message_id","sent_at","sender_id","recipient_id","channel","message_text"],
+  "rows": [
+    ["M-01","2026-10-16 14:41:00","NISHA","AARAV","EVENT_CHAT","Hold B-17 for a moment. I need to check something before it leaves the cage."],
+    ["M-02","2026-10-16 14:57:00","NISHA","AARAV","EVENT_CHAT","Print B-17R now. We cannot have the finalist photo delayed. I will sort the approval reference."],
+    ["M-03","2026-10-16 15:12:00","NISHA","KABIR","EVENT_CHAT","Take the replacement to registration; please do not describe it as a reprint yet."],
+    ["M-04","2026-10-16 15:24:00","NISHA","DEV","EVENT_CHAT","The first sleeve went with Kabir at 14:46. We can mark the replacement as the same batch until the sponsor photo is done."],
+    ["M-05","2026-10-16 15:25:00","KABIR","LEENA","EVENT_CHAT","I only scanned the empty tote at dispatch. I never received a sealed B-17 sleeve."],
+    ["M-06","2026-10-16 15:27:00","AARAV","DEV","EVENT_CHAT","I printed what the job queue showed. I did not authorize either batch."]
+  ]
+}

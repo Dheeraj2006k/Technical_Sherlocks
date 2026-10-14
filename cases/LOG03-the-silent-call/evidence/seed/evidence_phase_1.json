@@ -1,0 +1,9 @@
+{
+  "columns": ["evidence_id","title","source_label","body"],
+  "rows": [
+    ["A","Stage Running Sheet","Stage coordinator's event sheet","- 3:50 PM — Pulse demonstration confirmed for 4:30 PM.\n- 4:05 PM — Ritesh reports a loose power cable near the stage.\n- 4:09 PM — Ritesh marks the cable secured after inspection.\n- 4:12 PM — Karthik writes: “Faculty cancelled Pulse — electrical concern.”\n- 4:13 PM — Pulse is removed from the running order.\n- 4:35 PM — Ananya arrives and disputes the cancellation.\n\nThe sheet does not identify who gave Karthik the cancellation instruction."],
+    ["B","Control Desk Call Log","Event control desk phone","| Time | Record | Duration | Note |\n|---|---|---:|---|\n| 4:07 PM | Outgoing call to faculty office | 00:00 | No answer |\n| 4:10 PM | Incoming call, caller ID withheld | 00:18 | Answered by Sana |\n| 4:11 PM | Outgoing call to Karthik | 00:00 | No answer |\n| 4:14 PM | Incoming call from faculty office | 00:00 | Missed |\n\nThe desk system records call duration. A duration of `00:00` means the call did not connect in this system. It does not reveal what a caller intended to say."],
+    ["C","Karthik's Statement","Initial interview","Karthik says:\n\n*“At about 4:11, the faculty office called me and confirmed the cancellation. I wrote it down immediately. I wouldn't stop a team's demonstration without approval.”*\n\nHe says he did not speak to Sana before making the announcement."],
+    ["D","Safety Check","Ritesh's signed equipment checklist","- 4:05 PM — Loose cable reported.\n- 4:09 PM — Cable secured and tested.\n- 4:10 PM — Stage power checked; no continuing fault recorded.\n- 4:30 PM — Pulse demonstration remains listed as safe to proceed, pending normal start checks."]
+  ]
+}

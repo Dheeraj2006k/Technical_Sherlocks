@@ -1,0 +1,83 @@
+{
+  "phases": [
+    {
+      "phase": 1,
+      "name": "Discovery",
+      "tables": [
+        "evidence_phase_1"
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "Following the Object",
+      "tables": [
+        "evidence_phase_2"
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "Chain of Custody",
+      "tables": [
+        "evidence_phase_3"
+      ]
+    }
+  ],
+  "threads": [
+    {
+      "key": "t1",
+      "phase": 1,
+      "position": 1,
+      "title": "Discovery",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Find out what the checklist really verified and which movement is the first lead.",
+      "outcome_text": "The checklist shows only that the display looked ready at 4:05 PM, and the grey crate is the first object-movement lead.",
+      "unlocks": []
+    },
+    {
+      "key": "t2",
+      "phase": 2,
+      "position": 1,
+      "title": "Following the Object",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Separate authorization from return and test each person's role.",
+      "outcome_text": "The trophy was authorised to move for a photo; its return was never recorded, and the engraving proof gives a reason to delay.",
+      "unlocks": []
+    },
+    {
+      "key": "t3",
+      "phase": 3,
+      "position": 1,
+      "title": "Reconstruction",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Combine custody, timing and motive and choose the hypothesis with the fewest unsupported assumptions.",
+      "outcome_text": "The records support a diversion during the unrecorded return, with Kavya as the strongest explanation.",
+      "unlocks": []
+    }
+  ],
+  "story_events": [
+    {
+      "thread": "t1",
+      "title": "Ready is not verified",
+      "body": "The checklist says the display looked ready at 4:05 PM, but there is no item-by-item check afterwards. The volunteer notes record a grey crate moved at 4:11 PM with no entry for the trophy's destination. The first question is whether the trophy was moved for an approved activity."
+    },
+    {
+      "thread": "t2",
+      "title": "The blank return",
+      "body": "A movement slip opened by Kavya at 4:06 PM authorises a photo move and the return confirmation is blank. Naina saw the trophy on the table at 4:08 PM, which shows nothing about later custody. The engraving proof lists the wrong winning team."
+    },
+    {
+      "thread": "t3",
+      "title": "A delay drafted before the loss",
+      "body": "Kavya's awards folder holds the wrong-team engraving proof and an unsubmitted correction form, she called the vendor at 4:12 PM, and she drafted a delay at 4:17 PM before the trophy was reported missing. Crate G-14 is suitable for carrying the trophy but was empty at inspection, so the final location is unproven."
+    }
+  ]
+}

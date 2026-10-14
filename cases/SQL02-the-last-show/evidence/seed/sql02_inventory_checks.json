@@ -1,0 +1,11 @@
+{
+  "columns": ["check_id","checked_at","location","item_id","item_label","observed_condition","checked_by","note"],
+  "rows": [
+    ["IC01","2026-10-16 18:34:00","PROP_STAND","MASK-ORIG","Starfall Mask — original","PRESENT; serial SM-041 visible","SAN","Pre-rehearsal inventory."],
+    ["IC02","2026-10-16 18:55:00","STAGE_LEFT_WING","MASK-ORIG","Starfall Mask — original","PRESENT; clasp catches fabric","SAN","Last independent confirmation of original before return to prop bay."],
+    ["IC03","2026-10-16 19:08:00","DISPLAY_STAND","MASK-REPL","Starfall Mask — replica","PRESENT; serial plate absent","SAN","Post-finale check; display item is not the original."],
+    ["IC04","2026-10-16 19:10:00","PROP_BAY","MASK-ORIG","Starfall Mask — original","NOT FOUND at expected shelf","SAN","Incident opened; repair case not yet inspected."],
+    ["IC05","2026-10-16 19:22:00","REPAIR_CASE-2","MASK-ORIG","Starfall Mask — original","PRESENT; clasp taped for repair","ARJ","Found after Dev disclosed the repair case during follow-up."],
+    ["IC06","2026-10-16 19:22:00","REPAIR_CASE-2","MASK-REPL","Starfall Mask — replica","NOT PRESENT","ARJ","Confirms original was moved, not permanently removed from venue."]
+  ]
+}

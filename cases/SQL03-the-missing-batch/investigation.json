@@ -1,0 +1,87 @@
+{
+  "phases": [
+    {
+      "phase": 1,
+      "name": "Establish the Facts",
+      "tables": [
+        "sql03_characters",
+        "sql03_print_jobs",
+        "sql03_route_manifests"
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "Reconstruct Custody",
+      "tables": [
+        "sql03_custody_scans",
+        "sql03_approval_audit",
+        "sql03_desk_receipts"
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "Test the Cover Story",
+      "tables": [
+        "sql03_messages"
+      ]
+    }
+  ],
+  "threads": [
+    {
+      "key": "t1",
+      "phase": 1,
+      "position": 1,
+      "title": "Establish the Facts",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Find what the original batch should have been and what the 14:46 record really shows.",
+      "outcome_text": "B-17 was 12 badges for Registration, and the 14:46 manifest is only a planned route.",
+      "unlocks": []
+    },
+    {
+      "key": "t2",
+      "phase": 2,
+      "position": 1,
+      "title": "Reconstruct Custody",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Follow B-17 scan by scan and test the approval behind the reprint.",
+      "outcome_text": "Kabir never accepted the sealed batch, and the reprint’s approval belongs to another order.",
+      "unlocks": []
+    },
+    {
+      "key": "t3",
+      "phase": 3,
+      "position": 1,
+      "title": "Test the Cover Story",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Work out who held the original, who asked for the reprint, and what the messages say.",
+      "outcome_text": "Nisha held the original and requested the reprint, and her messages explain why.",
+      "unlocks": []
+    }
+  ],
+  "story_events": [
+    {
+      "thread": "t1",
+      "title": "A plan, not a handoff",
+      "body": "Job J-170 sets the batch at 12 badges for the Registration Desk. The 14:46 manifest is generated from the planned route and says in its own note that it is not a physical custody acceptance."
+    },
+    {
+      "thread": "t2",
+      "title": "An empty tote",
+      "body": "Kabir’s 14:49 scan is an empty route tote. The reprint job cites APR-044, an approval for lanyard order L-04 that the audit rejects for B-17R."
+    },
+    {
+      "thread": "t3",
+      "title": "Until the sponsor photo is done",
+      "body": "Nisha’s messages ask for a hold, then for B-17R to be printed immediately, and finally to mark the replacement as the same batch until the sponsor photo is done."
+    }
+  ]
+}

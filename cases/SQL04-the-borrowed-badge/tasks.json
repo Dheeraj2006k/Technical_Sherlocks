@@ -1,0 +1,214 @@
+{
+  "tasks": [
+    {
+      "key": "t1",
+      "thread": "t1",
+      "title": "THE MISSING ITEM",
+      "prompt": "Which item is missing from the archive?",
+      "answer_type": "CHOICE",
+      "answer": "A",
+      "options": [
+        {
+          "key": "A",
+          "text": "Demo-room access-token envelope"
+        },
+        {
+          "key": "B",
+          "text": "Replacement HDMI cable"
+        },
+        {
+          "key": "C",
+          "text": "Badge B-204"
+        },
+        {
+          "key": "D",
+          "text": "Forty volunteer lanyards"
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "join records on stable ids",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "Missing from the archive: {value}",
+      "explanation": "The archive count for ENV-TOKEN falls from one at 18:05 to zero at 18:21.",
+      "reference_sql": [
+        "SELECT item_id,item_name,quantity FROM sql04_archive_inventory ORDER BY event_at"
+      ]
+    },
+    {
+      "key": "t2",
+      "thread": "t1",
+      "title": "WHAT THE DOOR EVENT PROVES",
+      "prompt": "What does the 18:17 door event establish by itself?",
+      "answer_type": "CHOICE",
+      "answer": "B",
+      "options": [
+        {
+          "key": "A",
+          "text": "Ishaan physically entered the archive"
+        },
+        {
+          "key": "B",
+          "text": "Badge B-204 was used to enter the archive"
+        },
+        {
+          "key": "C",
+          "text": "Maya carried the envelope out"
+        },
+        {
+          "key": "D",
+          "text": "The envelope was already missing before 18:00"
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "join records on stable ids",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The 18:17 door event: {value}",
+      "explanation": "DE-03 records badge B-204 only; the controller note says it does not identify the carrier.",
+      "reference_sql": [
+        "SELECT event_at,badge_id,event_type,controller_note FROM sql04_door_events WHERE door_event_id='DE-03'"
+      ]
+    },
+    {
+      "key": "t3",
+      "thread": "t2",
+      "title": "THE RETURN AND THE SCAN",
+      "prompt": "Which records establish that Ishaan returned B-204 before the archive entry?",
+      "answer_type": "CHOICE",
+      "answer": "A",
+      "options": [
+        {
+          "key": "A",
+          "text": "The signed return at 17:24 and the later temporary scan by Maya"
+        },
+        {
+          "key": "B",
+          "text": "Maya's 18:11 amended note alone"
+        },
+        {
+          "key": "C",
+          "text": "Arjun's cable request"
+        },
+        {
+          "key": "D",
+          "text": "The door controller event alone"
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "join records on stable ids",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "B-204 return trail: {value}",
+      "explanation": "Dev accepted the signed return at 17:24, and Maya’s temporary scan at 17:31 comes after it.",
+      "reference_sql": [
+        "SELECT event_at,actor_id,event_type,note FROM sql04_badge_custody WHERE badge_id='B-204' ORDER BY event_at"
+      ]
+    },
+    {
+      "key": "t4",
+      "thread": "t2",
+      "title": "THE CABLE REQUEST",
+      "prompt": "Which alternative suspect is weakened by the equipment-request trail, and why?",
+      "answer_type": "CHOICE",
+      "answer": "A",
+      "options": [
+        {
+          "key": "A",
+          "text": "Arjun; the replacement cable came from the AV cabinet, not the archive"
+        },
+        {
+          "key": "B",
+          "text": "Pooja; she owns B-204"
+        },
+        {
+          "key": "C",
+          "text": "Ishaan; he requested the cable from the archive"
+        },
+        {
+          "key": "D",
+          "text": "Maya; her own badge was used at 18:17"
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "join records on stable ids",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "Weakened suspect: {value}",
+      "explanation": "ER-01 was fulfilled from the AV cabinet with no archive stock movement, which weakens the case against Arjun.",
+      "reference_sql": [
+        "SELECT requester_id,item_requested,fulfilled_from,fulfilled_by FROM sql04_equipment_requests"
+      ]
+    },
+    {
+      "key": "t5",
+      "thread": "t3",
+      "title": "CUSTODY OF B-204",
+      "prompt": "Who had documented custody of B-204 after its signed return and before the archive entry?",
+      "answer_type": "CHOICE",
+      "answer": "A",
+      "options": [
+        {
+          "key": "A",
+          "text": "Maya Kapoor"
+        },
+        {
+          "key": "B",
+          "text": "Ishaan Rao"
+        },
+        {
+          "key": "C",
+          "text": "Arjun Sen"
+        },
+        {
+          "key": "D",
+          "text": "Pooja Nair"
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "join records on stable ids",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "Custody after the return: {value}",
+      "explanation": "After the signed return the badge custody trail shows only Maya taking B-204, at 17:31, and no return to the desk.",
+      "reference_sql": [
+        "SELECT event_at,actor_id,event_type,from_location,to_location FROM sql04_badge_custody WHERE badge_id='B-204' ORDER BY event_at"
+      ]
+    },
+    {
+      "key": "t6",
+      "thread": "t3",
+      "title": "THE BEST EXPLANATION",
+      "prompt": "Which explanation best fits the complete evidence?",
+      "answer_type": "CHOICE",
+      "answer": "A",
+      "options": [
+        {
+          "key": "A",
+          "text": "Maya used the badge after taking custody of it, removed the envelope to delay handover, then amended the note to point blame at Ishaan."
+        },
+        {
+          "key": "B",
+          "text": "Ishaan kept his badge and removed the envelope after his shift."
+        },
+        {
+          "key": "C",
+          "text": "Arjun took the envelope while collecting the cable from the AV cabinet."
+        },
+        {
+          "key": "D",
+          "text": "Pooja removed the envelope when she requested a handover check."
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "join records on stable ids",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "Best explanation: {value}",
+      "explanation": "Maya’s custody, her 18:11 amended note, the 18:26 hold-the-handover message and her 18:51 blame of Ishaan fit together; none of the other options explains all of them.",
+      "reference_sql": [
+        "SELECT sent_at,sender_id,message_text FROM sql04_messages ORDER BY sent_at"
+      ]
+    }
+  ]
+}

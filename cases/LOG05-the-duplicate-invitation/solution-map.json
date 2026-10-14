@@ -1,0 +1,141 @@
+{
+  "inferences": [
+    {
+      "id": "I1",
+      "claim": "The received invitation (4:30 PM) contradicts the signed run sheet (4:00 PM).",
+      "tasks": [
+        "t1"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_1",
+          "summary": "Invitation says 4:30 PM",
+          "verify_sql": "select evidence_id from evidence_phase_1 where evidence_id = 'E01' and body ilike '%4:30 PM%'"
+        },
+        {
+          "table": "evidence_phase_1",
+          "summary": "Run sheet lists Orbit at 4:00 PM",
+          "verify_sql": "select evidence_id from evidence_phase_1 where evidence_id = 'E02' and body ilike '%Team Orbit check-in at 4:00 PM%'"
+        }
+      ]
+    },
+    {
+      "id": "I2",
+      "claim": "The shift board gives opportunity, not proof.",
+      "tasks": [
+        "t2"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_1",
+          "summary": "Board alone does not identify who printed any page",
+          "verify_sql": "select evidence_id from evidence_phase_1 where evidence_id = 'E04' and body ilike '%does not identify who printed%'"
+        }
+      ]
+    },
+    {
+      "id": "I3",
+      "claim": "The officially sent version said 4:00 PM.",
+      "tasks": [
+        "t3"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_2",
+          "summary": "Email PDF states 4:00 PM and QR ORB-041",
+          "verify_sql": "select evidence_id from evidence_phase_2 where evidence_id = 'E05' and body ilike '%4:00 PM%ORB-041%'"
+        }
+      ]
+    },
+    {
+      "id": "I4",
+      "claim": "An ANAIR-account print and a photograph of Aanya at the tray point to her without proving the page.",
+      "tasks": [
+        "t4"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_2",
+          "summary": "Print job at 3:51 PM under ANAIR",
+          "verify_sql": "select evidence_id from evidence_phase_2 where evidence_id = 'E06' and body ilike '%3:51 PM%ANAIR%'"
+        },
+        {
+          "table": "evidence_phase_2",
+          "summary": "Photo of Aanya at the printer at 3:54 PM",
+          "verify_sql": "select evidence_id from evidence_phase_2 where evidence_id = 'E08' and body ilike '%Aanya at the registration printer%'"
+        }
+      ]
+    },
+    {
+      "id": "I5",
+      "claim": "A rejected proof ties the 4:30 PM time and reused QR to handwriting consistent with Aanya's note.",
+      "tasks": [
+        "t5"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_3",
+          "summary": "Proof reads 4:30 PM with ORB-041 and a purple note",
+          "verify_sql": "select evidence_id from evidence_phase_3 where evidence_id = 'E09' and body ilike '%duplicate QR OK%'"
+        }
+      ]
+    },
+    {
+      "id": "I6",
+      "claim": "Her shift note states the aim and leaves the master alone.",
+      "tasks": [
+        "t6"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_3",
+          "summary": "Change Orbit copy only; leave master alone",
+          "verify_sql": "select evidence_id from evidence_phase_3 where evidence_id = 'E10' and body ilike '%Change Orbit copy only%'"
+        }
+      ]
+    }
+  ],
+  "red_herrings": [
+    {
+      "suspect": "Rohan Mehta",
+      "why_suspicious": "He really did revise the master schedule at 3:42 PM.",
+      "innocent_explanation": "The revision history shows only the opening remarks moved; Orbit stayed at 4:00 PM and Nova at 4:10 PM, so it cannot explain the 4:30 PM paper.",
+      "evidence": [
+        {
+          "table": "evidence_phase_3",
+          "verify_sql": "select evidence_id from evidence_phase_3 where evidence_id = 'E11' and body ilike '%Team Orbit remained at 4:00 PM%'"
+        }
+      ]
+    },
+    {
+      "suspect": "Irfan Khan",
+      "why_suspicious": "He operated the shared print desk.",
+      "innocent_explanation": "The print job ran under the ANAIR account, the photograph shows Aanya at the tray, and his shift ended at 4:05 PM with no record linking him to the altered page.",
+      "evidence": [
+        {
+          "table": "evidence_phase_2",
+          "verify_sql": "select evidence_id from evidence_phase_2 where evidence_id = 'E06' and body ilike '%ANAIR%'"
+        },
+        {
+          "table": "evidence_phase_1",
+          "verify_sql": "select evidence_id from evidence_phase_1 where evidence_id = 'E04' and body ilike '%Irfan operated the print desk%'"
+        }
+      ]
+    },
+    {
+      "suspect": "Meera Shah",
+      "why_suspicious": "She was the one who arrived late carrying the odd invitation.",
+      "innocent_explanation": "The system shows the QR resolving to the original registration with no second registration, and the email she was sent said 4:00 PM; her photograph proves only what she received.",
+      "evidence": [
+        {
+          "table": "evidence_phase_2",
+          "verify_sql": "select evidence_id from evidence_phase_2 where evidence_id = 'E07' and body ilike '%did not create a second registration%'"
+        },
+        {
+          "table": "evidence_phase_1",
+          "verify_sql": "select evidence_id from evidence_phase_1 where evidence_id = 'E01' and body ilike '%proves what she received%'"
+        }
+      ]
+    }
+  ]
+}

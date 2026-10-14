@@ -1,0 +1,31 @@
+{
+  "queries": [
+    {
+      "name": "phase 1 has four documents",
+      "sql": "select count(*) from evidence_phase_1",
+      "expect": [
+        [
+          "4"
+        ]
+      ]
+    },
+    {
+      "name": "two different checksums appear across the file trail",
+      "sql": "select count(*) from (select body from evidence_phase_1 union all select body from evidence_phase_2 union all select body from evidence_phase_3) d where body ilike '%7A20%'",
+      "expect": [
+        [
+          "2"
+        ]
+      ]
+    },
+    {
+      "name": "one document names the rehearsal cut as the export source",
+      "sql": "select evidence_id from evidence_phase_2 where body ilike '%from the source%Comet_Rehearsal_cut%'",
+      "expect": [
+        [
+          "E07"
+        ]
+      ]
+    }
+  ]
+}

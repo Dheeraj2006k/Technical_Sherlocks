@@ -1,0 +1,146 @@
+{
+  "inferences": [
+    {
+      "id": "I1",
+      "claim": "The checklist verified readiness at 4:05 PM only, with no item check after it.",
+      "tasks": [
+        "q1",
+        "q2",
+        "q3"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_1",
+          "summary": "No item-by-item verification between 4:05 and 4:25",
+          "verify_sql": "select evidence_id from evidence_phase_1 where evidence_id = 'A' and body ilike '%no item-by-item verification%'"
+        },
+        {
+          "table": "evidence_phase_1",
+          "summary": "Sameer moved a grey crate at 4:11 PM",
+          "verify_sql": "select evidence_id from evidence_phase_1 where evidence_id = 'C' and body ilike '%Sameer moved a grey crate%'"
+        }
+      ]
+    },
+    {
+      "id": "I2",
+      "claim": "The photo move was authorised but its return was never recorded.",
+      "tasks": [
+        "q4",
+        "q5"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_2",
+          "summary": "Return confirmation blank, initiated by Kavya Sen",
+          "verify_sql": "select evidence_id from evidence_phase_2 where evidence_id = 'E' and body ilike '%Return confirmation: blank%'"
+        },
+        {
+          "table": "evidence_phase_2",
+          "summary": "Trophy on the table at 4:08 PM",
+          "verify_sql": "select evidence_id from evidence_phase_2 where evidence_id = 'F' and body ilike '%4:08%'"
+        }
+      ]
+    },
+    {
+      "id": "I3",
+      "claim": "The engraving proof lists the wrong winning team, a reason to delay.",
+      "tasks": [
+        "q6",
+        "q8"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_2",
+          "summary": "Wrong team in the nameplate text; K.S. note to check the final plate",
+          "verify_sql": "select evidence_id from evidence_phase_2 where evidence_id = 'H' and body ilike '%wrong winning team%'"
+        }
+      ]
+    },
+    {
+      "id": "I4",
+      "claim": "The trophy moved for photography, its return is unrecorded and a crate moved at 4:11 PM.",
+      "tasks": [
+        "q7"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_2",
+          "summary": "G-14 moved toward storage at 4:11 PM; no content check",
+          "verify_sql": "select evidence_id from evidence_phase_2 where evidence_id = 'G' and body ilike '%4:11 PM%Sameer%'"
+        }
+      ]
+    },
+    {
+      "id": "I5",
+      "claim": "Crate G-14 was suitable for the trophy but empty at inspection.",
+      "tasks": [
+        "q9"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_3",
+          "summary": "Padded compartment and matching felt; compartment empty",
+          "verify_sql": "select evidence_id from evidence_phase_3 where evidence_id = 'K' and body ilike '%matches the felt%'"
+        }
+      ]
+    },
+    {
+      "id": "I6",
+      "claim": "Kavya called the vendor at 4:12 and drafted a delay at 4:17, before the report at 4:25.",
+      "tasks": [
+        "q9"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_3",
+          "summary": "Draft at 4:17 PM about a short delay",
+          "verify_sql": "select evidence_id from evidence_phase_3 where evidence_id = 'L' and body ilike '%4:17 PM%short delay%'"
+        },
+        {
+          "table": "evidence_phase_3",
+          "summary": "Vendor call at 4:12 PM, 46 seconds",
+          "verify_sql": "select evidence_id from evidence_phase_3 where evidence_id = 'M' and body ilike '%4:12 PM%46 seconds%'"
+        }
+      ]
+    }
+  ],
+  "red_herrings": [
+    {
+      "suspect": "Sameer Khan",
+      "why_suspicious": "He moved the grey crate that was suitable for carrying the trophy.",
+      "innocent_explanation": "The register records banner hardware assigned to G-14 and the crate was returned to storage at 4:19 PM; the inspection found nothing linking him to the trophy.",
+      "evidence": [
+        {
+          "table": "evidence_phase_2",
+          "verify_sql": "select evidence_id from evidence_phase_2 where evidence_id = 'G' and body ilike '%assigned to banner hardware%'"
+        },
+        {
+          "table": "evidence_phase_3",
+          "verify_sql": "select evidence_id from evidence_phase_3 where evidence_id = 'K' and body ilike '%can hold a trophy%'"
+        }
+      ]
+    },
+    {
+      "suspect": "Arjun Rao",
+      "why_suspicious": "He moved the display stand near the time of the photograph.",
+      "innocent_explanation": "He moved only the empty stand after the trophy was already on the awards table, as the 4:08 PM photograph confirms.",
+      "evidence": [
+        {
+          "table": "evidence_phase_2",
+          "verify_sql": "select evidence_id from evidence_phase_2 where evidence_id = 'I' and body ilike '%already on the awards table%'"
+        }
+      ]
+    },
+    {
+      "suspect": "Naina Rao",
+      "why_suspicious": "She requested the trophy be moved for a photograph.",
+      "innocent_explanation": "The request was legitimate, her group photograph shows the trophy on the table at 4:08 PM, and the photograph does not show who moved it afterwards.",
+      "evidence": [
+        {
+          "table": "evidence_phase_2",
+          "verify_sql": "select evidence_id from evidence_phase_2 where evidence_id = 'F' and body ilike '%I did not take it away%'"
+        }
+      ]
+    }
+  ]
+}

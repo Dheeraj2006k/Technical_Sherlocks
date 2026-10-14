@@ -1,0 +1,9 @@
+{
+  "columns": ["evidence_id","title","source_label","body"],
+  "rows": [
+    ["E01","The Demo That Ended Too Soon","Judge’s incident card","Team Comet’s scheduled 2-minute demo stopped after 42 seconds. The screen showed the correct opening title, then skipped straight to the end card. The judges paused scoring and asked for the source file. This establishes what happened on stage, not who caused it."],
+    ["E02","The Approved Run Sheet","Stage manager’s signed copy","Team Comet’s slot is 4:20–4:22 PM. The cue reads “COMET_FINAL — 2:00 — reveal at 1:25.” Team Orbit follows at 4:25 PM. The run sheet was signed at 3:30 PM and no timing change is recorded."],
+    ["E03","The Submission Receipt","Event upload kiosk","At 3:36 PM, Dev submitted “Comet_Final_v7.mp4”, duration 02:00. The kiosk receipt records a successful upload and checksum ending 91C4. The upload happened before the 3:45 PM media cutoff."],
+    ["E04","Who Could Prepare Playback?","AV booth duty card","Nisha prepared the playback package from 3:35–4:00 PM. Tara assisted with copying and labels from 3:40–3:55 PM. Arjun collected the playback drive at 4:02 PM after it was sealed. This shows opportunity windows, not who altered a file."]
+  ]
+}

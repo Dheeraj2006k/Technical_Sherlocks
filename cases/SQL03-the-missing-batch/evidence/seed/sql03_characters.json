@@ -1,0 +1,11 @@
+{
+  "columns": ["character_id","display_name","role","public_description"],
+  "rows": [
+    ["AARAV","Aarav Mehta","Print-room operator","Operates the badge printer and logs print jobs."],
+    ["DEV","Dev Malhotra","Production supervisor","Owns print-room scheduling and signs routine job summaries."],
+    ["KABIR","Kabir Shah","Delivery runner","Moves sealed packages along the event route."],
+    ["LEENA","Leena Das","Registration lead","Receives badges at the registration desk."],
+    ["NISHA","Nisha Varma","Event logistics coordinator","Controls the logistics cage and approves event movement records."],
+    ["TARA","Tara Iyer","Volunteer coordinator","Requested an unrelated lanyard order earlier that day."]
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "columns": ["expectation_id","created_at","requested_by","parcel_id","expected_contents","expected_destination","priority"],
+  "rows": [
+    ["EX-01","2026-10-16 15:12:00","MIRA","PX-14","SENSOR-MODULE","Demo Desk","HIGH"],
+    ["EX-02","2026-10-16 15:18:00","KARAN","PX-41","STAGE-CLIPS","Storage Bay","NORMAL"]
+  ]
+}

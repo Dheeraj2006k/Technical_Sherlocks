@@ -1,0 +1,27 @@
+{
+  "culprit": {
+    "points": 25,
+    "note": "Pick the responsible person from the suspect list"
+  },
+  "mechanism": {
+    "points": 15,
+    "options": [
+      {
+        "label": "Rohit knowingly restored power to Module 04 after reading the do-not-power warning, to save the 10 PM demo; the corrected controller and rear-door camera times both land on 21:32, and Arjun was shocked later while diagnosing it. It was reckless, not an intentional attack.",
+        "correct": true
+      },
+      {
+        "label": "Nikhil attacked Arjun after their argument; his workshop entry at 21:21 is the last RFID record before Arjun’s.",
+        "correct": false
+      },
+      {
+        "label": "Rohit planned the shock to hurt Arjun and powered Module 04 knowing Arjun would investigate it.",
+        "correct": false
+      },
+      {
+        "label": "Sameer powered Module 04 while collecting the soldering station and left before Arjun arrived.",
+        "correct": false
+      }
+    ]
+  }
+}

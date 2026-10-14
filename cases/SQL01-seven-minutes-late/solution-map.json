@@ -1,0 +1,175 @@
+{
+  "inferences": [
+    {
+      "id": "I1",
+      "claim": "Five Team Pulse members were active after 9:20 PM.",
+      "tasks": [
+        "t1"
+      ],
+      "evidence": [
+        {
+          "table": "team_members",
+          "summary": "Team Pulse roster",
+          "verify_sql": "select member_id from team_members where member_id = 'M4' and team_name = 'Team Pulse'"
+        },
+        {
+          "table": "fest_activity_log",
+          "summary": "F7 Kavya at 21:47",
+          "verify_sql": "select activity_id from fest_activity_log where activity_id = 'F7' and person_name = 'Kavya Iyer'"
+        }
+      ]
+    },
+    {
+      "id": "I2",
+      "claim": "Nikhil, Sameer and Arjun had the RFID entries.",
+      "tasks": [
+        "t2"
+      ],
+      "evidence": [
+        {
+          "table": "workshop_access_log",
+          "summary": "W4 Nikhil 21:21",
+          "verify_sql": "select event_id from workshop_access_log where event_id = 'W4' and direction = 'ENTRY'"
+        },
+        {
+          "table": "workshop_access_log",
+          "summary": "W8 Arjun 21:38",
+          "verify_sql": "select event_id from workshop_access_log where event_id = 'W8' and person_name = 'Arjun Varma'"
+        }
+      ]
+    },
+    {
+      "id": "I3",
+      "claim": "Two independent records place Nikhil in Seminar Hall 2.",
+      "tasks": [
+        "t3"
+      ],
+      "evidence": [
+        {
+          "table": "nikhil_device_activity",
+          "summary": "ND1 laptop at 21:42",
+          "verify_sql": "select device_event_id from nikhil_device_activity where device_event_id = 'ND1' and location = 'Seminar Hall 2'"
+        },
+        {
+          "table": "fest_activity_log",
+          "summary": "F3 badge scan at 21:43",
+          "verify_sql": "select activity_id from fest_activity_log where activity_id = 'F3' and location = 'Seminar Hall 2'"
+        }
+      ]
+    },
+    {
+      "id": "I4",
+      "claim": "Kavya filed the do-not-power report and Rohit opened it.",
+      "tasks": [
+        "t4"
+      ],
+      "evidence": [
+        {
+          "table": "maintenance_reports",
+          "summary": "MR-184",
+          "verify_sql": "select report_id from maintenance_reports where report_id = 'MR-184' and reported_by = 'Kavya Iyer' and report_text ilike '%DO NOT POWER%'"
+        },
+        {
+          "table": "notification_activity",
+          "summary": "NA-1 Rohit opened it at 20:49",
+          "verify_sql": "select activity_id from notification_activity where activity_id = 'NA-1' and actor = 'Rohit Kulkarni' and action = 'OPENED'"
+        }
+      ]
+    },
+    {
+      "id": "I5",
+      "claim": "The controller ON event is 21:32 after clock correction, matching the rear-door camera.",
+      "tasks": [
+        "t5"
+      ],
+      "evidence": [
+        {
+          "table": "power_controller_log",
+          "summary": "P2 ON at displayed 21:29",
+          "verify_sql": "select controller_event_id from power_controller_log where controller_event_id = 'P2' and status = 'ON'"
+        },
+        {
+          "table": "corridor_camera_events",
+          "summary": "C9 rear-door motion at displayed 21:36",
+          "verify_sql": "select camera_event_id from corridor_camera_events where camera_event_id = 'C9' and camera_location = 'Rear Loading Door'"
+        },
+        {
+          "table": "security_configuration",
+          "summary": "clock offsets",
+          "verify_sql": "select config_id from security_configuration where config_id = 'SC4' and config_value = '-3'"
+        }
+      ]
+    },
+    {
+      "id": "I6",
+      "claim": "The rear door produces no RFID event, and Rohit’s messages and task show the pressure and the intent to restore the demo.",
+      "tasks": [
+        "t6"
+      ],
+      "evidence": [
+        {
+          "table": "building_access_points",
+          "summary": "D2 no RFID",
+          "verify_sql": "select access_point_id from building_access_points where access_point_id = 'D2' and records_rfid = false"
+        },
+        {
+          "table": "rohit_messages",
+          "summary": "RM3 Give me ten minutes",
+          "verify_sql": "select message_id from rohit_messages where message_id = 'RM3' and message_text = 'Give me ten minutes.'"
+        },
+        {
+          "table": "rohit_fest_tasks",
+          "summary": "RT3 restore full-brightness demo",
+          "verify_sql": "select task_id from rohit_fest_tasks where task_id = 'RT3' and task_text ilike '%full-brightness%'"
+        }
+      ]
+    }
+  ],
+  "red_herrings": [
+    {
+      "suspect": "Nikhil Reddy",
+      "why_suspicious": "He argued with Arjun and has a workshop entry close to Arjun’s last entry.",
+      "innocent_explanation": "He left the workshop at 21:27, eleven minutes before Arjun entered at 21:38, and his laptop and badge records place him in Seminar Hall 2 from 21:42.",
+      "evidence": [
+        {
+          "table": "workshop_access_log",
+          "verify_sql": "select event_id from workshop_access_log where event_id = 'W5' and person_name = 'Nikhil Reddy' and direction = 'EXIT'"
+        },
+        {
+          "table": "nikhil_device_activity",
+          "verify_sql": "select device_event_id from nikhil_device_activity where device_event_id = 'ND2' and location = 'Seminar Hall 2'"
+        }
+      ]
+    },
+    {
+      "suspect": "Kavya Iyer",
+      "why_suspicious": "She worked on Module 04 and reported it.",
+      "innocent_explanation": "She disconnected it at 20:43 and left, filed the warning, and her stage console logs put her in the Main Auditorium at 20:50 and 21:47.",
+      "evidence": [
+        {
+          "table": "fest_activity_log",
+          "verify_sql": "select activity_id from fest_activity_log where activity_id = 'F7' and location = 'Main Auditorium'"
+        },
+        {
+          "table": "workshop_access_log",
+          "verify_sql": "select event_id from workshop_access_log where event_id = 'W3' and direction = 'EXIT'"
+        }
+      ]
+    },
+    {
+      "suspect": "Sameer Khan",
+      "why_suspicious": "He was in the workshop in the minutes before Arjun entered.",
+      "innocent_explanation": "He collected the soldering station, his entry and exit match the camera once its 4 minute offset is removed, and no controller event is his.",
+      "evidence": [
+        {
+          "table": "equipment_checkout",
+          "verify_sql": "select checkout_id from equipment_checkout where checkout_id = 'E2' and person_name = 'Sameer Khan'"
+        },
+        {
+          "table": "corridor_camera_events",
+          "verify_sql": "select camera_event_id from corridor_camera_events where camera_event_id = 'C6' and person_hint = 'Sameer Khan'"
+        }
+      ]
+    }
+  ]
+}

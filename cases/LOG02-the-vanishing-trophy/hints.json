@@ -1,0 +1,62 @@
+{
+  "scoring": {
+    "reward_schedule": [
+      10,
+      8,
+      6,
+      4,
+      2
+    ],
+    "wrong_answer_penalty": 2,
+    "sql_errors_free": true,
+    "retries_allowed": true,
+    "each_component_awards_points_once": true
+  },
+  "hints": {
+    "q1": [
+      "Check the time of the last actual item verification.",
+      "What does “display looks ready” mean?",
+      "The checklist is not an item-by-item inspection after 4:05."
+    ],
+    "q2": [
+      "Follow an object whose contents are not checked.",
+      "Which movement record has both a destination and contents gap?",
+      "Investigate the grey crate's route and contents."
+    ],
+    "q3": [
+      "Establish the last confirmed location before searching for a culprit.",
+      "Look for an authorized movement record and its return field.",
+      "The temporary movement slip is the first break in the chain of custody."
+    ],
+    "q4": [
+      "Separate authorization from proof of return.",
+      "The slip authorizes the photo movement.",
+      "Its return confirmation is blank."
+    ],
+    "q5": [
+      "What does the photograph show directly?",
+      "It shows the trophy on the table at 4:08, not what happened afterward.",
+      "Naina's role in the photo does not prove later custody."
+    ],
+    "q6": [
+      "Look for a problem that would make the ceremony difficult.",
+      "Inspect the engraving proof.",
+      "The wrong team name could explain pressure to delay the presentation."
+    ],
+    "q7": [
+      "Put the photo, crate movement and missing report in order.",
+      "The trophy was on the table at 4:08; the crate moved at 4:11.",
+      "The record supports an unrecorded return/diversion window, not continuous presence on the stand."
+    ],
+    "q8": [
+      "Motive and opportunity are separate.",
+      "The paperwork links Kavya to the engraving issue and a planned delay.",
+      "Combine this with the movement records; do not treat motive as proof by itself."
+    ],
+    "q9": [
+      "Compare which theory explains both the custody gap and the timing of the draft.",
+      "Consider the person who handled the authorized movement and knew about the engraving problem.",
+      "The strongest theory is a diversion during the unrecorded return period to delay the presentation."
+    ]
+  }
+}

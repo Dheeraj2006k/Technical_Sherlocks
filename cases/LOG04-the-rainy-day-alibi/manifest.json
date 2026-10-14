@@ -1,0 +1,25 @@
+{
+  "case_code": "LOG04",
+  "track": "LOGIC",
+  "title": "The Rainy-Day Alibi",
+  "slug": "the-rainy-day-alibi",
+  "content_version": 2,
+  "status": "review",
+  "duration_minutes": 18,
+  "recommended_team_size": 2,
+  "setting": "QUBIT Innovation Showcase, judges' office corridor and results desk, Aster prototype category",
+  "incident": "The original signed judging summary vanishes and a replacement with a different tie-break appears",
+  "source": {
+    "files": [
+      "docs/LOG04_The_Rainy_Day_Alibi.zip"
+    ],
+    "content_version": "1.0.0",
+    "original_release_status": "draft_pending_review_and_platform_qa"
+  },
+  "reviewer": {
+    "author": "Supplied case content (docs/*.zip), packaged for the runtime by Claude Code",
+    "human_reviewer": null,
+    "note": "No human has reviewed or blind-playtested this version; see review.json"
+  },
+  "publication_eligible": false
+}

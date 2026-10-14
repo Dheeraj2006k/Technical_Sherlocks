@@ -1,0 +1,8 @@
+{
+  "columns": ["device_event_id","event_at","person_name","device_name","event_type","location"],
+  "rows": [
+    ["ND1","2026-10-16 21:42:00","Nikhil Reddy","Laptop NIK-14","WIFI_RECONNECT","Seminar Hall 2"],
+    ["ND2","2026-10-16 21:44:00","Nikhil Reddy","Laptop NIK-14","ACTIVE_SESSION","Seminar Hall 2"],
+    ["ND3","2026-10-16 21:48:00","Nikhil Reddy","Laptop NIK-14","ACTIVE_SESSION","Seminar Hall 2"]
+  ]
+}

@@ -1,0 +1,150 @@
+{
+  "inferences": [
+    {
+      "id": "I1",
+      "claim": "The room was reported closed at 4:20 PM on a visual checklist; this does not show when Aster was last present.",
+      "tasks": [
+        "q1",
+        "q2",
+        "q3"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_1",
+          "summary": "Closure checklist entries",
+          "verify_sql": "select evidence_id from evidence_phase_1 where evidence_id = 'A' and body ilike '%Room reported closed%'"
+        },
+        {
+          "table": "evidence_phase_1",
+          "summary": "The 4:18 photograph is slightly angled with glare",
+          "verify_sql": "select evidence_id from evidence_phase_1 where evidence_id = 'C' and body ilike '%slightly angled%'"
+        }
+      ]
+    },
+    {
+      "id": "I2",
+      "claim": "The object in the 4:18 photograph is the display replica.",
+      "tasks": [
+        "q4"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_2",
+          "summary": "Blue inspection mark absent, solid lens",
+          "verify_sql": "select evidence_id from evidence_phase_2 where evidence_id = 'F' and body ilike '%blue inspection mark is absent%'"
+        },
+        {
+          "table": "evidence_phase_2",
+          "summary": "The genuine device has a transparent lens and an inspection mark",
+          "verify_sql": "select evidence_id from evidence_phase_2 where evidence_id = 'E' and body ilike '%blue inspection mark%'"
+        }
+      ]
+    },
+    {
+      "id": "I3",
+      "claim": "Rohan's sighting of Vikram with a black case is independently confirmed.",
+      "tasks": [
+        "q5",
+        "q6"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_2",
+          "summary": "Vikram signed out a flat black case at 4:02 PM",
+          "verify_sql": "select evidence_id from evidence_phase_2 where evidence_id = 'H' and body ilike '%Vikram signs out a flat black equipment case%'"
+        },
+        {
+          "table": "evidence_phase_2",
+          "summary": "Rohan saw Vikram carrying a flat black case",
+          "verify_sql": "select evidence_id from evidence_phase_2 where evidence_id = 'G' and body ilike '%Vikram carrying a flat black event case%'"
+        }
+      ]
+    },
+    {
+      "id": "I4",
+      "claim": "The substitution preceded closure and followed the failed output check.",
+      "tasks": [
+        "q7"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_3",
+          "summary": "Failure warning to the team at 4:00, delivered to Vikram at 4:01",
+          "verify_sql": "select evidence_id from evidence_phase_3 where evidence_id = 'J' and body ilike '%Vikram%account received it at 4:01 PM%'"
+        }
+      ]
+    },
+    {
+      "id": "I5",
+      "claim": "The case holds a fitted insert and packaging tape; the prototype is absent.",
+      "tasks": [
+        "q8"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_3",
+          "summary": "Foam insert cut to Aster and blue tape",
+          "verify_sql": "select evidence_id from evidence_phase_3 where evidence_id = 'L' and body ilike '%foam insert cut to fit%'"
+        }
+      ]
+    },
+    {
+      "id": "I6",
+      "claim": "Vikram drafted a security-related delay before the loss was reported.",
+      "tasks": [
+        "q9"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_3",
+          "summary": "Unsent draft at 4:14 PM",
+          "verify_sql": "select evidence_id from evidence_phase_3 where evidence_id = 'K' and body ilike '%4:14 PM%security incident%'"
+        },
+        {
+          "table": "evidence_phase_3",
+          "summary": "Aditya authorised no swap",
+          "verify_sql": "select evidence_id from evidence_phase_3 where evidence_id = 'M' and body ilike '%had not authorized anyone%'"
+        }
+      ]
+    }
+  ],
+  "red_herrings": [
+    {
+      "suspect": "Rohan Mehta",
+      "why_suspicious": "He has a rivalry with Aster's team, was near the room at 4:08 PM and first gave a misleading answer.",
+      "innocent_explanation": "He says he only went to the corridor for his presentation file; the movement sheet records presence near the room, not entry, and no record places him making the substitution.",
+      "evidence": [
+        {
+          "table": "evidence_phase_1",
+          "verify_sql": "select evidence_id from evidence_phase_1 where evidence_id = 'B' and body ilike '%presence near the room%'"
+        },
+        {
+          "table": "evidence_phase_2",
+          "verify_sql": "select evidence_id from evidence_phase_2 where evidence_id = 'G' and body ilike '%I did not enter the room%'"
+        }
+      ]
+    },
+    {
+      "suspect": "Imran Shaikh",
+      "why_suspicious": "He had tools, access and knowledge of the display.",
+      "innocent_explanation": "His signed work note places his repair at 3:35 PM, he did not remove the backing panel, and Aditya's signature confirms the case was open for inspection afterwards.",
+      "evidence": [
+        {
+          "table": "evidence_phase_2",
+          "verify_sql": "select evidence_id from evidence_phase_2 where evidence_id = 'I' and body ilike '%did not remove the display%'"
+        }
+      ]
+    },
+    {
+      "suspect": "Naina Rao",
+      "why_suspicious": "She took the photograph that shows the replica.",
+      "innocent_explanation": "Her photograph documents the replica, it does not show her placing it; she was in the room only for the official photographs.",
+      "evidence": [
+        {
+          "table": "evidence_phase_1",
+          "verify_sql": "select evidence_id from evidence_phase_1 where evidence_id = 'B' and body ilike '%Naina was inside the room for official photographs%'"
+        }
+      ]
+    }
+  ]
+}

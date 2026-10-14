@@ -1,0 +1,217 @@
+{
+  "tasks": [
+    {
+      "key": "t1",
+      "thread": "t1",
+      "title": "WHAT THE WEATHER PROVES",
+      "prompt": "What does the weather record establish about Devika's claim that heavy rain kept her at the loading bay until nearly 3:40 PM?",
+      "answer_type": "CHOICE",
+      "answer": "B",
+      "options": [
+        {
+          "key": "A",
+          "text": "It proves she was inside the judges' office at 3:23 PM."
+        },
+        {
+          "key": "B",
+          "text": "It contradicts the claim that heavy rain continued until 3:40 PM, but weather alone does not establish where she was."
+        },
+        {
+          "key": "C",
+          "text": "It proves no one could enter the building."
+        },
+        {
+          "key": "D",
+          "text": "It proves Devika is guilty without any other evidence."
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The weather record: {value}",
+      "explanation": "The rain stopped at 3:16 PM, which contradicts Devika's claim, but weather says nothing about where she stood.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_1 where evidence_id in ('A', 'B') order by evidence_id"
+      ]
+    },
+    {
+      "key": "t2",
+      "thread": "t1",
+      "title": "THE 3:23 SWIPE",
+      "prompt": "Which conclusion is supported by the access log at this stage?",
+      "answer_type": "CHOICE",
+      "answer": "A",
+      "options": [
+        {
+          "key": "A",
+          "text": "Devika's badge was granted entry at 3:23 PM, but the swipe alone does not identify the person carrying it."
+        },
+        {
+          "key": "B",
+          "text": "Arjun entered the corridor at 3:19 PM."
+        },
+        {
+          "key": "C",
+          "text": "Isha entered the corridor at 3:27 PM."
+        },
+        {
+          "key": "D",
+          "text": "The original summary was definitely removed at 3:23 PM."
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The access log shows: {value}",
+      "explanation": "Badge R-14 was granted at 3:23 PM; a swipe identifies a badge, not the person carrying it.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_1 where evidence_id in ('C') order by evidence_id"
+      ]
+    },
+    {
+      "key": "t3",
+      "thread": "t2",
+      "title": "WHAT CHANGED",
+      "prompt": "What is the strongest conclusion from the original and replacement summaries?",
+      "answer_type": "CHOICE",
+      "answer": "B",
+      "options": [
+        {
+          "key": "A",
+          "text": "The replacement changed the total points and the tie-break."
+        },
+        {
+          "key": "B",
+          "text": "The replacement changed the tie-break result while keeping the total points the same."
+        },
+        {
+          "key": "C",
+          "text": "The judges officially approved Team Meridian after 3:28 PM."
+        },
+        {
+          "key": "D",
+          "text": "The printer audit proves Devika personally collected the page."
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The replacement: {value}",
+      "explanation": "The replacement keeps the total points and changes only the tie-break winner.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_2 where evidence_id in ('F') order by evidence_id"
+      ]
+    },
+    {
+      "key": "t4",
+      "thread": "t2",
+      "title": "THE PRINTER AUDIT",
+      "prompt": "What does the printer audit establish about the 3:28 PM replacement?",
+      "answer_type": "CHOICE",
+      "answer": "A",
+      "options": [
+        {
+          "key": "A",
+          "text": "The D.RAO account printed the revision at 3:28 PM; the audit alone does not identify the person who operated or collected it."
+        },
+        {
+          "key": "B",
+          "text": "Devika was certainly standing at the printer."
+        },
+        {
+          "key": "C",
+          "text": "Isha printed the replacement at 3:28 PM."
+        },
+        {
+          "key": "D",
+          "text": "The replacement must be authentic because the printer completed the job."
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The printer audit: {value}",
+      "explanation": "The D.RAO account printed the revision at 3:28 PM; the audit identifies an account, not an operator.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_2 where evidence_id in ('G') order by evidence_id"
+      ]
+    },
+    {
+      "key": "t5",
+      "thread": "t3",
+      "title": "UNDERMINING THE ALIBI",
+      "prompt": "Which evidence most directly undermines Devika's alibi without overclaiming what a single record proves?",
+      "answer_type": "CHOICE",
+      "answer": "A",
+      "options": [
+        {
+          "key": "A",
+          "text": "The rain stopped at 3:16, and her badge recorded a successful corridor entry at 3:23; together these conflict with her account, although each record has limits."
+        },
+        {
+          "key": "B",
+          "text": "The weather station proves she was inside the office."
+        },
+        {
+          "key": "C",
+          "text": "The badge log proves with certainty that no one could have borrowed her badge."
+        },
+        {
+          "key": "D",
+          "text": "The maintenance ticket proves Devika was at the loading bay all afternoon."
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The alibi: {value}",
+      "explanation": "Two independent records, the rain and the corridor swipe, conflict with her account, with the limits of each stated.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_1 where evidence_id in ('A', 'C') order by evidence_id",
+        "select evidence_id, title from evidence_phase_3 where evidence_id in ('I') order by evidence_id"
+      ]
+    },
+    {
+      "key": "t6",
+      "thread": "t3",
+      "title": "THE BEST EXPLANATION",
+      "prompt": "Which explanation best accounts for the changed summary and the full evidence set?",
+      "answer_type": "CHOICE",
+      "answer": "C",
+      "options": [
+        {
+          "key": "A",
+          "text": "Arjun accidentally printed a new sheet during rehearsal, and the judges silently approved it."
+        },
+        {
+          "key": "B",
+          "text": "Isha changed the tie-break because she printed a badge after 3:28 PM."
+        },
+        {
+          "key": "C",
+          "text": "Devika used the results workflow to produce an unauthorised replacement tie-break summary; her corridor badge entry, account print, contradicted alibi and lack of judge approval converge on her, while no single log is treated as conclusive alone."
+        },
+        {
+          "key": "D",
+          "text": "Kabir entered the judges' corridor despite the denied-access record and changed the sheet, with no supporting evidence."
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "Best explanation: {value}",
+      "explanation": "The only explanation that accounts for the corridor entry, the account print, the contradicted alibi and the missing judge approval without overclaiming.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_1 where evidence_id in ('C') order by evidence_id",
+        "select evidence_id, title from evidence_phase_2 where evidence_id in ('G') order by evidence_id",
+        "select evidence_id, title from evidence_phase_3 where evidence_id in ('L', 'M') order by evidence_id"
+      ]
+    }
+  ]
+}

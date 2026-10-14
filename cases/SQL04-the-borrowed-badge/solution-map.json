@@ -1,0 +1,155 @@
+{
+  "inferences": [
+    {
+      "id": "I1",
+      "claim": "The access-token envelope is the missing item.",
+      "tasks": [
+        "t1"
+      ],
+      "evidence": [
+        {
+          "table": "sql04_archive_inventory",
+          "summary": "AI-03 count zero at 18:21",
+          "verify_sql": "select inventory_event_id from sql04_archive_inventory where inventory_event_id = 'AI-03' and quantity = 0"
+        },
+        {
+          "table": "sql04_archive_inventory",
+          "summary": "AI-02 count one at 18:05",
+          "verify_sql": "select inventory_event_id from sql04_archive_inventory where inventory_event_id = 'AI-02' and quantity = 1"
+        }
+      ]
+    },
+    {
+      "id": "I2",
+      "claim": "The door event identifies a badge, not a person.",
+      "tasks": [
+        "t2"
+      ],
+      "evidence": [
+        {
+          "table": "sql04_door_events",
+          "summary": "DE-03 controller note",
+          "verify_sql": "select door_event_id from sql04_door_events where door_event_id = 'DE-03' and controller_note ilike '%does not identify the carrier%'"
+        }
+      ]
+    },
+    {
+      "id": "I3",
+      "claim": "Ishaan returned B-204 and Maya scanned it afterwards.",
+      "tasks": [
+        "t3"
+      ],
+      "evidence": [
+        {
+          "table": "sql04_badge_custody",
+          "summary": "BC-03 return accepted",
+          "verify_sql": "select custody_id from sql04_badge_custody where custody_id = 'BC-03' and event_type = 'RETURN_ACCEPTED'"
+        },
+        {
+          "table": "sql04_badge_custody",
+          "summary": "BC-04 Maya temporary scan",
+          "verify_sql": "select custody_id from sql04_badge_custody where custody_id = 'BC-04' and actor_id = 'MAYA'"
+        }
+      ]
+    },
+    {
+      "id": "I4",
+      "claim": "The cable request was fulfilled from the AV cabinet, not the archive.",
+      "tasks": [
+        "t4"
+      ],
+      "evidence": [
+        {
+          "table": "sql04_equipment_requests",
+          "summary": "ER-01 AV cabinet",
+          "verify_sql": "select request_id from sql04_equipment_requests where request_id = 'ER-01' and fulfilled_from = 'AV Cabinet'"
+        }
+      ]
+    },
+    {
+      "id": "I5",
+      "claim": "Maya had the only documented custody after the return.",
+      "tasks": [
+        "t5"
+      ],
+      "evidence": [
+        {
+          "table": "sql04_badge_custody",
+          "summary": "BC-05 scan complete, no return",
+          "verify_sql": "select custody_id from sql04_badge_custody where custody_id = 'BC-05' and note ilike '%no return-to-desk event%'"
+        }
+      ]
+    },
+    {
+      "id": "I6",
+      "claim": "Her amended note and her messages point at the interference and the blame.",
+      "tasks": [
+        "t6"
+      ],
+      "evidence": [
+        {
+          "table": "sql04_inventory_notes",
+          "summary": "IN-02 return unconfirmed",
+          "verify_sql": "select note_id from sql04_inventory_notes where note_id = 'IN-02' and author_id = 'MAYA' and note_status = 'AMENDED'"
+        },
+        {
+          "table": "sql04_messages",
+          "summary": "MSG-01 hold the handover",
+          "verify_sql": "select message_id from sql04_messages where message_id = 'MSG-01' and message_text ilike '%Hold the demo-room handover%'"
+        },
+        {
+          "table": "sql04_messages",
+          "summary": "MSG-03 blames Ishaan",
+          "verify_sql": "select message_id from sql04_messages where message_id = 'MSG-03' and sender_id = 'MAYA'"
+        }
+      ]
+    }
+  ],
+  "red_herrings": [
+    {
+      "suspect": "Ishaan Rao",
+      "why_suspicious": "The door log shows his badge entering the archive.",
+      "innocent_explanation": "His return was signed at 17:24 and Maya took custody afterwards; the controller records the badge ID only.",
+      "evidence": [
+        {
+          "table": "sql04_badge_custody",
+          "verify_sql": "select custody_id from sql04_badge_custody where custody_id = 'BC-03' and actor_id = 'DEV'"
+        },
+        {
+          "table": "sql04_inventory_notes",
+          "verify_sql": "select note_id from sql04_inventory_notes where note_id = 'IN-03' and note_text ilike '%Signed return accepted%'"
+        }
+      ]
+    },
+    {
+      "suspect": "Arjun Sen",
+      "why_suspicious": "He entered the archive earlier and asked for a replacement cable.",
+      "innocent_explanation": "His entry was at 17:09 to inspect a cable rack, and the replacement cable was fulfilled from the AV cabinet with no archive stock movement.",
+      "evidence": [
+        {
+          "table": "sql04_equipment_requests",
+          "verify_sql": "select request_id from sql04_equipment_requests where request_id = 'ER-01' and note ilike '%no archive stock movement%'"
+        },
+        {
+          "table": "sql04_door_events",
+          "verify_sql": "select door_event_id from sql04_door_events where door_event_id = 'DE-02' and badge_id = 'B-311'"
+        }
+      ]
+    },
+    {
+      "suspect": "Pooja Nair",
+      "why_suspicious": "She was responsible for the envelope and asked about it.",
+      "innocent_explanation": "Her request only checks the handover list and she independently confirmed the envelope missing; she is the one who reported it.",
+      "evidence": [
+        {
+          "table": "sql04_equipment_requests",
+          "verify_sql": "select request_id from sql04_equipment_requests where request_id = 'ER-02' and note ilike '%not a request to remove%'"
+        },
+        {
+          "table": "sql04_archive_inventory",
+          "verify_sql": "select inventory_event_id from sql04_archive_inventory where inventory_event_id = 'AI-04' and recorded_by = 'POOJA'"
+        }
+      ]
+    }
+  ]
+}

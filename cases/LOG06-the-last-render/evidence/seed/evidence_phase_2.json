@@ -1,0 +1,9 @@
+{
+  "columns": ["evidence_id","title","source_label","body"],
+  "rows": [
+    ["E05","The Sealed Drive Handoff","Stage runner’s handoff log","Arjun signed for one sealed USB drive at 4:02 PM. The seal number was AV-17. He returned it unopened at 4:31 PM. The seal number matches the booth’s photo taken immediately after the drive was closed."],
+    ["E06","The Playback Device Report","Media player diagnostics","The player ran “Comet_Final_v7.mp4” for exactly 00:42. Its checksum ends 7A20, not 91C4. The player log confirms the short file was played, but it does not identify who created or copied it."],
+    ["E07","The Export Folder History","AV workstation audit","At 3:49 PM, the workstation created a 42-second file named “Comet_Final_v7.mp4” from the source “Comet_Rehearsal_cut.mp4”. The workstation audit attributes the export session to Nisha’s account. The audit records the account, not by itself the human at the keyboard."],
+    ["E08","Tara’s Label Sheet","Recovered from the AV desk","Tara’s handwritten label sheet says “COMET FINAL — 2:00 — checksum 91C4”. A separate sticky note says “short cut = rehearsal only”. The label sheet was written at 3:44 PM, before the 3:49 PM export. Tara’s labels accurately describe the submitted final file."]
+  ]
+}

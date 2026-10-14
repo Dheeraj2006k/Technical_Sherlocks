@@ -1,0 +1,29 @@
+{
+  "victim": "The QUBIT Prototype Fund",
+  "characters": [
+    {
+      "name": "Asha Rao",
+      "role": "Student finance coordinator",
+      "profile": "Creates supplier requests and tracks receipts; works from FIN-03.",
+      "suspect": true
+    },
+    {
+      "name": "Dev Malhotra",
+      "role": "Equipment logistics lead",
+      "profile": "Coordinates reserve equipment and supplier handoffs; works from FIN-02.",
+      "suspect": true
+    },
+    {
+      "name": "Dr Meera Iyer",
+      "role": "Faculty approver",
+      "profile": "Approves budgeted purchases against a payee, a purpose and an amount limit.",
+      "suspect": true
+    },
+    {
+      "name": "Rohan Das",
+      "role": "Gateway support assistant",
+      "profile": "Checks gateway status and reconciliation timing; has no payment creation permission.",
+      "suspect": true
+    }
+  ]
+}

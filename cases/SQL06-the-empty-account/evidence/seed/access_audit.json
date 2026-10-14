@@ -1,0 +1,11 @@
+{
+  "columns": ["audit_id","event_at","actor","action","object_ref","result","workstation"],
+  "rows": [
+    ["A1","2026-10-15 15:28:00","Asha Rao","CREATE_REQUEST","PAY-712","SUCCESS","FIN-03"],
+    ["A2","2026-10-15 15:39:00","Dev Malhotra","EDIT_DESTINATION","PAY-712","DENIED","FIN-02"],
+    ["A3","2026-10-15 15:42:30","Dev Malhotra","CREATE_REQUEST","PAY-712B","SUCCESS","FIN-02"],
+    ["A4","2026-10-15 15:43:00","Dev Malhotra","MANUAL_OVERRIDE","PAY-712B","SUCCESS","FIN-02"],
+    ["A5","2026-10-15 15:44:30","Asha Rao","LOGOUT","FINANCE_PORTAL","SUCCESS","FIN-03"],
+    ["A6","2026-10-15 15:46:00","Finance System","SYNC_CHECK","QPF","DEFERRED","SERVER"]
+  ]
+}

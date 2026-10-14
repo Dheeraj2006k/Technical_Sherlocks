@@ -1,0 +1,12 @@
+{
+  "columns": ["staff_id","full_name","role_title","known_context"],
+  "rows": [
+    ["ST1","Arjun Varma","Victim / circuit designer","Designed the Pulse control circuit; found unconscious beside the powered cabinet."],
+    ["ST2","Nikhil Reddy","Software lead / person of interest","Had a public argument with Arjun earlier in the evening."],
+    ["ST3","Kavya Iyer","Power-system lead","Reported the Module 04 overheating and disconnected the unit."],
+    ["ST4","Rohit Kulkarni","Team lead","Led the Pulse team and the 10 PM demonstration setup."],
+    ["ST5","Sameer Khan","Fabrication member","Collected the soldering station from the workshop."],
+    ["ST6","Priya Nair","Stage coordinator","Coordinated the stage schedule for the 10 PM demonstration."],
+    ["ST7","Mahesh Anna","Lab assistant","Workshop key and equipment custodian."]
+  ]
+}

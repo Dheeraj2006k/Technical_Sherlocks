@@ -1,0 +1,41 @@
+{
+  "victim": "The demo-room handover and Ishaan Rao’s reputation",
+  "characters": [
+    {
+      "name": "Arjun Sen",
+      "role": "AV technician",
+      "profile": "Requested a replacement cable for the demo room.",
+      "suspect": true
+    },
+    {
+      "name": "Dev Malhotra",
+      "role": "Security desk attendant",
+      "profile": "Records returned badges at the volunteer desk.",
+      "suspect": false
+    },
+    {
+      "name": "Ishaan Rao",
+      "role": "Student volunteer",
+      "profile": "Volunteer whose badge ID appears in the archive door log.",
+      "suspect": true
+    },
+    {
+      "name": "Maya Kapoor",
+      "role": "Inventory coordinator",
+      "profile": "Reconciles equipment and returned badge records.",
+      "suspect": true
+    },
+    {
+      "name": "Pooja Nair",
+      "role": "Demo-room coordinator",
+      "profile": "Responsible for receiving the access-token envelope.",
+      "suspect": true
+    },
+    {
+      "name": "Rhea Thomas",
+      "role": "Show producer",
+      "profile": "Responsible for the closing-show schedule.",
+      "suspect": false
+    }
+  ]
+}

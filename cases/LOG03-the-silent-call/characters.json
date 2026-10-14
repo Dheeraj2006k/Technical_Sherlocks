@@ -1,0 +1,41 @@
+{
+  "victim": "Team Pulse",
+  "characters": [
+    {
+      "name": "Ananya Rao",
+      "role": "Faculty supervisor",
+      "profile": "Responsible for approving safety-related changes to demonstrations. She says she did not cancel Pulse's slot and did not authorize anyone to announce a cancellation.",
+      "suspect": true
+    },
+    {
+      "name": "Karthik Menon",
+      "role": "Stage coordinator",
+      "profile": "Managed the running order and announced that Pulse was cancelled. He says he received a phone confirmation from the faculty office shortly before making the announcement.",
+      "suspect": true
+    },
+    {
+      "name": "Sana Ali",
+      "role": "Control-desk volunteer",
+      "profile": "Answered calls at the event control desk. She says the desk received a brief call about a possible electrical issue, but she could not identify the caller.",
+      "suspect": true
+    },
+    {
+      "name": "Dev Malhotra",
+      "role": "Pulse team leader",
+      "profile": "Built Pulse and was due to demonstrate it. His team had argued with the stage team about a last-minute schedule change. He says he called the control desk to ask whether the slot was still on.",
+      "suspect": true
+    },
+    {
+      "name": "Ritesh Shah",
+      "role": "AV technician",
+      "profile": "Responsible for stage audio and power distribution. He had raised a genuine concern about a loose cable earlier that afternoon, but says it was fixed before the demonstration.",
+      "suspect": true
+    },
+    {
+      "name": "Meera Joshi",
+      "role": "Faculty office assistant",
+      "profile": "Works at the faculty office and manages its landline. She says the office phone rang during setup, but no one from the office spoke to Karthik to cancel the demonstration.",
+      "suspect": true
+    }
+  ]
+}

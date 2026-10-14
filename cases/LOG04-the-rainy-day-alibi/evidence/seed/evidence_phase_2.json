@@ -1,0 +1,9 @@
+{
+  "columns": ["evidence_id","title","source_label","body"],
+  "rows": [
+    ["E","Judges' Folder Inventory","Inventory signed at 3:14 and compared at 3:40","| Item | At 3:14 PM | At 3:40 PM |\n|---|---|---|\n| Original signed Aster summary | Present | Missing |\n| Blue scoring worksheets | Present | Present |\n| Judge's handwritten tie-break note | Clipped behind summary | Still clipped behind blank divider |\n| Red folder seal | Intact, S-208 | S-208 cut; replacement tape applied |\n\nJudge Leena says she did not authorise anyone to open the folder after handover."],
+    ["F","Replacement Summary Comparison","Original and replacement scans","The original scan shows Team Northstar ahead on the signed tie-break note. The replacement names Team Meridian as tie-break winner. Total points are unchanged; only the tie-break decision differs. The replacement footer reads “Printed 3:28 PM — Results Desk — User: D.RAO”. Printer account data identifies the account used, not necessarily the operator."],
+    ["G","Results Desk Printer Audit","Managed printer log","| Time | Account | Job | Pages | Status |\n|---|---|---|---:|---|\n| 3:06 PM | D.RAO | Aster_summary_original.pdf | 1 | Completed |\n| 3:28 PM | D.RAO | Aster_summary_revision.pdf | 1 | Completed |\n| 3:29 PM | I.REDDY | Badge_reprint_17.pdf | 1 | Completed |\n| 3:34 PM | D.RAO | Aster_summary_revision.pdf | 1 | Cancelled |\n\nThe audit records account and job status, not who collected each page."],
+    ["H","Stage Rehearsal Log","Stage run sheet and AV cue timestamps","3:18 PM — Arjun begins award-announcement rehearsal. 3:21 — first microphone cue. 3:26 — second microphone cue. 3:32 — final timing cue. 3:36 — rehearsal ends. This supports Arjun being occupied for much of the interval but does not prove he could not briefly leave."]
+  ]
+}

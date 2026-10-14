@@ -1,0 +1,215 @@
+{
+  "tasks": [
+    {
+      "key": "t1",
+      "thread": "t1",
+      "title": "THE 4:11 PM CALL",
+      "prompt": "**What does the phone log establish about the alleged 4:11 PM confirmation from the faculty office to Karthik?**",
+      "answer_type": "CHOICE",
+      "answer": "B",
+      "options": [
+        {
+          "key": "A",
+          "text": "The call definitely happened and the cancellation was confirmed."
+        },
+        {
+          "key": "B",
+          "text": "The listed 4:11 PM call was an outgoing call from the control desk to Karthik that did not connect; it does not support Karthik's claim of a connected faculty-office call at that time."
+        },
+        {
+          "key": "C",
+          "text": "The faculty supervisor never made any call that day."
+        },
+        {
+          "key": "D",
+          "text": "The caller at 4:10 was definitely Ananya."
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "About the 4:11 PM call: {value}",
+      "explanation": "The listed 4:11 PM call is an outgoing, unconnected control-desk call, not the claimed faculty confirmation.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_1 where evidence_id in ('B', 'C') order by evidence_id"
+      ]
+    },
+    {
+      "key": "t2",
+      "thread": "t1",
+      "title": "THE SAFETY CHECKLIST",
+      "prompt": "**Which conclusion is best supported by the safety checklist?**",
+      "answer_type": "CHOICE",
+      "answer": "A",
+      "options": [
+        {
+          "key": "A",
+          "text": "There was a real cable concern, but it was marked fixed before the cancellation was recorded."
+        },
+        {
+          "key": "B",
+          "text": "The stage was dangerous throughout the afternoon."
+        },
+        {
+          "key": "C",
+          "text": "Ritesh must have invented the fault."
+        },
+        {
+          "key": "D",
+          "text": "The faculty supervisor cancelled Pulse because of the cable.\n---\n# Phase 2 — Two Sides of the Call\n## Evidence E — Faculty Office Phone Log\n**Source:** Faculty office landline system\n| Time | Record | Duration | Note |\n|---|---|---:|---|\n| 4:07 PM | Incoming call from control desk | 00:00 | Missed |\n| 4:10 PM | No incoming or outgoing call recorded | — | — |\n| 4:11 PM | No outgoing call to Karthik recorded | — | — |\n| 4:14 PM | Outgoing call to control desk | 00:00 | No answer |\nThe faculty office system and control desk system both show no connected call between the faculty office and Karthik before the cancellation was announced.\n## Evidence F — Sana's Clarification\n**Source:** Follow-up interview\nSana says the 4:10 call lasted about eighteen seconds. The caller said:\n*“There may be an electrical problem. Please hold the Pulse slot until it is checked.”*\nSana did not hear the caller's name. The caller did **not** say that the faculty supervisor had cancelled the demonstration.\nSana says she attempted to call Karthik back at 4:11, but he did not answer. The control desk log shows this outgoing call lasted `00:00`.\n## Evidence G — Message Draft\n**Source:** Karthik's event messaging app, inspected with permission\nAt 4:12 PM, Karthik drafts the following announcement:\n*“As confirmed by the faculty supervisor, Pulse is cancelled due to an electrical safety concern.”*\nThe draft is posted to the stage team's internal channel at 4:13 PM. The app records the draft and posting times. It does not show that the faculty supervisor approved the wording. The draft was created after the 4:10 call and before the 4:13 post; the time alone does not establish what Karthik believed.\n## Evidence H — Dev's Call History\n**Source:** Dev's phone, shown during interview\n- 4:06 PM — Outgoing call to the control desk, connected for 24 seconds.\n- 4:10 PM — No call to the faculty office.\n- 4:15 PM — Message to a teammate: “They've paused us. Nobody has told us why yet.”\nDev says he called to confirm that Pulse was still scheduled. He says the person who answered told him the slot was still listed, but that a safety check was underway."
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The checklist: {value}",
+      "explanation": "A real cable concern was reported at 4:05 and marked secured and tested by 4:09 to 4:10.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_1 where evidence_id in ('D') order by evidence_id"
+      ]
+    },
+    {
+      "key": "t3",
+      "thread": "t2",
+      "title": "WHAT THE 4:10 CALLER SAID",
+      "prompt": "**What did the 4:10 incoming call to the control desk actually communicate, according to Sana?**",
+      "answer_type": "CHOICE",
+      "answer": "B",
+      "options": [
+        {
+          "key": "A",
+          "text": "The faculty supervisor had formally cancelled Pulse."
+        },
+        {
+          "key": "B",
+          "text": "There might be an electrical problem and the slot should be held until checked; the caller did not identify themselves or claim faculty authorization."
+        },
+        {
+          "key": "C",
+          "text": "Dev demanded that Pulse be cancelled."
+        },
+        {
+          "key": "D",
+          "text": "The caller confirmed that the cable was still dangerous."
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The 4:10 call: {value}",
+      "explanation": "According to Sana the caller asked only for a hold and did not identify themselves or claim faculty authority.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_2 where evidence_id in ('F') order by evidence_id"
+      ]
+    },
+    {
+      "key": "t4",
+      "thread": "t2",
+      "title": "READING THE CALL RECORDS",
+      "prompt": "**Which statement about the call records is correct?**",
+      "answer_type": "CHOICE",
+      "answer": "B",
+      "options": [
+        {
+          "key": "A",
+          "text": "A call appearing in a log always means the people spoke."
+        },
+        {
+          "key": "B",
+          "text": "The two phone systems show no connected faculty-office call to Karthik before the cancellation announcement."
+        },
+        {
+          "key": "C",
+          "text": "The logs prove Ananya never used a phone that day."
+        },
+        {
+          "key": "D",
+          "text": "The 4:14 missed call proves the faculty office approved the cancellation.\n---\n# Phase 3 — The Missing Confirmation\n## Evidence I — Control Desk Procedure Card\n**Source:** Printed procedure beside the event phone\nFor safety-related changes:\n1. Record the caller's name and role.\n2. If the caller claims faculty authorization, call the faculty office back using the number on the approved contact sheet.\n3. Do not change the running order until authorization is confirmed.\n4. A request to “hold” a slot is not the same as a cancellation.\nSana's incident note at 4:10 says only: *“Caller unidentified — possible electrical issue — verify.”*\n## Evidence J — Approved Contact Sheet\n**Source:** Event control desk folder\nThe faculty office's approved callback number ends in **204**. The control desk log's 4:07 outgoing call was made to that number and did not connect. No connected callback to that number appears before 4:13.\nKarthik's phone history shows no incoming call from the faculty office between 4:00 and 4:15.\n## Evidence K — Karthik's Private Note\n**Source:** Paper running sheet recovered from the stage desk\nBeside the 4:12 cancellation entry, Karthik wrote:\n*“Need a reason to move Pulse after slot dispute. Safety concern is enough if marked faculty-approved.”*\nThe handwriting is identified as Karthik's by the event lead. Karthik says he wrote the note as a reminder to verify the instruction, but the note does not say “verify” or “pending.”\n## Evidence L — Final Timeline\n**Source:** Combined timeline prepared by the event lead\n- 4:05 — Ritesh reports a loose cable.\n- 4:09 — Cable is secured and tested.\n- 4:10 — Unidentified caller asks the control desk to hold Pulse pending a check.\n- 4:11 — Sana's attempted call to Karthik does not connect.\n- 4:12 — Karthik records “faculty cancelled” and drafts the announcement.\n- 4:13 — The announcement is posted.\n- 4:14 — The faculty office's return call to the control desk is missed.\n- 4:35 — Ananya says she never cancelled Pulse.\nThe records show that the safety concern was real, but they do not show a connected call in which the faculty office cancelled the demonstration."
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The call records: {value}",
+      "explanation": "Neither system shows a connected faculty-office call to Karthik before the announcement.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_1 where evidence_id in ('B') order by evidence_id",
+        "select evidence_id, title from evidence_phase_2 where evidence_id in ('E') order by evidence_id"
+      ]
+    },
+    {
+      "key": "t5",
+      "thread": "t3",
+      "title": "THE RULE THAT WAS BROKEN",
+      "prompt": "**Which rule was most clearly violated?**",
+      "answer_type": "CHOICE",
+      "answer": "B",
+      "options": [
+        {
+          "key": "A",
+          "text": "A safety concern must never be reported."
+        },
+        {
+          "key": "B",
+          "text": "A request to hold a slot is not a cancellation, and claimed faculty authorization must be verified before changing the running order."
+        },
+        {
+          "key": "C",
+          "text": "Photographs must be taken before every demonstration."
+        },
+        {
+          "key": "D",
+          "text": "Only students can call the control desk."
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The rule: {value}",
+      "explanation": "A request to hold is not a cancellation and claimed authorisation must be verified by callback before the running order changes.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_3 where evidence_id in ('I', 'J') order by evidence_id"
+      ]
+    },
+    {
+      "key": "t6",
+      "thread": "t3",
+      "title": "KARTHIK'S PRIVATE NOTE",
+      "prompt": "**What does Karthik's private note add to the case?**",
+      "answer_type": "CHOICE",
+      "answer": "B",
+      "options": [
+        {
+          "key": "A",
+          "text": "It proves the cable was never loose."
+        },
+        {
+          "key": "B",
+          "text": "It gives evidence that Karthik had a schedule-related motive and knowingly treated an unconfirmed concern as faculty-approved."
+        },
+        {
+          "key": "C",
+          "text": "It proves Dev placed the 4:10 call."
+        },
+        {
+          "key": "D",
+          "text": "It proves Ananya secretly cancelled Pulse.\n---"
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The private note: {value}",
+      "explanation": "The note shows a schedule-related motive and that he knowingly treated an unconfirmed concern as faculty-approved.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_3 where evidence_id in ('K', 'L') order by evidence_id"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "columns": ["evidence_id","title","source_label","body"],
+  "rows": [
+    ["E01","The Invitation Received by Team Orbit","Team Orbit message archive","At 3:58 PM, Meera saved a photograph of the invitation delivered to her team. It says: “Final Prototype Reveal — check-in 4:30 PM.” The QR code reads ORB-041. The paper is ordinary event stock. The photograph timestamp is from Meera’s phone; it proves what she received, not who printed it."],
+    ["E02","The Master Run Sheet","Schedule office export","The signed master run sheet lists Team Orbit check-in at 4:00 PM and Team Nova check-in at 4:10 PM. A 3:42 PM revision moved the opening remarks by five minutes but did not change either team’s check-in time. The file history attributes that revision to Rohan Mehta."],
+    ["E03","The Check-in Desk Note","Registration desk incident log","At 4:02 PM, the desk marked Team Orbit “not present.” At 4:12 PM, Meera arrived and showed the invitation with the 4:30 PM time. The desk paused Orbit’s check-in rather than disqualifying the team. A handwritten note says, “QR accepted, time conflicts with master.”"],
+    ["E04","The People on Duty","Volunteer shift board","Aanya handled invitation delivery and registration materials from 3:30–4:15 PM. Irfan operated the print desk from 3:35–4:05 PM. Rohan worked at the schedule desk. Kabir carried sealed envelopes between desks. Sana photographed the registration area. Several people could approach the printer; this board alone does not identify who printed any particular page."]
+  ]
+}

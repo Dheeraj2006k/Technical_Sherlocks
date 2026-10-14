@@ -1,0 +1,9 @@
+{
+  "columns": ["config_id","access_point_id","config_key","config_value"],
+  "rows": [
+    ["SC1","D2","rfid_required","false"],
+    ["SC2","D2","camera_clock_offset_minutes","+4"],
+    ["SC3","D1","camera_clock_offset_minutes","+4"],
+    ["SC4","P1","controller_clock_offset_minutes","-3"]
+  ]
+}

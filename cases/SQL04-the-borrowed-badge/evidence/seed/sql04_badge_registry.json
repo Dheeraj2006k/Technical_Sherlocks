@@ -1,0 +1,9 @@
+{
+  "columns": ["badge_id","assigned_to","badge_type","status","note"],
+  "rows": [
+    ["B-090","POOJA","STAFF_ACCESS","ACTIVE","Demo-room coordinator badge."],
+    ["B-118","MAYA","STAFF_ACCESS","ACTIVE","Inventory coordinator badge."],
+    ["B-204","ISHAAN","TEMPORARY_ACCESS","ACTIVE","Assigned to Ishaan for volunteer duty."],
+    ["B-311","ARJUN","TECH_ACCESS","ACTIVE","AV technician badge."]
+  ]
+}

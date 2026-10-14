@@ -1,0 +1,87 @@
+{
+  "phases": [
+    {
+      "phase": 1,
+      "name": "The Mix-up",
+      "tables": [
+        "sql05_characters",
+        "sql05_delivery_expectations",
+        "sql05_parcels",
+        "sql05_receipts"
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "The Route",
+      "tables": [
+        "sql05_label_audit",
+        "sql05_route_scans"
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "The Cover-up",
+      "tables": [
+        "sql05_messages"
+      ]
+    }
+  ],
+  "threads": [
+    {
+      "key": "t1",
+      "phase": 1,
+      "position": 1,
+      "title": "The Mix-up",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Compare the expected delivery with the receipt at the Demo Desk.",
+      "outcome_text": "PX-14 with the sensor module was expected; Joel got stage clips in PX-41.",
+      "unlocks": []
+    },
+    {
+      "key": "t2",
+      "phase": 2,
+      "position": 1,
+      "title": "The Route",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Test whether a courier mistake explains it, and why the dashboard says delivered.",
+      "outcome_text": "Both labels were swapped in opposite directions, and the dashboard only follows labels.",
+      "unlocks": []
+    },
+    {
+      "key": "t3",
+      "phase": 3,
+      "position": 1,
+      "title": "The Cover-up",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Read the messages against the label audit and the scans.",
+      "outcome_text": "Ravi’s message gives a delay motive that fits the swap.",
+      "unlocks": []
+    }
+  ],
+  "story_events": [
+    {
+      "thread": "t1",
+      "title": "Clips instead of a module",
+      "body": "EX-01 expects PX-14 with the sensor module at the Demo Desk. Joel’s receipt records stage clips in PX-41 and notes the expected module is absent."
+    },
+    {
+      "thread": "t2",
+      "title": "Delivered, by label",
+      "body": "The audit shows two reciprocal parcel-code changes by one actor before dispatch. The scanner reads labels, so the dashboard marks PX-14 delivered to the Storage Bay without checking contents."
+    },
+    {
+      "thread": "t3",
+      "title": "Until the calibration sheet",
+      "body": "Ravi tells Sana that if the module goes to storage the demo has to wait, and that he needs time to find the calibration sheet before it is tested. Sana says she did not edit either label."
+    }
+  ]
+}

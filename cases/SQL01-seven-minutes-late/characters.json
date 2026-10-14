@@ -1,0 +1,41 @@
+{
+  "victim": "Arjun Varma",
+  "characters": [
+    {
+      "name": "Nikhil Reddy",
+      "role": "Software lead",
+      "profile": "Had a public argument with Arjun earlier in the evening.",
+      "suspect": true
+    },
+    {
+      "name": "Kavya Iyer",
+      "role": "Power-system lead",
+      "profile": "Reported the Module 04 overheating and disconnected the unit.",
+      "suspect": true
+    },
+    {
+      "name": "Rohit Kulkarni",
+      "role": "Team lead",
+      "profile": "Led the Pulse team and the 10 PM demonstration setup.",
+      "suspect": true
+    },
+    {
+      "name": "Sameer Khan",
+      "role": "Fabrication member",
+      "profile": "Collected the soldering station from the workshop.",
+      "suspect": true
+    },
+    {
+      "name": "Priya Nair",
+      "role": "Stage coordinator",
+      "profile": "Coordinated the stage schedule for the 10 PM demonstration.",
+      "suspect": true
+    },
+    {
+      "name": "Mahesh Anna",
+      "role": "Lab assistant",
+      "profile": "Workshop key and equipment custodian.",
+      "suspect": true
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "phases": [
+    {
+      "phase": 1,
+      "name": "The Cut",
+      "tables": [
+        "evidence_phase_1"
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "The File Trail",
+      "tables": [
+        "evidence_phase_2"
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "The Final Export",
+      "tables": [
+        "evidence_phase_3"
+      ]
+    }
+  ],
+  "threads": [
+    {
+      "key": "t1",
+      "phase": 1,
+      "position": 1,
+      "title": "The Cut",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Establish what happened on stage and what the submission receipt does and does not prove.",
+      "outcome_text": "The demo ran 42 seconds against a two-minute cue, and Dev submitted the correct file on time.",
+      "unlocks": []
+    },
+    {
+      "key": "t2",
+      "phase": 2,
+      "position": 1,
+      "title": "The File Trail",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Follow the file from the kiosk to the player and test the custody theories against the records.",
+      "outcome_text": "The drive was returned with its seal intact, and the playback file was a 42-second export under the final filename.",
+      "unlocks": []
+    },
+    {
+      "key": "t3",
+      "phase": 3,
+      "position": 1,
+      "title": "The Final Export",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Combine the photo, the end card, the cue draft and the archive comparison.",
+      "outcome_text": "The photo, the rehearsal-only end card and the cue draft converge with the export record.",
+      "unlocks": []
+    }
+  ],
+  "story_events": [
+    {
+      "thread": "t1",
+      "title": "Forty-two seconds",
+      "body": "Team Comet's demo stopped after 42 seconds although the approved cue called for 2:00. Dev's receipt shows he uploaded a two-minute file at 3:36 PM, before the cutoff. The receipt proves the submission, not what was later played."
+    },
+    {
+      "thread": "t2",
+      "title": "A different file, the same name",
+      "body": "The sealed drive was returned unopened, so Arjun's custody does not explain the mismatch. The workstation exported a 42-second file from the rehearsal cut under the name Comet_Final_v7.mp4 at 3:49 PM, under Nisha's account, and the player's checksum does not match Dev's upload."
+    },
+    {
+      "thread": "t3",
+      "title": "The reflection and the draft",
+      "body": "A reflection in the booth monitor places Nisha at the workstation while the export was running, the short file ends on a rehearsal-only note, and her cue draft says to use the short render. Dev's original is still in the kiosk archive, uncorrupted."
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "culprit": {
+    "points": 35,
+    "note": "Pick the responsible person from the suspect list"
+  },
+  "mechanism": {
+    "points": 20,
+    "options": [
+      {
+        "label": "The genuine Aster was stolen after the room was locked, using an unknown way into the room.",
+        "correct": false
+      },
+      {
+        "label": "The genuine Aster was accidentally damaged during maintenance, and the display model was substituted to hide the damage.",
+        "correct": false
+      },
+      {
+        "label": "The genuine Aster was removed before closure and replaced with a replica; the disappearance was used to create a security-related delay after the rehearsal failure.",
+        "correct": true
+      },
+      {
+        "label": "The genuine Aster was never placed in the room; the entire event team mistakenly believed a replica was the real prototype.",
+        "correct": false
+      }
+    ]
+  }
+}

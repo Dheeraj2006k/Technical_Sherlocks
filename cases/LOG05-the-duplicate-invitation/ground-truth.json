@@ -1,0 +1,60 @@
+{
+  "victim": "Team Orbit",
+  "motive": "To delay Team Orbit past sound check so that Team Nova would keep the first demo slot; the shift note says to change Orbit's copy only and leave the master alone.",
+  "method": "Aanya Nair printed a one-page Orbit invitation under the ANAIR account at 3:51 PM with a 4:30 PM check-in and Orbit's valid QR code ORB-041, collected it at the printer tray at 3:54 PM, and left the master schedule and the official email untouched.",
+  "explanation": "The master run sheet and the emailed PDF both say 4:00 PM while the paper copy says 4:30 PM. The ANAIR print job at 3:51 PM, the photograph of Aanya at the tray at 3:54 PM, the rejected proof with the same time and QR and handwriting consistent with her shift note, and the note itself converge on her. Rohan's real schedule revision did not move Orbit, and Nova checked in normally.",
+  "timeline": [
+    {
+      "time": "3:42 PM",
+      "event": "Rohan revises the schedule: opening remarks move five minutes, check-in times unchanged",
+      "evidence": "E02, E11"
+    },
+    {
+      "time": "3:45 PM",
+      "event": "The official email to Team Orbit says check-in 4:00 PM with QR ORB-041",
+      "evidence": "E05"
+    },
+    {
+      "time": "3:51 PM",
+      "event": "A one-page Orbit_Final_v3.pdf is printed under the ANAIR account",
+      "evidence": "E06"
+    },
+    {
+      "time": "3:54 PM",
+      "event": "A photograph shows Aanya collecting a single sheet at the printer",
+      "evidence": "E08"
+    },
+    {
+      "time": "3:58 PM",
+      "event": "Meera photographs the invitation she received: check-in 4:30 PM",
+      "evidence": "E01"
+    },
+    {
+      "time": "4:02 PM",
+      "event": "The desk marks Orbit not present",
+      "evidence": "E03"
+    },
+    {
+      "time": "4:12 PM",
+      "event": "Meera arrives; QR ORB-041 is scanned and resolves to Orbit's original registration",
+      "evidence": "E03, E07"
+    }
+  ],
+  "causal_chain": [
+    "The signed master and the official email both give Orbit a 4:00 PM check-in.",
+    "A paper copy with 4:30 PM and the same valid QR reached Team Orbit.",
+    "The only matching print job is under Aanya's account and she is photographed at the tray.",
+    "A rejected proof with the same wrong time and QR, and her shift note stating the aim, close the chain."
+  ],
+  "resolution": {
+    "motive": "Aanya wanted Team Orbit to miss sound check so Team Nova would keep the first demo slot.",
+    "method": "She printed a misleading Orbit invitation with a 4:30 PM check-in on the valid QR ORB-041 and left the official master schedule and email unchanged.",
+    "chain": [
+      "The master run sheet and the official email both say 4:00 PM; the paper copy says 4:30 PM.",
+      "An ANAIR-account print ran at 3:51 PM and Aanya is photographed at the output tray at 3:54 PM.",
+      "A rejected proof with 4:30 PM and QR ORB-041 carries a handwritten note consistent with Aanya's shift note.",
+      "Her note says to change Orbit's copy only and leave the master alone; Rohan's revision and Nova's check-in do not explain the copy."
+    ]
+  },
+  "culprit": "Aanya Nair"
+}

@@ -1,0 +1,47 @@
+{
+  "scoring": {
+    "reward_schedule": [
+      10,
+      8,
+      6,
+      4,
+      2
+    ],
+    "wrong_answer_penalty": 2,
+    "sql_errors_free": true,
+    "retries_allowed": true,
+    "each_component_awards_points_once": true
+  },
+  "hints": {
+    "t1": [
+      "Start with the original print job, not the later reprint.",
+      "Filter print_jobs to J-170.",
+      "Read quantity and destination together."
+    ],
+    "t2": [
+      "A manifest may describe a plan rather than an event.",
+      "Inspect manifest_type and note for RM-17.",
+      "Look for the phrase planned route."
+    ],
+    "t3": [
+      "A scan of a tote is not necessarily a scan of the package.",
+      "List all B-17 custody scans in time order.",
+      "Compare the empty tote scan with any explicit sealed-package acceptance."
+    ],
+    "t4": [
+      "Follow the approval reference, not just the job ID.",
+      "Join print_jobs to approval_audit on approval_ref.",
+      "APR-044 appears on another order."
+    ],
+    "t5": [
+      "Separate the person who printed from the person who requested and held the batch.",
+      "Compare J-171.requested_by with the CUSTODY_IN scan for B-17.",
+      "The custody record and reprint request point to the same coordinator."
+    ],
+    "t6": [
+      "The strongest explanation must account for the original, the reprint, and the later statement.",
+      "Compare Nisha's messages with the actual custody and approval records.",
+      "Do not claim the records prove what happened to the physical badges after the trail breaks."
+    ]
+  }
+}
