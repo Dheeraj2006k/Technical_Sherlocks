@@ -1,0 +1,7 @@
+{
+  "columns": ["component_code","component_name","storage_location","safe_to_use","status","last_checked_at"],
+  "rows": [
+    ["MODULE_04","Pulse LED power module","Pulse wall cabinet",false,"QUARANTINED","2026-10-16 20:46:00"],
+    ["MODULE_SPARE","Spare LED power module","Rear Storage",true,"NOT_FOUND","2026-10-16 21:31:00"]
+  ]
+}

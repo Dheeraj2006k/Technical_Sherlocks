@@ -1,0 +1,11 @@
+{
+  "columns": ["character_id","display_name","role","public_description"],
+  "rows": [
+    ["ARJUN","Arjun Sen","AV technician","Requested a replacement cable for the demo room."],
+    ["DEV","Dev Malhotra","Security desk attendant","Records returned badges at the volunteer desk."],
+    ["ISHAAN","Ishaan Rao","Student volunteer","Volunteer whose badge ID appears in the archive door log."],
+    ["MAYA","Maya Kapoor","Inventory coordinator","Reconciles equipment and returned badge records."],
+    ["POOJA","Pooja Nair","Demo-room coordinator","Responsible for receiving the access-token envelope."],
+    ["RHEA","Rhea Thomas","Show producer","Responsible for the closing-show schedule."]
+  ]
+}

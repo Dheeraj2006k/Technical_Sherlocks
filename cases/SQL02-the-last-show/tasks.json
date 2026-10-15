@@ -1,0 +1,218 @@
+{
+  "tasks": [
+    {
+      "key": "t1",
+      "thread": "t1",
+      "title": "WHAT WAS ON THE STAND?",
+      "prompt": "Compare the pre-show inventory and post-finale check. Which conclusion is supported?",
+      "answer_type": "CHOICE",
+      "answer": "B",
+      "options": [
+        {
+          "key": "A",
+          "text": "The original was present at the finale."
+        },
+        {
+          "key": "B",
+          "text": "The post-finale stand held the replica, while the original was later found in Repair Case 2."
+        },
+        {
+          "key": "C",
+          "text": "Both masks were destroyed."
+        },
+        {
+          "key": "D",
+          "text": "The original was never issued."
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "join records on stable ids",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The stand held: {value}",
+      "explanation": "IC02 confirms original before return; IC03 confirms replica on stand; IC05 later finds original in repair case.",
+      "reference_sql": [
+        "SELECT check_id, checked_at, location, item_id, observed_condition FROM sql02_inventory_checks ORDER BY checked_at"
+      ]
+    },
+    {
+      "key": "t2",
+      "thread": "t1",
+      "title": "WHO HAD PROP RESPONSIBILITY",
+      "prompt": "Join role assignments to characters. Who had the prop-custody lead duty during the relevant window?",
+      "answer_type": "CHOICE",
+      "answer": "C",
+      "options": [
+        {
+          "key": "A",
+          "text": "Nikhil Rao"
+        },
+        {
+          "key": "B",
+          "text": "Kavya Sen"
+        },
+        {
+          "key": "C",
+          "text": "Dev Malhotra"
+        },
+        {
+          "key": "D",
+          "text": "Arjun Das"
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "join records on stable ids",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "Prop custody lead: {value}",
+      "explanation": "RA01 assigns prop custody lead to Dev. This is responsibility, not by itself proof of the swap.",
+      "reference_sql": [
+        "SELECT c.display_name, r.duty, r.zone FROM sql02_role_assignments r JOIN sql02_characters c USING(character_id) WHERE r.duty ILIKE '%prop custody%'"
+      ]
+    },
+    {
+      "key": "t3",
+      "thread": "t2",
+      "title": "PRESENCE VERSUS OPPORTUNITY",
+      "prompt": "Nikhil appears in the access log near the stage-left wing. Which joined evidence most strongly weakens the claim that he performed the substitution?",
+      "answer_type": "CHOICE",
+      "answer": "B",
+      "options": [
+        {
+          "key": "A",
+          "text": "His access event was denied."
+        },
+        {
+          "key": "B",
+          "text": "He exited stage-left at 18:54, and the call sheet places him onstage from 18:55; the original returned to the prop bay at 18:57."
+        },
+        {
+          "key": "C",
+          "text": "He never entered backstage."
+        },
+        {
+          "key": "D",
+          "text": "He operated CUE-17."
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "join records on stable ids",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "Nikhil and the swap: {value}",
+      "explanation": "The records place Nikhil onstage before the original returns to the prop bay. The badge alone isn't decisive; the combined sequence clears him of the substitution window.",
+      "reference_sql": [
+        "SELECT a.event_time, a.event_type, a.zone, a.note FROM sql02_access_events a WHERE a.assigned_character_id='NIK' ORDER BY a.event_time",
+        "SELECT event_time, handled_by, from_location, to_location FROM sql02_prop_movements WHERE item_id='MASK-ORIG' ORDER BY event_time"
+      ]
+    },
+    {
+      "key": "t4",
+      "thread": "t2",
+      "title": "THE SUBSTITUTION WINDOW",
+      "prompt": "Join movements and inventory checks. Which event sequence best explains how the replica reached the finale stand?",
+      "answer_type": "CHOICE",
+      "answer": "B",
+      "options": [
+        {
+          "key": "A",
+          "text": "The original was taken from the stand after the finale and the replica appeared later."
+        },
+        {
+          "key": "B",
+          "text": "The original returned to the prop bay at 18:57; the replica moved from backup tray to stage-left at 18:59; the replica was on the display stand by 19:08."
+        },
+        {
+          "key": "C",
+          "text": "Kavya moved the original from the AV booth."
+        },
+        {
+          "key": "D",
+          "text": "The delivery marshal carried the mask out through the staff door."
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "join records on stable ids",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The swap sequence: {value}",
+      "explanation": "The movement records and inventory checks provide a continuous substitution sequence; the delivery manifest lists fabric rolls only.",
+      "reference_sql": [
+        "SELECT event_time, item_id, from_location, to_location, handled_by, reason FROM sql02_prop_movements WHERE item_id IN ('MASK-ORIG','MASK-REPL') ORDER BY event_time",
+        "SELECT checked_at, location, item_id, observed_condition FROM sql02_inventory_checks ORDER BY checked_at"
+      ]
+    },
+    {
+      "key": "t5",
+      "thread": "t3",
+      "title": "THE CUE OPERATOR",
+      "prompt": "Join cue records with role assignments and access events. Which interpretation fits the evidence?",
+      "answer_type": "CHOICE",
+      "answer": "B",
+      "options": [
+        {
+          "key": "A",
+          "text": "Kavya triggered the cue, so she must have swapped the prop."
+        },
+        {
+          "key": "B",
+          "text": "Kavya's cue log shows the wrong item but does not show prop handling; her assignment is AV operation, and no prop-bay access is recorded for her."
+        },
+        {
+          "key": "C",
+          "text": "Kavya signed the original into Repair Case 2."
+        },
+        {
+          "key": "D",
+          "text": "The cue log proves Nikhil carried the original."
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "join records on stable ids",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The cue log shows: {value}",
+      "explanation": "Kavya executed the scheduled cue, but records don't put her in prop custody or show her moving either item.",
+      "reference_sql": [
+        "SELECT q.event_time, q.cue_code, c.display_name, q.planned_item_id, q.observed_item_id, q.note FROM sql02_cue_log q JOIN sql02_characters c ON c.character_id=q.operator_id ORDER BY q.event_time",
+        "SELECT * FROM sql02_access_events WHERE assigned_character_id='KAV' ORDER BY event_time"
+      ]
+    },
+    {
+      "key": "t6",
+      "thread": "t3",
+      "title": "THE COVER STORY",
+      "prompt": "Join the original's movement history to the direct messages. Which explanation is best supported?",
+      "answer_type": "CHOICE",
+      "answer": "A",
+      "options": [
+        {
+          "key": "A",
+          "text": "Dev deliberately used the backup and kept the original for a clasp repair, concealing the move because he feared the producer would cancel the finale."
+        },
+        {
+          "key": "B",
+          "text": "Nikhil stole the mask to sabotage his own performance."
+        },
+        {
+          "key": "C",
+          "text": "Kavya swapped the mask to improve the camera shot."
+        },
+        {
+          "key": "D",
+          "text": "Arjun removed the mask during the fabric delivery."
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "join records on stable ids",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "Best explanation: {value}",
+      "explanation": "Dev handled the original's return and later repair-case movement, instructed Sana to use the backup without notifying the producer, and admitted the unlogged move. The motive is avoiding cancellation, not permanent theft.",
+      "reference_sql": [
+        "SELECT m.event_time, m.item_id, m.from_location, m.to_location, c.display_name AS handler, m.reason FROM sql02_prop_movements m JOIN sql02_characters c ON c.character_id=m.handled_by WHERE m.item_id='MASK-ORIG' ORDER BY m.event_time",
+        "SELECT sent_at, sender_id, recipient_id, subject, body FROM sql02_messages WHERE sender_id='DEV' ORDER BY sent_at"
+      ]
+    }
+  ]
+}

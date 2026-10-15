@@ -1,0 +1,14 @@
+{
+  "columns": ["activity_id","event_at","person_name","activity","location","source_system"],
+  "rows": [
+    ["F1","2026-10-16 20:50:00","Kavya Iyer","Stage lighting test","Main Auditorium","STAGE_CONSOLE"],
+    ["F2","2026-10-16 21:20:00","Nikhil Reddy","Presentation rehearsal scan","Seminar Hall 2","FEST_BADGE"],
+    ["F3","2026-10-16 21:43:00","Nikhil Reddy","Presentation rehearsal scan","Seminar Hall 2","FEST_BADGE"],
+    ["F4","2026-10-16 21:44:00","Nikhil Reddy","Laptop Wi-Fi reconnect","Seminar Hall 2","NETWORK"],
+    ["F5","2026-10-16 21:10:00","Rohit Kulkarni","Pulse demo setup","Main Auditorium","TASK_SYSTEM"],
+    ["F6","2026-10-16 21:26:00","Rohit Kulkarni","Spare module search","Rear Storage","TASK_SYSTEM"],
+    ["F7","2026-10-16 21:47:00","Kavya Iyer","Stage lighting test","Main Auditorium","STAGE_CONSOLE"],
+    ["F8","2026-10-16 21:51:00","Arjun Varma","Found unconscious","Engineering Workshop","INCIDENT_REPORT"],
+    ["F9","2026-10-16 21:52:00","Mahesh Anna","Incident response","Engineering Workshop","INCIDENT_REPORT"]
+  ]
+}

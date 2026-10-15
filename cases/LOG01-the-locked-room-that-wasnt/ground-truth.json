@@ -1,0 +1,71 @@
+{
+  "victim": "The Aster project team",
+  "motive": "Aster had failed its rehearsal output check. Vikram feared the demonstration would collapse and that his failure to report the fault would be exposed, so he staged a theft to create a reason to postpone the demonstration.",
+  "method": "Vikram removed the working prototype from Innovation Room B at about 4:12 PM while it was still open, put the nonfunctional display replica in its place, carried the genuine device out in a fitted flat black equipment case from the AV booth, drafted a security-related delay at 4:14 PM and let the normal 4:20 PM closure go ahead.",
+  "explanation": "The 4:18 photograph already shows the replica, so the substitution happened before the room was closed and no one had to enter a locked room. Vikram received the failure warning at 4:01 PM, signed out the black case at 4:02, was seen carrying it at 4:08, drafted a security-incident delay at 4:14 before anyone reported a loss, and the returned case holds a fitted insert with tape matching Aster's packaging. No single record captures the removal, but together they converge on him.",
+  "timeline": [
+    {
+      "time": "3:35 PM",
+      "event": "Imran repairs the display lighting; the case is left open for Aditya's inspection",
+      "evidence": "I"
+    },
+    {
+      "time": "3:52 PM",
+      "event": "Aditya notes Aster must not be presented as fully working if the fault returns",
+      "evidence": "D"
+    },
+    {
+      "time": "4:00 PM",
+      "event": "Aditya messages the team that Aster failed the output check again; Vikram's account receives it at 4:01",
+      "evidence": "J"
+    },
+    {
+      "time": "4:02 PM",
+      "event": "Vikram signs out a flat black equipment case",
+      "evidence": "H"
+    },
+    {
+      "time": "4:08 PM",
+      "event": "Rohan sees Vikram with the case near the AV booth",
+      "evidence": "G, N"
+    },
+    {
+      "time": "4:14 PM",
+      "event": "Vikram drafts an unsent schedule update about a security incident",
+      "evidence": "K"
+    },
+    {
+      "time": "4:18 PM",
+      "event": "Naina photographs the display: it holds the replica",
+      "evidence": "C, F, M"
+    },
+    {
+      "time": "4:20 PM",
+      "event": "The room is reported closed on a visual checklist",
+      "evidence": "A"
+    },
+    {
+      "time": "4:30 PM",
+      "event": "The missing prototype is reported",
+      "evidence": "A"
+    }
+  ],
+  "causal_chain": [
+    "Aster failed the 4:00 PM output check and Vikram received the warning.",
+    "He signed out a flat black case and was seen carrying it before the replica appears in the 4:18 photograph.",
+    "The replica is in the case before 4:20, so the room never needed to be entered after closure.",
+    "He drafted a security-related delay at 4:14 PM, before the loss was reported.",
+    "The returned case holds an insert cut for Aster and tape matching its packaging."
+  ],
+  "resolution": {
+    "motive": "Vikram knew Aster had failed its output check and could not face the demonstration collapsing, so he staged a theft to force a delay.",
+    "method": "He swapped the working prototype for the display replica before the room was closed, carried it out in the black equipment case, and drafted a security-incident delay before the loss was reported.",
+    "chain": [
+      "The 4:18 PM photograph shows the replica, so the substitution happened before the 4:20 PM closure.",
+      "Vikram received the failure warning at 4:01 PM and signed out the black case at 4:02 PM.",
+      "Rohan saw him with the case at 4:08 PM, and the returned case holds an insert fitted to Aster.",
+      "He drafted a security-incident delay at 4:14 PM, before the loss was reported."
+    ]
+  },
+  "culprit": "Vikram Sethi"
+}

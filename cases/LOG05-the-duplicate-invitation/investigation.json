@@ -1,0 +1,83 @@
+{
+  "phases": [
+    {
+      "phase": 1,
+      "name": "The Mismatch",
+      "tables": [
+        "evidence_phase_1"
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "The Duplicate",
+      "tables": [
+        "evidence_phase_2"
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "The Motive",
+      "tables": [
+        "evidence_phase_3"
+      ]
+    }
+  ],
+  "threads": [
+    {
+      "key": "t1",
+      "phase": 1,
+      "position": 1,
+      "title": "The Mismatch",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Compare the invitation Team Orbit received with the official schedule and see what the duty board can and cannot show.",
+      "outcome_text": "The paper invitation conflicts with the signed schedule, and the shift board shows only who had roles nearby.",
+      "unlocks": []
+    },
+    {
+      "key": "t2",
+      "phase": 2,
+      "position": 1,
+      "title": "The Duplicate",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Establish what was officially sent and what the print queue, the QR audit and the printer-tray photograph each prove.",
+      "outcome_text": "The official email said 4:00 PM, and an ANAIR print plus a photo at the tray point to one person without proving the page content.",
+      "unlocks": []
+    },
+    {
+      "key": "t3",
+      "phase": 3,
+      "position": 1,
+      "title": "The Motive",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Bring the rejected proof, the shift note, the schedule history and Nova's receipt together.",
+      "outcome_text": "The proof and the note tie the wrong copy to Aanya and show why; the schedule revision and Nova's receipt do not.",
+      "unlocks": []
+    }
+  ],
+  "story_events": [
+    {
+      "thread": "t1",
+      "title": "Two different times",
+      "body": "Team Orbit received an invitation saying check-in at 4:30 PM, but the signed master run sheet says 4:00 PM. The desk accepted the QR but noted the time conflict. The shift board lists who worked near registration and the printer, but several people could reach the printer."
+    },
+    {
+      "thread": "t2",
+      "title": "The valid QR was reused",
+      "body": "The emailed PDF to Team Orbit said 4:00 PM with QR ORB-041. A one-page print ran under the ANAIR account at 3:51 PM and Aanya is photographed collecting a sheet at the tray at 3:54 PM. The QR only identifies the team record; it does not authenticate the time printed beside it."
+    },
+    {
+      "thread": "t3",
+      "title": "Consistent handwriting, a stated aim",
+      "body": "A rejected proof reading Team Orbit, check-in 4:30 PM with QR ORB-041 was recovered from the recycling bin, with a purple-ink margin note consistent with Aanya's shift board marker. Her shift note says to change Orbit's copy only and leave the master alone. Rohan's revision never moved Orbit, and Nova checked in normally."
+    }
+  ]
+}

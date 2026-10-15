@@ -1,0 +1,7 @@
+{
+  "columns": ["receipt_id","batch_id","received_at","received_by","item_received","quantity_received","condition_note"],
+  "rows": [
+    ["DR-17","B-17","2026-10-16 15:17:00","LEENA","EMPTY_SLEEVE",0,"Original batch sleeve arrived without badges."],
+    ["DR-17R","B-17R","2026-10-16 15:18:00","LEENA","SEALED_BADGE_PACK",12,"Replacement batch received and counted."]
+  ]
+}

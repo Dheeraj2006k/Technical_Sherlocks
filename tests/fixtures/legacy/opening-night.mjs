@@ -13,7 +13,7 @@
 // Tables (schema case_<slug>): cast_crew, access_log (P1) | prop_handling_log (P2) | text_messages (P3)
 // Every task is solvable with only the tables unlocked at that phase. verify-case.mjs / the test
 // suite run the reference SQL below against the real data to prove each answer is unique.
-import { installCase, removeCaseFully } from './engine.mjs';
+import { installCase, removeCaseFully } from '../../../scripts/cases/engine.mjs';
 
 const D = '2025-03-14';
 const t = (hhmm) => `${D} ${hhmm}:00`;

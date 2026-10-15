@@ -1,0 +1,12 @@
+{
+  "columns": ["movement_id","event_time","item_id","item_label","from_location","to_location","handled_by","logged_by","reason","seal_status"],
+  "rows": [
+    ["PM01","2026-10-16 18:20:00","MASK-ORIG","Starfall Mask — original","LOCKER-A","PROP_STAND","DEV","SAN","Pre-show issue; serial plate SM-041 verified","SEALED"],
+    ["PM02","2026-10-16 18:37:00","MASK-REPL","Starfall Mask — replica","PROP_CABINET","BACKUP_TRAY","DEV","SAN","Backup prop for camera rehearsal","NOT_APPLICABLE"],
+    ["PM03","2026-10-16 18:51:00","MASK-ORIG","Starfall Mask — original","PROP_STAND","STAGE_LEFT_WING","SAN","SAN","Approved pre-finale hand-off","SEALED"],
+    ["PM04","2026-10-16 18:57:00","MASK-ORIG","Starfall Mask — original","STAGE_LEFT_WING","PROP_BAY","DEV","SAN","Returned for clasp inspection after rehearsal snag","OPEN"],
+    ["PM05","2026-10-16 18:59:00","MASK-REPL","Starfall Mask — replica","BACKUP_TRAY","STAGE_LEFT_WING","DEV","SAN","Marked “finale ready”; no original serial recorded","NOT_APPLICABLE"],
+    ["PM06","2026-10-16 19:06:00","MASK-REPL","Starfall Mask — replica","STAGE_LEFT_WING","DISPLAY_STAND","SAN","SAN","Used for finale reveal after prop lead sign-off","NOT_APPLICABLE"],
+    ["PM07","2026-10-16 19:14:00","MASK-ORIG","Starfall Mask — original","PROP_BAY","REPAIR_CASE-2","DEV","DEV","Clasp repair; entered after incident report was filed","OPEN"]
+  ]
+}

@@ -1,0 +1,214 @@
+{
+  "tasks": [
+    {
+      "key": "t1",
+      "thread": "t1",
+      "title": "THE EXPECTED PARCEL",
+      "prompt": "Which parcel was expected at the Demo Desk, and what did it contain?",
+      "answer_type": "CHOICE",
+      "answer": "A",
+      "options": [
+        {
+          "key": "A",
+          "text": "PX-14, sensor module"
+        },
+        {
+          "key": "B",
+          "text": "PX-41, stage clips"
+        },
+        {
+          "key": "C",
+          "text": "PX-14, stage clips"
+        },
+        {
+          "key": "D",
+          "text": "PX-41, sensor module"
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "join records on stable ids",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "Expected at the Demo Desk: {value}",
+      "explanation": "EX-01 expects parcel PX-14 containing the sensor module at the Demo Desk.",
+      "reference_sql": [
+        "SELECT parcel_id,expected_contents,expected_destination FROM sql05_delivery_expectations WHERE expectation_id='EX-01'"
+      ]
+    },
+    {
+      "key": "t2",
+      "thread": "t1",
+      "title": "WHAT JOEL RECEIVED",
+      "prompt": "What did Joel actually receive?",
+      "answer_type": "CHOICE",
+      "answer": "B",
+      "options": [
+        {
+          "key": "A",
+          "text": "The sensor module in PX-14"
+        },
+        {
+          "key": "B",
+          "text": "Stage clips in parcel PX-41"
+        },
+        {
+          "key": "C",
+          "text": "An empty parcel"
+        },
+        {
+          "key": "D",
+          "text": "Only a calibration sheet"
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "join records on stable ids",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "Joel received: {value}",
+      "explanation": "RC-01 records stage clips in PX-41 at the Demo Desk, with the expected sensor module absent.",
+      "reference_sql": [
+        "SELECT parcel_id,contents_observed FROM sql05_receipts WHERE receipt_id='RC-01'"
+      ]
+    },
+    {
+      "key": "t3",
+      "thread": "t2",
+      "title": "NOT A COURIER MIX-UP",
+      "prompt": "What most strongly shows this was not simply a courier mix-up?",
+      "answer_type": "CHOICE",
+      "answer": "A",
+      "options": [
+        {
+          "key": "A",
+          "text": "Reciprocal parcel-code changes on both labels by the same actor before dispatch"
+        },
+        {
+          "key": "B",
+          "text": "The delivered status"
+        },
+        {
+          "key": "C",
+          "text": "Joel's receipt alone"
+        },
+        {
+          "key": "D",
+          "text": "The parcels have different weights"
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "join records on stable ids",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "What rules out a mix-up: {value}",
+      "explanation": "The audit shows both parcel codes changed in opposite directions by the same actor before dispatch.",
+      "reference_sql": [
+        "SELECT parcel_id,event_at,actor_id,old_value,new_value FROM sql05_label_audit WHERE field_changed='PARCEL_CODE' ORDER BY event_at"
+      ]
+    },
+    {
+      "key": "t4",
+      "thread": "t2",
+      "title": "WHY IT SAYS DELIVERED",
+      "prompt": "Why does the dashboard say PX-14 was delivered even though the module did not reach the Demo Desk?",
+      "answer_type": "CHOICE",
+      "answer": "A",
+      "options": [
+        {
+          "key": "A",
+          "text": "The route system follows the swapped label and does not verify contents"
+        },
+        {
+          "key": "B",
+          "text": "Joel changed the receipt"
+        },
+        {
+          "key": "C",
+          "text": "The module was confirmed at the Demo Desk"
+        },
+        {
+          "key": "D",
+          "text": "The scanner identifies contents automatically"
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "join records on stable ids",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "Why it reads delivered: {value}",
+      "explanation": "The scanner reads labels, not contents, so the dashboard follows the swapped label.",
+      "reference_sql": [
+        "SELECT parcel_id,scan_location,scan_type,scanned_label_destination,note FROM sql05_route_scans ORDER BY event_at"
+      ]
+    },
+    {
+      "key": "t5",
+      "thread": "t3",
+      "title": "WHO CHANGED THE LABELS",
+      "prompt": "Who performed the reciprocal label changes?",
+      "answer_type": "CHOICE",
+      "answer": "A",
+      "options": [
+        {
+          "key": "A",
+          "text": "Ravi Menon"
+        },
+        {
+          "key": "B",
+          "text": "Sana Qureshi"
+        },
+        {
+          "key": "C",
+          "text": "Joel D'Souza"
+        },
+        {
+          "key": "D",
+          "text": "Mira Patel"
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "join records on stable ids",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The label changes were made by: {value}",
+      "explanation": "Both reciprocal PARCEL_CODE changes (LA-02, LA-03) name Ravi.",
+      "reference_sql": [
+        "SELECT actor_id,parcel_id,event_at,old_value,new_value FROM sql05_label_audit ORDER BY event_at"
+      ]
+    },
+    {
+      "key": "t6",
+      "thread": "t3",
+      "title": "THE BEST EXPLANATION",
+      "prompt": "Which explanation best fits the full record?",
+      "answer_type": "CHOICE",
+      "answer": "A",
+      "options": [
+        {
+          "key": "A",
+          "text": "Ravi swapped the labels to route the sensor module to storage until he found its calibration sheet, relying on label-based delivery status to obscure the mismatch."
+        },
+        {
+          "key": "B",
+          "text": "Sana made a random courier mistake"
+        },
+        {
+          "key": "C",
+          "text": "Joel replaced the module after receiving it"
+        },
+        {
+          "key": "D",
+          "text": "The scanner verified contents and confirmed the module at the desk"
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "join records on stable ids",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "Best explanation: {value}",
+      "explanation": "The swap, the route result and Ravi’s calibration-sheet message together point to a deliberate swap meant to buy time.",
+      "reference_sql": [
+        "SELECT sent_at,sender_id,message_text FROM sql05_messages ORDER BY sent_at"
+      ]
+    }
+  ]
+}

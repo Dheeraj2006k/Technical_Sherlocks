@@ -78,7 +78,7 @@ test('gen-case-credentials: new password per case, hash only in the database, pu
   try {
     // a draft case cannot be published
     const refused = run('scripts/gen-case-credentials.mjs', [draft.caseCode, '--publish']);
-    assert.match(refused.stderr, /only validated/);
+    assert.match(refused.stderr, /only a tested version/);
     assert.equal((await pool.query('select status from cases where id = $1', [draft.caseId])).rows[0].status, 'draft');
 
     const out = run('scripts/gen-case-credentials.mjs', [tested.caseCode, '--publish']);

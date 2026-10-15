@@ -1,0 +1,157 @@
+{
+  "inferences": [
+    {
+      "id": "I1",
+      "claim": "The finale stand held the replica and the original was later found in Repair Case 2.",
+      "tasks": [
+        "t1"
+      ],
+      "evidence": [
+        {
+          "table": "sql02_inventory_checks",
+          "summary": "IC03 replica on stand, serial plate absent",
+          "verify_sql": "select check_id from sql02_inventory_checks where check_id = 'IC03' and item_id = 'MASK-REPL'"
+        },
+        {
+          "table": "sql02_inventory_checks",
+          "summary": "IC05 original in Repair Case 2",
+          "verify_sql": "select check_id from sql02_inventory_checks where check_id = 'IC05' and location = 'REPAIR_CASE-2'"
+        }
+      ]
+    },
+    {
+      "id": "I2",
+      "claim": "Dev held the prop custody duty.",
+      "tasks": [
+        "t2"
+      ],
+      "evidence": [
+        {
+          "table": "sql02_role_assignments",
+          "summary": "RA01 prop custody lead",
+          "verify_sql": "select assignment_id from sql02_role_assignments where assignment_id = 'RA01' and character_id = 'DEV'"
+        }
+      ]
+    },
+    {
+      "id": "I3",
+      "claim": "Nikhil was onstage before the original returned to the prop bay.",
+      "tasks": [
+        "t3"
+      ],
+      "evidence": [
+        {
+          "table": "sql02_access_events",
+          "summary": "AC03 exit toward stage at 18:54",
+          "verify_sql": "select event_id from sql02_access_events where event_id = 'AC03' and assigned_character_id = 'NIK' and note ilike '%onstage from 18:55%'"
+        },
+        {
+          "table": "sql02_prop_movements",
+          "summary": "PM04 original returned at 18:57",
+          "verify_sql": "select movement_id from sql02_prop_movements where movement_id = 'PM04' and to_location = 'PROP_BAY'"
+        }
+      ]
+    },
+    {
+      "id": "I4",
+      "claim": "The replica replaced the original between 18:57 and 19:08.",
+      "tasks": [
+        "t4"
+      ],
+      "evidence": [
+        {
+          "table": "sql02_prop_movements",
+          "summary": "PM05 replica to stage-left wing at 18:59",
+          "verify_sql": "select movement_id from sql02_prop_movements where movement_id = 'PM05' and item_id = 'MASK-REPL' and handled_by = 'DEV'"
+        },
+        {
+          "table": "sql02_inventory_checks",
+          "summary": "IC03 replica on display stand at 19:08",
+          "verify_sql": "select check_id from sql02_inventory_checks where check_id = 'IC03' and location = 'DISPLAY_STAND'"
+        }
+      ]
+    },
+    {
+      "id": "I5",
+      "claim": "The cue log shows the wrong item but no prop handling by Kavya.",
+      "tasks": [
+        "t5"
+      ],
+      "evidence": [
+        {
+          "table": "sql02_cue_log",
+          "summary": "CU02 planned original, observed replica",
+          "verify_sql": "select cue_event_id from sql02_cue_log where cue_event_id = 'CU02' and operator_id = 'KAV' and observed_item_id = 'MASK-REPL'"
+        },
+        {
+          "table": "sql02_access_events",
+          "summary": "AC06 AV booth credential, not prop bay",
+          "verify_sql": "select event_id from sql02_access_events where event_id = 'AC06' and zone = 'AV_BOOTH'"
+        }
+      ]
+    },
+    {
+      "id": "I6",
+      "claim": "Dev concealed the move and admitted it afterwards.",
+      "tasks": [
+        "t6"
+      ],
+      "evidence": [
+        {
+          "table": "sql02_messages",
+          "summary": "MSG03 do not update the producer",
+          "verify_sql": "select message_id from sql02_messages where message_id = 'MSG03' and sender_id = 'DEV' and body ilike '%producer%'"
+        },
+        {
+          "table": "sql02_messages",
+          "summary": "MSG06 admission",
+          "verify_sql": "select message_id from sql02_messages where message_id = 'MSG06' and body ilike '%Repair Case 2%'"
+        },
+        {
+          "table": "sql02_prop_movements",
+          "summary": "PM07 original into Repair Case 2",
+          "verify_sql": "select movement_id from sql02_prop_movements where movement_id = 'PM07' and to_location = 'REPAIR_CASE-2'"
+        }
+      ]
+    }
+  ],
+  "red_herrings": [
+    {
+      "suspect": "Nikhil Rao",
+      "why_suspicious": "He argued against using the mask and was seen at the stage-left door.",
+      "innocent_explanation": "His credential exited toward the stage at 18:54 and the call sheet puts him onstage from 18:55, before the original returned to the prop bay at 18:57. He has no movement of either mask.",
+      "evidence": [
+        {
+          "table": "sql02_access_events",
+          "verify_sql": "select event_id from sql02_access_events where event_id = 'AC03' and note ilike '%onstage%'"
+        }
+      ]
+    },
+    {
+      "suspect": "Kavya Sen",
+      "why_suspicious": "She triggered the cue that played with the wrong item.",
+      "innocent_explanation": "The cue log shows she followed the run sheet; her role and credentials are the AV booth and nothing places her in the prop bay.",
+      "evidence": [
+        {
+          "table": "sql02_cue_log",
+          "verify_sql": "select cue_event_id from sql02_cue_log where cue_event_id = 'CU02' and note ilike '%run sheet%'"
+        },
+        {
+          "table": "sql02_access_events",
+          "verify_sql": "select event_id from sql02_access_events where event_id = 'AC06' and note ilike '%not a prop-bay credential%'"
+        }
+      ]
+    },
+    {
+      "suspect": "Arjun Das",
+      "why_suspicious": "He opened the staff door during the swap window.",
+      "innocent_explanation": "The delivery manifest lists fabric rolls only, and no mask movement is assigned to him.",
+      "evidence": [
+        {
+          "table": "sql02_access_events",
+          "verify_sql": "select event_id from sql02_access_events where event_id = 'AC09' and note ilike '%fabric rolls%'"
+        }
+      ]
+    }
+  ]
+}

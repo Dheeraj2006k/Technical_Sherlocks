@@ -1,0 +1,31 @@
+{
+  "queries": [
+    {
+      "name": "phase 1 has four documents",
+      "sql": "select count(*) from evidence_phase_1",
+      "expect": [
+        [
+          "4"
+        ]
+      ]
+    },
+    {
+      "name": "the only print job record is under ANAIR",
+      "sql": "select count(*) from evidence_phase_2 where body ilike '%ANAIR%'",
+      "expect": [
+        [
+          "1"
+        ]
+      ]
+    },
+    {
+      "name": "the QR code appears in the official email, the invitation and the rejected proof",
+      "sql": "select count(*) from (select body from evidence_phase_1 union all select body from evidence_phase_2 union all select body from evidence_phase_3) d where body ilike '%ORB-041%'",
+      "expect": [
+        [
+          "4"
+        ]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "columns": ["inventory_event_id","event_at","item_id","item_name","location","quantity","recorded_by","event_type","note"],
+  "rows": [
+    ["AI-01","2026-10-16 17:55:00","ENV-TOKEN","Demo-room access-token envelope","Equipment Archive",1,"MAYA","COUNT","Envelope present during pre-show inventory."],
+    ["AI-02","2026-10-16 18:05:00","ENV-TOKEN","Demo-room access-token envelope","Equipment Archive",1,"MAYA","COUNT","Second count confirms envelope present."],
+    ["AI-03","2026-10-16 18:21:00","ENV-TOKEN","Demo-room access-token envelope","Equipment Archive",0,"MAYA","COUNT","Envelope absent after badge B-204 archive visit."],
+    ["AI-04","2026-10-16 18:32:00","ENV-TOKEN","Demo-room access-token envelope","Equipment Archive",0,"POOJA","INCIDENT_CHECK","Pooja independently confirms envelope missing."]
+  ]
+}

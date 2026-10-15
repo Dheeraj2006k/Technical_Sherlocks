@@ -1,0 +1,10 @@
+{
+  "columns": ["evidence_id","title","source_label","body"],
+  "rows": [
+    ["I","Badge Custody Check","Staff badge issue and return register","Devika checked out R-14 at 8:42 AM and signed that it would remain in her possession. At 3:45 PM she said it was clipped to her lanyard all afternoon and she did not lend it. No transfer is recorded. A 3:50 PM interview photo shows R-14 on her lanyard; that photo does not establish where it was at 3:23."],
+    ["J","Loading-Bay Service Ticket","Nikhil's signed maintenance ticket","3:17 PM — Nikhil checks the outer cable cover. 3:22 — walkway passable and cover dry. 3:24 — he photographs the cleared walkway; timestamp verified by venue media system, no person identifiable. 3:29 — maintenance kit returned. Nikhil did not see Devika during his check but does not claim she was absent the entire period."],
+    ["K","Results Revision Request","Results desk email archive","3:04 PM — Devika asks the secretary to prepare a clean copy, stating: “Do not change any score or decision without a judge's confirmation.” 3:30 PM — secretary replies that a revision printed under her account but no new signed judge decision has been received, so the signed original will not be replaced. Archive confirms messages and timestamps but not who physically changed the document."],
+    ["L","Judge's Confirmation Record","Judges' decision register and interview","Judge Leena confirms she signed the original tie-break note at 3:10 PM. No later tie-break change is entered. She did not authorise a replacement decision and did not sign the revision. The replacement contains no judge initials or signature."],
+    ["M","Results Desk Incident Note","Secretary's note at 3:43 PM","Original was present at handover; missing at 3:40; replacement had different tie-break and no judge signature. Devika had the results-desk account and badge R-14; badge recorded corridor entry at 3:23; account print at 3:28. She said rain kept her at loading bay until 3:40, while the station shows rain stopped at 3:16. The note records observations and follow-up, not proof of guilt."]
+  ]
+}

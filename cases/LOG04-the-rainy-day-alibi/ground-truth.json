@@ -1,0 +1,65 @@
+{
+  "victim": "Team Northstar",
+  "motive": "The evidence establishes unauthorised manipulation of the tie-break and an attempt to distance herself from the corridor and revision window. It does not establish a personal relationship or a financial motive, and none should be assumed.",
+  "method": "She knowingly produced a replacement Aster tie-break summary naming Team Meridian without a new signed judge decision, using her badge R-14 for the 3:23 corridor entry and the D.RAO account for the 3:28 print, and offered a rain-based alibi that the weather record contradicts.",
+  "explanation": "The rain stopped at 3:16, yet Devika says heavy rain kept her at the loading bay until nearly 3:40. Her badge was granted corridor entry at 3:23. A revision under her account printed at 3:28. The replacement changes only the tie-break and carries no judge signature, and the judge confirms no later decision. No single record is conclusive; together they converge on her.",
+  "timeline": [
+    {
+      "time": "3:06 PM",
+      "event": "The original Aster summary is printed under the D.RAO account",
+      "evidence": "G"
+    },
+    {
+      "time": "3:10 PM",
+      "event": "Judge Leena signs the original tie-break note",
+      "evidence": "L"
+    },
+    {
+      "time": "3:12 PM",
+      "event": "Farah delivers the original summary to the judges' office",
+      "evidence": "D"
+    },
+    {
+      "time": "3:16 PM",
+      "event": "Rain stops at the weather station",
+      "evidence": "A"
+    },
+    {
+      "time": "3:23 PM",
+      "event": "Badge R-14 (Devika) is granted corridor entry",
+      "evidence": "C"
+    },
+    {
+      "time": "3:28 PM",
+      "event": "A revision is printed under the D.RAO account",
+      "evidence": "G, F"
+    },
+    {
+      "time": "3:40 PM",
+      "event": "The original is reported missing",
+      "evidence": "D, E"
+    },
+    {
+      "time": "3:42 PM",
+      "event": "A replacement with a different tie-break is found in the event folder",
+      "evidence": "D"
+    }
+  ],
+  "causal_chain": [
+    "The judges signed a tie-break naming Team Northstar and the summary was delivered at 3:12 PM.",
+    "Devika's alibi puts her at the loading bay in heavy rain, but the rain had stopped at 3:16 PM.",
+    "Her badge entered the judges' corridor at 3:23 PM and her account printed a revision at 3:28 PM.",
+    "The replacement changed the tie-break to Team Meridian with no judge signature or new decision."
+  ],
+  "resolution": {
+    "motive": "The records do not establish why. They establish that Devika knowingly introduced an unauthorised replacement tie-break and tried to distance herself from the corridor and revision window.",
+    "method": "Her badge entered the corridor at 3:23 PM, her account printed the unsigned revision at 3:28 PM, and her rain alibi is contradicted by the weather station.",
+    "chain": [
+      "The rain stopped at 3:16 PM, contradicting the claim that heavy rain kept her at the loading bay until 3:40 PM.",
+      "Badge R-14, assigned to Devika, was granted corridor entry at 3:23 PM.",
+      "The D.RAO account printed the replacement at 3:28 PM; it changes only the tie-break and has no judge signature.",
+      "Judge Leena confirms no later decision; the evidence converges on Devika although no single record is conclusive."
+    ]
+  },
+  "culprit": "Devika Rao"
+}

@@ -1,0 +1,10 @@
+{
+  "columns": ["custody_id","badge_id","event_at","actor_id","event_type","from_location","to_location","note"],
+  "rows": [
+    ["BC-01","B-204","2026-10-16 16:05:00","DEV","CHECKOUT","Volunteer Desk","Ishaan Rao","Issued for volunteer shift."],
+    ["BC-02","B-204","2026-10-16 17:22:00","ISHAAN","RETURN_DECLARED","Ishaan Rao","Volunteer Desk","Ishaan hands badge back; Dev signs receipt."],
+    ["BC-03","B-204","2026-10-16 17:24:00","DEV","RETURN_ACCEPTED","Ishaan Rao","Volunteer Desk","Signed return recorded by security desk attendant."],
+    ["BC-04","B-204","2026-10-16 17:31:00","MAYA","TEMPORARY_SCAN","Volunteer Desk","Inventory Office","Maya takes badge briefly to reconcile returned badge IDs."],
+    ["BC-05","B-204","2026-10-16 17:42:00","MAYA","SCAN_COMPLETE","Inventory Office","Inventory Office","Badge scan completed; no return-to-desk event is recorded."]
+  ]
+}

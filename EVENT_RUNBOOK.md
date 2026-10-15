@@ -24,8 +24,8 @@ Every credential below is shown **once** by a script or by the admin screen. Do 
 - [ ] `SESSION_SECRET` and `ADMIN_PASSWORD` differ from the dev values and are in the organizers' password manager.
 
 ### 2. Cases and credentials
-- [ ] `SLC_ALLOW_REMOTE_DB=1 node scripts/seed-cases.mjs` against the event database: all 20 lines end with `tested`.
-- [ ] `SLC_ALLOW_REMOTE_DB=1 node scripts/verify-case.mjs` prints `all 20 cases verified`.
+- [ ] `SLC_ALLOW_REMOTE_DB=1 node scripts/seed-cases.mjs` against the event database: all 12 lines end with `review` (publish only after human review and blind playtest are recorded).
+- [ ] `SLC_ALLOW_REMOTE_DB=1 node scripts/verify-case.mjs` prints `all 12 cases verified`.
 - [ ] `SLC_ALLOW_REMOTE_DB=1 node scripts/gen-case-credentials.mjs --all --publish` (or one code at a time). Copy each
       `CODE  password` pair straight onto that case's card. Re-running regenerates and kills the old password.
 - [ ] A **human who does not know the answers** has played at least one SQL case and one Logic case end to end (the machine checks
@@ -96,7 +96,7 @@ Every credential below is shown **once** by a script or by the admin screen. Do 
 
 ## REHEARSAL (anytime, safe)
 
-On a machine with the repo: `npm test` runs everything, including a solo start-to-finish rehearsal of **all 20 cases** and a
+On a machine with the repo: `npm test` runs everything, including a solo start-to-finish rehearsal of **all 12 cases** and a
 35-player load run, on an isolated local database. It touches no real data.
 
 ---

@@ -1,0 +1,65 @@
+{
+  "victim": "The finalist badge delivery and the registration desk",
+  "culprit": "Nisha Varma",
+  "motive": "To avoid a visible disruption before the evening sponsor photo, she asked for the replacement to be treated as the original batch.",
+  "method": "She held B-17 in the logistics cage under her custody, requested the B-17R reprint on an approval reference that belonged to another order, and later said the original went to Kabir at 14:46.",
+  "explanation": "The official custody trail breaks while Nisha is the recorded custodian. The records prove deliberate diversion and a cover-up, not what happened to the physical badges afterwards.",
+  "timeline": [
+    {
+      "time": "14:32",
+      "event": "Aarav prints the original B-17 batch: 12 badges for registration",
+      "evidence": "J-170"
+    },
+    {
+      "time": "14:39",
+      "event": "Nisha places B-17 on a quality hold with no failed measurement",
+      "evidence": "CS-01"
+    },
+    {
+      "time": "14:44",
+      "event": "B-17 enters the logistics cage under Nisha’s custody",
+      "evidence": "CS-02"
+    },
+    {
+      "time": "14:46",
+      "event": "A planned-route manifest is generated; it is not a handoff",
+      "evidence": "RM-17"
+    },
+    {
+      "time": "14:49",
+      "event": "Kabir scans an empty route tote",
+      "evidence": "CS-03"
+    },
+    {
+      "time": "14:54",
+      "event": "Nisha requests B-17R using approval reference APR-044",
+      "evidence": "AA-02, J-171"
+    },
+    {
+      "time": "15:17",
+      "event": "Registration receives an empty B-17 sleeve",
+      "evidence": "DR-17, CS-06"
+    },
+    {
+      "time": "15:24",
+      "event": "Nisha says the original went to Kabir at 14:46",
+      "evidence": "CS-08, M-04"
+    }
+  ],
+  "causal_chain": [
+    "The original B-17 was in Nisha’s custody after 14:44.",
+    "No scan shows Kabir ever accepted it; his scan is an empty tote.",
+    "Nisha ordered a reprint on an approval reference that belongs to another order.",
+    "Her later statement conflicts with the custody trail and her messages show why."
+  ],
+  "resolution": {
+    "motive": "She wanted no visible delay before the sponsor photo and asked for the replacement to be treated as the original.",
+    "method": "She held the original in her custody, ordered an unapproved reprint and misstated who had the original.",
+    "chain": [
+      "The original B-17 was scanned into the cage under Nisha’s custody at 14:44.",
+      "Kabir’s only B-17 scan is an empty tote; the manifest is only a plan.",
+      "The reprint request carries APR-044, which belongs to lanyard order L-04.",
+      "Her 15:24 messages ask for the replacement to stand in for the original."
+    ]
+  }
+}

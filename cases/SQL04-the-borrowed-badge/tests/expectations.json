@@ -1,0 +1,43 @@
+{
+  "queries": [
+    {
+      "name": "the envelope count falls from one to zero",
+      "sql": "select quantity from sql04_archive_inventory where item_id = 'ENV-TOKEN' order by event_at",
+      "expect": [
+        [
+          "1"
+        ],
+        [
+          "1"
+        ],
+        [
+          "0"
+        ],
+        [
+          "0"
+        ]
+      ]
+    },
+    {
+      "name": "Maya holds every B-204 custody event after the signed return",
+      "sql": "select actor_id from sql04_badge_custody where badge_id = 'B-204' and event_at > '2026-10-16 17:24:00' order by event_at",
+      "expect": [
+        [
+          "MAYA"
+        ],
+        [
+          "MAYA"
+        ]
+      ]
+    },
+    {
+      "name": "one amended note exists and it is Maya’s",
+      "sql": "select author_id from sql04_inventory_notes where note_status = 'AMENDED'",
+      "expect": [
+        [
+          "MAYA"
+        ]
+      ]
+    }
+  ]
+}

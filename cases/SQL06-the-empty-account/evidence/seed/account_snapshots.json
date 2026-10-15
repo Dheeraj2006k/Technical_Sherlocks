@@ -1,0 +1,8 @@
+{
+  "columns": ["snapshot_id","account_name","recorded_at","available_balance","pending_balance","source_system","note"],
+  "rows": [
+    ["S1","QUBIT Prototype Fund","2026-10-15 09:00:00","42000.00","0.00","FINANCE_PORTAL","Opening balance before supplier payments"],
+    ["S2","QUBIT Prototype Fund","2026-10-15 16:00:00","42000.00","0.00","FINANCE_PORTAL","Dashboard snapshot; excludes gateway holds"],
+    ["S3","QUBIT Prototype Fund","2026-10-16 09:00:00","0.00","0.00","FINANCE_PORTAL","Balance appears empty before event setup"]
+  ]
+}

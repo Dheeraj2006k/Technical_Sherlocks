@@ -1,0 +1,8 @@
+{
+  "columns": ["activity_id","notification_id","actor","action","event_at"],
+  "rows": [
+    ["NA-1","N-1","Rohit Kulkarni","OPENED","2026-10-16 20:49:00"],
+    ["NA-2","N-2","Arjun Varma","OPENED","2026-10-16 20:51:00"],
+    ["NA-3","N-3","Kavya Iyer","OPENED","2026-10-16 20:48:00"]
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "victim": "Team Orbit",
+  "characters": [
+    {
+      "name": "Aanya Nair",
+      "role": "Registration coordinator; manages invitation delivery and check-in materials.",
+      "profile": "Registration coordinator; manages invitation delivery and check-in materials.",
+      "suspect": true
+    },
+    {
+      "name": "Rohan Mehta",
+      "role": "Schedule coordinator; owns the master run sheet and slot order.",
+      "profile": "Schedule coordinator; owns the master run sheet and slot order.",
+      "suspect": true
+    },
+    {
+      "name": "Irfan Khan",
+      "role": "Print-desk volunteer; operates the shared event printer.",
+      "profile": "Print-desk volunteer; operates the shared event printer.",
+      "suspect": true
+    },
+    {
+      "name": "Meera Shah",
+      "role": "Team Orbit captain; received the invitation and reported the mismatch.",
+      "profile": "Team Orbit captain; received the invitation and reported the mismatch.",
+      "suspect": true
+    },
+    {
+      "name": "Kabir Sen",
+      "role": "Stage runner; transports sealed event envelopes and cue cards.",
+      "profile": "Stage runner; transports sealed event envelopes and cue cards.",
+      "suspect": true
+    },
+    {
+      "name": "Sana Reddy",
+      "role": "Event photographer; takes timestamped setup and registration photos.",
+      "profile": "Event photographer; takes timestamped setup and registration photos.",
+      "suspect": true
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "columns": ["scan_id","batch_id","event_at","location","scanned_by","scan_type","package_state","note"],
+  "rows": [
+    ["CS-01","B-17","2026-10-16 14:39:00","Print Room","NISHA","QUALITY_HOLD","SEALED","Nisha places original batch on hold; no failed quality measurement is recorded."],
+    ["CS-02","B-17","2026-10-16 14:44:00","Logistics Cage","NISHA","CUSTODY_IN","SEALED","Original sleeve enters logistics cage under Nisha custody."],
+    ["CS-03","B-17","2026-10-16 14:49:00","Dispatch Bay","KABIR","TOTE_SCAN","EMPTY_TOTE","Kabir scans route tote; scan is not acceptance of batch B-17."],
+    ["CS-04","B-17R","2026-10-16 15:08:00","Logistics Cage","NISHA","CUSTODY_OUT","SEALED","Replacement sleeve leaves cage under Nisha badge."],
+    ["CS-05","B-17R","2026-10-16 15:14:00","Registration Desk","KABIR","ROUTE_DROP","SEALED","Kabir delivers replacement batch to desk."],
+    ["CS-06","B-17","2026-10-16 15:17:00","Registration Desk","LEENA","RECEIPT_CHECK","EMPTY_SLEEVE","Original batch ID appears on empty sleeve; zero badges received."],
+    ["CS-07","B-17R","2026-10-16 15:18:00","Registration Desk","LEENA","RECEIPT_CHECK","SEALED","Desk confirms 12 badges in replacement batch."],
+    ["CS-08","B-17","2026-10-16 15:24:00","Admin Desk","NISHA","INCIDENT_NOTE","UNKNOWN","Nisha states original was handed to Kabir at 14:46."]
+  ]
+}

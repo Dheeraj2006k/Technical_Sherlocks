@@ -1,0 +1,31 @@
+{
+  "queries": [
+    {
+      "name": "the ledger sums to zero after the replacement",
+      "sql": "select sum(case when entry_type = 'DEBIT' then -amount else amount end) from ledger_entries",
+      "expect": [
+        [
+          "0.00"
+        ]
+      ]
+    },
+    {
+      "name": "two different destination fingerprints on the transfers",
+      "sql": "select count(distinct destination_fingerprint) from gateway_events where event_type = 'TRANSFER'",
+      "expect": [
+        [
+          "2"
+        ]
+      ]
+    },
+    {
+      "name": "the private author draft is not loaded",
+      "sql": "select count(*) from reconciliation_notes where visibility = 'RESTRICTED_AUTHOR'",
+      "expect": [
+        [
+          "0"
+        ]
+      ]
+    }
+  ]
+}

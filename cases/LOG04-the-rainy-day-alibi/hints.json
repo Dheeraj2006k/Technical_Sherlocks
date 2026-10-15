@@ -1,0 +1,59 @@
+{
+  "scoring": {
+    "reward_schedule": [
+      10,
+      8,
+      6,
+      4,
+      2
+    ],
+    "wrong_answer_penalty": 2,
+    "sql_errors_free": true,
+    "retries_allowed": true,
+    "each_component_awards_points_once": true
+  },
+  "hints": {
+    "t1": [
+      "Treat the weather station as evidence about conditions, not a person.",
+      "Rainfall reached zero at 3:16 PM.",
+      "The alibi says heavy rain continued until nearly 3:40 PM.",
+      "The weather conflicts with the claimed reason for remaining at the bay, but does not locate Devika.",
+      "Choose the option that states both the contradiction and the limitation."
+    ],
+    "t2": [
+      "Read the result column carefully.",
+      "Only one listed swipe is granted at 3:23 PM.",
+      "The record identifies badge R-14, not a face.",
+      "A successful swipe is not a timestamp for the document removal itself.",
+      "Choose the option that states exactly what the log proves and what it does not."
+    ],
+    "t3": [
+      "Compare the total and tie-break separately.",
+      "The total points are explicitly unchanged.",
+      "The named tie-break winner changes from Northstar to Meridian.",
+      "No later judge decision is recorded.",
+      "Choose the option that describes only the documented change."
+    ],
+    "t4": [
+      "The audit has an account field and a job field.",
+      "The 3:28 job is under D.RAO.",
+      "Account attribution is not the same as physical-person identification.",
+      "Completion confirms printing, not approval.",
+      "Choose the option with the right boundary on the evidence."
+    ],
+    "t5": [
+      "Use two independent records rather than one.",
+      "The rain record contradicts the claimed weather condition.",
+      "The corridor reader records a granted R-14 swipe at 3:23.",
+      "Neither record alone proves who carried the badge or where Devika stood.",
+      "Choose the answer that combines the evidence while preserving its limitations."
+    ],
+    "t6": [
+      "Identify who is connected to both the corridor entry and the revision print.",
+      "The replacement changed the decision but has no judge signature.",
+      "The weather contradiction weakens Devika's stated location.",
+      "The records converge on the same person, while each has a stated limitation.",
+      "Choose the explanation that accounts for the complete record without inventing judge approval."
+    ]
+  }
+}

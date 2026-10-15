@@ -1,5 +1,9 @@
 # Assumptions and decisions (PRD v5 implementation)
 
+## SCOPE DECISION (2026-10-15): the active catalogue is the twelve supplied case packs
+
+The PRD v5 PDF (`docs/PRD__Sherlocks_Last_Case-_v5.pdf`, unchanged) and the first addendum describe a 10-case roster (SQL01-05, LOG01-05; earlier drafts 20 generated cases, SQL01-10 and LOG01-10). The owner then instructed, later and explicitly, to use the exact cases supplied in `docs/*.zip`. That later instruction supersedes the earlier rosters. **The authoritative catalogue is SQL01-SQL06 and LOG01-LOG06 (12 cases), `content_version` 2, all in `review`.** Everywhere else in this file, "ten", "20" and SQL07-10 / LOG07-10 are historical: they describe the earlier generated implementation, which now exists only as test fixtures (`tests/fixtures/legacy/`) and is retired with `scripts/retire-legacy-cases.mjs` (disable only). The supplied storylines, characters, evidence, tasks, hints and answers are preserved; the fairness corrections are listed under "Decisions from the case-pack work" below.
+
 Every item here is a judgment call made while implementing PRD v5 where the PRD was silent, ambiguous or truncated. Change
 any of them by editing the code and this file. The PRD text available to the implementation was the PDF plus a master prompt
 truncated at 50,000 characters; where the truncated part may have said something different, that is noted.
@@ -100,3 +104,21 @@ truncated at 50,000 characters; where the truncated part may have said something
     fallback and is tested locally.
 27. **v4 games in flight cannot continue after the migration.** v4 questions have no threads. Upgrade between events (see
     DATABASE_MIGRATION.md).
+
+
+## Decisions from the case-pack work
+
+- **Twelve cases, not ten.** The owner supplied twelve cases in `docs/*.zip` and asked for exactly those; this supersedes the earlier "exactly ten" rule and my authored cases. Catalogue = SQL01-06, LOG01-06, `content_version` 2.
+- **Scores.** Every case totals 100 but follows its source: SQL01-06 and LOG03-06 use 6 x 10 + 25 + 15; LOG01/02 have nine questions (45) with final components 35 + 20 and a scaled five-step reward ladder. Wrong committed answers cost 2.
+- **Answers.** Multiple-choice sources use CHOICE; typed sources use NUMBER/TIME/TEXT with `alt_answers` (e.g. SQL01 name lists in any order and separator).
+- **Edits to supplied data** (recorded because they change supplied content):
+  - SQL01 and SQL06 `staff_directory.known_context` stated conclusions in a table players can read; made neutral.
+  - SQL01: rear-door camera event C9 moved from displayed 21:40 to 21:36 (real 21:32) so corrected controller and camera times align, as the author notes request.
+  - SQL06: the RESTRICTED_AUTHOR private draft is not loaded into the player schema; PAY-712 and its ledger entry are credited to Asha Rao, matching the audit log, staff notes and answer key (the seed said Dev).
+  - SQL03: one wrong explanation option was lengthened to pass the minimum-length check.
+  - Timestamps are stored as IST wall-clock `timestamp` values.
+- **Small datasets** (SQL02-06 have 25-45 evidence rows) are a content gap the source authors noted; not padded.
+- **No human review or playtest is claimed.** All twelve are `review` with `publication_eligible: false`; the source packs list their own pending gates.
+- **Story visibility.** Hook, briefings and people are in a persistent banner and a Case File dialog, opened first on entering a case; the tour follows. Per-tab sessionStorage plus the player's own tour flag; no game state is touched.
+- **Table cap** raised from 16 to 18 evidence tables (SQL01 has 17).
+- **Function lockdown** (migration 013): Postgres grants EXECUTE to PUBLIC by default.

@@ -1,0 +1,31 @@
+{
+  "queries": [
+    {
+      "name": "the original is in Repair Case 2 at the later check",
+      "sql": "select location from sql02_inventory_checks where check_id = 'IC05'",
+      "expect": [
+        [
+          "REPAIR_CASE-2"
+        ]
+      ]
+    },
+    {
+      "name": "Dev handled five mask movements",
+      "sql": "select count(*) from sql02_prop_movements where handled_by = 'DEV' and item_id in ('MASK-ORIG','MASK-REPL')",
+      "expect": [
+        [
+          "5"
+        ]
+      ]
+    },
+    {
+      "name": "nobody but Dev has a prop bay entry",
+      "sql": "select assigned_character_id from sql02_access_events where zone = 'PROP_BAY' and event_type = 'ENTRY'",
+      "expect": [
+        [
+          "DEV"
+        ]
+      ]
+    }
+  ]
+}

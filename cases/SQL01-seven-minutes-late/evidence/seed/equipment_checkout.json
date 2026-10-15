@@ -1,0 +1,10 @@
+{
+  "columns": ["checkout_id","event_at","person_name","item_name","action","destination"],
+  "rows": [
+    ["E1","2026-10-16 21:18:00","Nikhil Reddy","Laptop charger","CHECKOUT","Seminar Hall 2"],
+    ["E2","2026-10-16 21:35:00","Sameer Khan","Soldering station","CHECKOUT","Fabrication Store"],
+    ["E3","2026-10-16 21:25:00","Rohit Kulkarni","Spare LED power module","INVENTORY_CHECK","Rear Storage"],
+    ["E4","2026-10-16 21:31:00","Rohit Kulkarni","Spare LED power module","NOT_FOUND","Rear Storage"],
+    ["E5","2026-10-16 21:40:00","Mahesh Anna","Workshop keys","RETURN","Lab Office"]
+  ]
+}

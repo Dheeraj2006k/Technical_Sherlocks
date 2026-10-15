@@ -1,0 +1,27 @@
+{
+  "culprit": {
+    "points": 25,
+    "note": "Pick the responsible person from the suspect list"
+  },
+  "mechanism": {
+    "points": 15,
+    "options": [
+      {
+        "label": "Dev created PAY-712B and used a successful manual override to send the same ₹12,000 to a different destination fingerprint (DEST-NORTH-44 became DEST-NORTH-84) under the reused APR-103, then called it a routine retry.",
+        "correct": true
+      },
+      {
+        "label": "Asha resubmitted PAY-712 as a routine retry after the gateway rejection and the dashboard simply failed to sync.",
+        "correct": false
+      },
+      {
+        "label": "Dr Meera Iyer approved a new destination for the replacement transfer under APR-103.",
+        "correct": false
+      },
+      {
+        "label": "Rohan Das edited the destination in the gateway while checking reconciliation timing.",
+        "correct": false
+      }
+    ]
+  }
+}

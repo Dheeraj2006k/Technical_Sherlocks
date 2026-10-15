@@ -1,0 +1,9 @@
+{
+  "columns": ["evidence_id","title","source_label","body"],
+  "rows": [
+    ["A","Rainfall Station Record","Venue weather station","| Time | Rain intensity | Notes |\n|---|---:|---|\n| 2:55 PM | 11 mm/hour | Heavy rain |\n| 3:05 PM | 8 mm/hour | Rain easing |\n| 3:12 PM | 3 mm/hour | Light rain |\n| 3:16 PM | 0 mm/hour | Rain stopped at station |\n| 3:25 PM | 0 mm/hour | Dry interval |\n| 3:35 PM | 0 mm/hour | Dry interval |\n\nThe station clock is synchronised to venue time. This establishes conditions at the loading bay, not anyone's location."],
+    ["B","Devika's Statement","First interview, 3:50 PM","Devika says she was at the covered loading bay from about 3:15 until nearly 3:40, that heavy rain prevented her crossing, and that she never entered the judges' corridor after 3:10. She says her staff badge remained with her and she did not lend it."],
+    ["C","Staff Access Log","Badge reader at judges' corridor","| Time | Badge | Result |\n|---|---|---|\n| 3:08 PM | Devika Rao — R-14 | Entry granted |\n| 3:12 PM | Farah Khan — F-02 | Entry granted |\n| 3:19 PM | Arjun Mehta — A-11 | Access denied |\n| 3:23 PM | Devika Rao — R-14 | Entry granted |\n| 3:27 PM | Isha Reddy — I-07 | Access denied |\n| 3:31 PM | Nikhil Verma — N-09 | Access denied |\n\nA successful swipe records the badge presented, not conclusively the person carrying it."],
+    ["D","Original Document Handover","Judges' office handover register","3:12 PM — Farah records delivery of the original signed Aster judging summary. 3:14 PM — Judge Leena acknowledges receipt. 3:40 PM — Judge Leena reports the original missing from the red folder. 3:42 PM — A replacement summary is found in the event results folder. The register does not identify who last touched the folder after 3:14."]
+  ]
+}

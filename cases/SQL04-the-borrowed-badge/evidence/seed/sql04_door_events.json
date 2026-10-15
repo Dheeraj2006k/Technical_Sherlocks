@@ -1,0 +1,9 @@
+{
+  "columns": ["door_event_id","event_at","door_name","badge_id","event_type","result","controller_note"],
+  "rows": [
+    ["DE-01","2026-10-16 16:52:00","Equipment Archive","B-118","ENTRY","GRANTED","Maya enters during routine inventory check."],
+    ["DE-02","2026-10-16 17:09:00","Equipment Archive","B-311","ENTRY","GRANTED","Arjun enters to inspect a cable rack."],
+    ["DE-03","2026-10-16 18:17:00","Equipment Archive","B-204","ENTRY","GRANTED","Door controller records badge ID only; it does not identify the carrier."],
+    ["DE-04","2026-10-16 18:23:00","Equipment Archive","B-204","EXIT","GRANTED","Exit logged with the same badge ID."]
+  ]
+}

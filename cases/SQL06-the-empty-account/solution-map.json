@@ -1,0 +1,147 @@
+{
+  "inferences": [
+    {
+      "id": "I1",
+      "claim": "The grant credit was ₹42,000.",
+      "tasks": [
+        "t1"
+      ],
+      "evidence": [
+        {
+          "table": "ledger_entries",
+          "summary": "L001 credit 42,000",
+          "verify_sql": "select entry_id from ledger_entries where entry_id = 'L001' and entry_type = 'CREDIT' and amount = 42000"
+        }
+      ]
+    },
+    {
+      "id": "I2",
+      "claim": "PAY-712 is the original reserve payment.",
+      "tasks": [
+        "t2"
+      ],
+      "evidence": [
+        {
+          "table": "ledger_entries",
+          "summary": "L004 debit PAY-712",
+          "verify_sql": "select entry_id from ledger_entries where entry_id = 'L004' and reference_code = 'PAY-712'"
+        }
+      ]
+    },
+    {
+      "id": "I3",
+      "claim": "The replacement reused APR-103.",
+      "tasks": [
+        "t3"
+      ],
+      "evidence": [
+        {
+          "table": "payment_requests",
+          "summary": "PAY-712B approval code",
+          "verify_sql": "select request_id from payment_requests where request_id = 'PAY-712B' and approval_code = 'APR-103'"
+        },
+        {
+          "table": "approval_registry",
+          "summary": "APR-103 payee and purpose",
+          "verify_sql": "select approval_code from approval_registry where approval_code = 'APR-103' and approved_payee = 'Northstar Equipment'"
+        }
+      ]
+    },
+    {
+      "id": "I4",
+      "claim": "Dev created the replacement request.",
+      "tasks": [
+        "t4"
+      ],
+      "evidence": [
+        {
+          "table": "payment_requests",
+          "summary": "PAY-712B requested by Dev",
+          "verify_sql": "select request_id from payment_requests where request_id = 'PAY-712B' and requested_by = 'Dev Malhotra'"
+        },
+        {
+          "table": "access_audit",
+          "summary": "A3 create request",
+          "verify_sql": "select audit_id from access_audit where audit_id = 'A3' and actor = 'Dev Malhotra'"
+        }
+      ]
+    },
+    {
+      "id": "I5",
+      "claim": "The destination fingerprint changed between the two transfers.",
+      "tasks": [
+        "t5"
+      ],
+      "evidence": [
+        {
+          "table": "gateway_events",
+          "summary": "G1 DEST-NORTH-44",
+          "verify_sql": "select event_id from gateway_events where event_id = 'G1' and destination_fingerprint = 'DEST-NORTH-44'"
+        },
+        {
+          "table": "gateway_events",
+          "summary": "G3 DEST-NORTH-84",
+          "verify_sql": "select event_id from gateway_events where event_id = 'G3' and destination_fingerprint = 'DEST-NORTH-84'"
+        }
+      ]
+    },
+    {
+      "id": "I6",
+      "claim": "A successful manual override let the replacement proceed.",
+      "tasks": [
+        "t6"
+      ],
+      "evidence": [
+        {
+          "table": "access_audit",
+          "summary": "A4 manual override",
+          "verify_sql": "select audit_id from access_audit where audit_id = 'A4' and action = 'MANUAL_OVERRIDE' and result = 'SUCCESS'"
+        },
+        {
+          "table": "reconciliation_notes",
+          "summary": "N1 routine retry claim",
+          "verify_sql": "select note_id from reconciliation_notes where note_id = 'N1' and note_text ilike '%routine retry%'"
+        }
+      ]
+    }
+  ],
+  "red_herrings": [
+    {
+      "suspect": "Asha Rao",
+      "why_suspicious": "She created the original request and used the same approval code.",
+      "innocent_explanation": "The audit shows she did not create PAY-712B and she logged out of FIN-03 at 15:44:30, after Dev’s FIN-02 activity.",
+      "evidence": [
+        {
+          "table": "access_audit",
+          "verify_sql": "select audit_id from access_audit where audit_id = 'A5' and actor = 'Asha Rao' and action = 'LOGOUT'"
+        },
+        {
+          "table": "reconciliation_notes",
+          "verify_sql": "select note_id from reconciliation_notes where note_id = 'N2' and note_text ilike '%did not submit PAY-712B%'"
+        }
+      ]
+    },
+    {
+      "suspect": "Dr Meera Iyer",
+      "why_suspicious": "APR-103 carries her approval and was reused.",
+      "innocent_explanation": "The approval covers a payee, a purpose and an amount limit; it was registered at 14:00 for the original destination and does not authorise a changed one.",
+      "evidence": [
+        {
+          "table": "approval_registry",
+          "verify_sql": "select approval_code from approval_registry where approval_code = 'APR-103' and approver = 'Dr Meera Iyer' and amount_limit = 12000"
+        }
+      ]
+    },
+    {
+      "suspect": "Rohan Das",
+      "why_suspicious": "He works the gateway and can read the events.",
+      "innocent_explanation": "His role is checking gateway status and reconciliation timing; no audit event is his, and he has no payment creation permission.",
+      "evidence": [
+        {
+          "table": "staff_directory",
+          "verify_sql": "select staff_id from staff_directory where staff_id = 'ST4' and known_context ilike '%no payment creation permission%'"
+        }
+      ]
+    }
+  ]
+}

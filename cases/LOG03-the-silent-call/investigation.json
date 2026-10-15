@@ -1,0 +1,83 @@
+{
+  "phases": [
+    {
+      "phase": 1,
+      "name": "The Claim",
+      "tables": [
+        "evidence_phase_1"
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "Two Sides of the Call",
+      "tables": [
+        "evidence_phase_2"
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "The Missing Confirmation",
+      "tables": [
+        "evidence_phase_3"
+      ]
+    }
+  ],
+  "threads": [
+    {
+      "key": "t1",
+      "phase": 1,
+      "position": 1,
+      "title": "The Silent Call",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Test Karthik's claimed 4:11 PM confirmation against the call log and the safety checklist.",
+      "outcome_text": "The 4:11 call was an outgoing, unanswered control-desk call, and the cable concern was real but marked fixed before the cancellation.",
+      "unlocks": []
+    },
+    {
+      "key": "t2",
+      "phase": 2,
+      "position": 1,
+      "title": "Two Sides of the Call",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Compare the two phone systems and ask what the 4:10 caller really said.",
+      "outcome_text": "Both phone systems show no connected faculty call to Karthik, and the 4:10 caller asked only for a hold.",
+      "unlocks": []
+    },
+    {
+      "key": "t3",
+      "phase": 3,
+      "position": 1,
+      "title": "The Missing Confirmation",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Read the procedure card, the contact sheet and the recovered note, then decide what rule was broken and why.",
+      "outcome_text": "The procedure required verification before any change, and Karthik's private note shows a schedule motive.",
+      "unlocks": []
+    }
+  ],
+  "story_events": [
+    {
+      "thread": "t1",
+      "title": "No connected call",
+      "body": "The 4:11 PM call listed in the control desk log is an outgoing call to Karthik that never connected. The safety checklist shows a real loose cable that was secured and tested at 4:09 to 4:10 PM, before the cancellation entry at 4:12 PM."
+    },
+    {
+      "thread": "t2",
+      "title": "A hold is not a cancellation",
+      "body": "Sana says the 4:10 caller said only that there might be an electrical problem and asked to hold the Pulse slot. The faculty office log and the control desk log both show no connected call between the faculty office and Karthik before the announcement."
+    },
+    {
+      "thread": "t3",
+      "title": "A reason written down",
+      "body": "The procedure card says a request to hold is not a cancellation and that claimed faculty authorisation must be verified by calling back the approved number. Karthik's handwritten note beside the 4:12 entry says he needed a reason to move Pulse after a slot dispute and that a safety concern would do if marked faculty-approved."
+    }
+  ]
+}

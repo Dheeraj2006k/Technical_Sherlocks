@@ -1,0 +1,7 @@
+{
+  "columns": ["request_id","requested_at","requester_id","item_requested","fulfilled_from","fulfilled_at","fulfilled_by","status","note"],
+  "rows": [
+    ["ER-01","2026-10-16 17:48:00","ARJUN","Replacement HDMI cable","AV Cabinet","2026-10-16 17:54:00","DEV","FULFILLED","Cable issued from AV cabinet; no archive stock movement."],
+    ["ER-02","2026-10-16 18:12:00","POOJA","Demo-room access-token envelope","Equipment Archive",null,null,"OPEN","Pooja checks the handover list; this is not a request to remove the envelope."]
+  ]
+}

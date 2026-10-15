@@ -1,0 +1,9 @@
+{
+  "columns": ["message_id","sent_at","sender_id","recipient_id","message_text"],
+  "rows": [
+    ["MSG-01","2026-10-16 16:07:00","RAVI","SANA","If the module goes to storage, the demo has to wait. I need time to find the calibration sheet before they test it."],
+    ["MSG-02","2026-10-16 16:08:00","SANA","RAVI","I coordinated courier handoff, but I did not edit either label. The scans follow what was printed."],
+    ["MSG-03","2026-10-16 16:10:00","SANA","MIRA","I opened a discrepancy report. Delivered status is based on route scan, not a contents check."],
+    ["MSG-04","2026-10-16 16:12:00","JOEL","MIRA","PX-41 arrived at the demo desk. It contains stage clips, not the sensor module."]
+  ]
+}

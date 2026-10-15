@@ -24,8 +24,8 @@ are no longer written by the application. They can be dropped in a later cleanup
 ## What it does not do
 
 * It does **not** convert v4 cases or v4 games. v4 cases have no threads, so they cannot be played by the v5 engine. The
-  content comes from `node scripts/seed-cases.mjs`, which installs SQL01-SQL10 and LOG01-LOG10 (replacing any case that holds
-  the same slug or catalogue code, **and deleting teams that played the replaced case**).
+  content comes from `node scripts/seed-cases.mjs`, which installs the twelve case packs (SQL01-SQL06, LOG01-LOG06). The current seeder
+  never deletes a case that a team references and never touches team state (see `seeding-spec.md`).
 * It does not create registrations. The organizer creates them in the admin screen (Registrations) before the event.
 
 ## Order of operations for the real database (needs the organizers' approval)
@@ -33,7 +33,7 @@ are no longer written by the application. They can be dropped in a later cleanup
 1. Pick a window with no event running. Take a Supabase backup / point-in-time marker.
 2. `npm run db:migrate` (applies 009; every file runs in its own transaction and is recorded in `schema_migrations`).
 3. `node scripts/setup-player-role.mjs` (idempotent; keeps the low-privilege `player_exec` role and its grants current).
-4. `SLC_ALLOW_REMOTE_DB=1 node scripts/seed-cases.mjs` (installs and validates the 20 cases; each becomes `tested` only if every
+4. `SLC_ALLOW_REMOTE_DB=1 node scripts/seed-cases.mjs` (installs and validates the 12 case packs; each lands in `review`, never `tested` only if every
    machine check passes).
 5. `SLC_ALLOW_REMOTE_DB=1 node scripts/gen-case-credentials.mjs --all --publish` (new passwords, printed once; cases become
    `published`).
@@ -53,3 +53,25 @@ cases it should serve. `case_code` values that were rewritten by the seed script
 
 Everything is idempotent: `migrate` skips applied files, `setup-player-role` re-applies settings, and `seed-cases` replaces cases
 by id, slug and code.
+
+
+## Migrations 010-013 (this work)
+
+All additive; none rewrites team data.
+
+| # | What | Rollback / recovery |
+|---|---|---|
+| 010 | content versions (`unique(case_code, content_version)`), lifecycle (`review`, hashes, `transition_case_status`), team version pin, content-freeze triggers, `players.tour_state` | forward-fix only: restoring `cases_case_code_key` is unsafe once two versions exist |
+| 011 | `tasks.alt_answers`, `task_options` (CHOICE), `characters.is_suspect` | forward-fix; columns nullable/defaulted |
+| 012 | `case_phases.phase_name`, `characters.public_profile` | nullable; safe to leave in place |
+| 013 | revoke EXECUTE on lifecycle/trigger functions from PUBLIC, anon, authenticated | re-grant only if intentionally exposing them (do not) |
+
+Tested on a populated isolated local database (`tests/v5_migration.test.mjs`, `tests/v5_versioning.test.mjs`).
+
+### Production order (manual; not performed)
+1. Back up the database (provider snapshot).
+2. `npm run db:migrate` with the migration role (`SLC_ALLOW_REMOTE_DB=1`).
+3. `node scripts/seed-cases.mjs --dry-run`, review, then run without `--dry-run`. New versions land in `review`.
+4. Human review and blind playtest per case; record in `review.json`; `case-lifecycle.mjs ... tested`; Publish from Admin.
+5. `node scripts/retire-legacy-cases.mjs` (dry run), then `--apply` once no event team needs the old cases (disables only).
+6. `npm run check:env` against production, then the smoke checklist in `EVENT_RUNBOOK.md`.

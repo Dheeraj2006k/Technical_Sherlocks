@@ -1,0 +1,31 @@
+{
+  "queries": [
+    {
+      "name": "the audit has two reciprocal parcel code changes",
+      "sql": "select count(*) from sql05_label_audit where field_changed = 'PARCEL_CODE' and old_value <> new_value",
+      "expect": [
+        [
+          "2"
+        ]
+      ]
+    },
+    {
+      "name": "every audit entry belongs to Ravi",
+      "sql": "select distinct actor_id from sql05_label_audit",
+      "expect": [
+        [
+          "RAVI"
+        ]
+      ]
+    },
+    {
+      "name": "three scan notes say contents were not inspected",
+      "sql": "select count(*) from sql05_route_scans where note ilike '%contents%'",
+      "expect": [
+        [
+          "3"
+        ]
+      ]
+    }
+  ]
+}

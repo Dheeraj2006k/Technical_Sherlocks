@@ -1,0 +1,214 @@
+{
+  "tasks": [
+    {
+      "key": "t1",
+      "thread": "t1",
+      "title": "THE ORIGINAL BATCH",
+      "prompt": "How many badges were meant to be in the original batch, and where were they going?",
+      "answer_type": "CHOICE",
+      "answer": "A",
+      "options": [
+        {
+          "key": "A",
+          "text": "12 badges to Registration Desk"
+        },
+        {
+          "key": "B",
+          "text": "40 lanyards to Volunteer Desk"
+        },
+        {
+          "key": "C",
+          "text": "12 badges to Volunteer Desk"
+        },
+        {
+          "key": "D",
+          "text": "24 badges to Registration Desk"
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "join records on stable ids",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The original batch: {value}",
+      "explanation": "Job J-170 is the original order: 12 finalist badges for the Registration Desk, approved by APR-170.",
+      "reference_sql": [
+        "SELECT batch_id, quantity, destination FROM sql03_print_jobs WHERE job_id='J-170'"
+      ]
+    },
+    {
+      "key": "t2",
+      "thread": "t1",
+      "title": "WHAT THE MANIFEST PROVES",
+      "prompt": "What did the 14:46 route manifest actually prove?",
+      "answer_type": "CHOICE",
+      "answer": "B",
+      "options": [
+        {
+          "key": "A",
+          "text": "Kabir accepted the sealed package"
+        },
+        {
+          "key": "B",
+          "text": "A planned route was generated, not a physical handoff"
+        },
+        {
+          "key": "C",
+          "text": "Registration counted 12 badges"
+        },
+        {
+          "key": "D",
+          "text": "The original batch passed a failed quality check"
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "join records on stable ids",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The 14:46 manifest: {value}",
+      "explanation": "RM-17 is a PLANNED_ROUTE manifest generated from the plan; it is not a custody acceptance.",
+      "reference_sql": [
+        "SELECT manifest_type,status,note FROM sql03_route_manifests WHERE manifest_id='RM-17'"
+      ]
+    },
+    {
+      "key": "t3",
+      "thread": "t2",
+      "title": "DID KABIR ACCEPT THE BATCH",
+      "prompt": "Which recorded event shows Kabir did not accept the original sealed batch?",
+      "answer_type": "CHOICE",
+      "answer": "A",
+      "options": [
+        {
+          "key": "A",
+          "text": "The empty-tote scan at 14:49, combined with no B-17 custody acceptance"
+        },
+        {
+          "key": "B",
+          "text": "His delivery of B-17R at 15:14"
+        },
+        {
+          "key": "C",
+          "text": "The generated route manifest"
+        },
+        {
+          "key": "D",
+          "text": "Aarav's print job"
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "join records on stable ids",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "Kabir and B-17: {value}",
+      "explanation": "Kabir’s 14:49 scan is a TOTE_SCAN of an empty tote; no scan shows him accepting the sealed B-17 sleeve.",
+      "reference_sql": [
+        "SELECT scan_id,event_at,scan_type,package_state FROM sql03_custody_scans WHERE batch_id='B-17' ORDER BY event_at"
+      ]
+    },
+    {
+      "key": "t4",
+      "thread": "t2",
+      "title": "THE REPRINT APPROVAL",
+      "prompt": "Why is the B-17R approval reference invalid?",
+      "answer_type": "CHOICE",
+      "answer": "A",
+      "options": [
+        {
+          "key": "A",
+          "text": "APR-044 belongs to unrelated lanyard order L-04"
+        },
+        {
+          "key": "B",
+          "text": "APR-170 approved B-17R"
+        },
+        {
+          "key": "C",
+          "text": "Aarav cannot print badges"
+        },
+        {
+          "key": "D",
+          "text": "The registration desk approved the reprint"
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "join records on stable ids",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The B-17R approval: {value}",
+      "explanation": "Job J-171 cites APR-044, which belongs to lanyard order L-04 and is REJECTED for the reprint.",
+      "reference_sql": [
+        "SELECT j.job_id,j.approval_ref,a.request_id,a.result,a.note FROM sql03_print_jobs j LEFT JOIN sql03_approval_audit a ON a.approval_ref=j.approval_ref WHERE j.job_id='J-171'"
+      ]
+    },
+    {
+      "key": "t5",
+      "thread": "t3",
+      "title": "WHO HELD AND REQUESTED",
+      "prompt": "Who initiated the replacement job and had the original in recorded custody immediately before the trail breaks?",
+      "answer_type": "CHOICE",
+      "answer": "A",
+      "options": [
+        {
+          "key": "A",
+          "text": "Nisha Varma"
+        },
+        {
+          "key": "B",
+          "text": "Kabir Shah"
+        },
+        {
+          "key": "C",
+          "text": "Aarav Mehta"
+        },
+        {
+          "key": "D",
+          "text": "Leena Das"
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "join records on stable ids",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "Held B-17 and requested B-17R: {value}",
+      "explanation": "Nisha scanned B-17 into the logistics cage at 14:44 and requested the J-171 reprint at 14:54.",
+      "reference_sql": [
+        "SELECT j.requested_by,s.scanned_by,s.event_at,s.scan_type FROM sql03_print_jobs j JOIN sql03_custody_scans s ON s.batch_id='B-17' WHERE j.job_id='J-171' AND s.scan_type='CUSTODY_IN'"
+      ]
+    },
+    {
+      "key": "t6",
+      "thread": "t3",
+      "title": "THE BEST EXPLANATION",
+      "prompt": "Which explanation best fits the full record?",
+      "answer_type": "CHOICE",
+      "answer": "A",
+      "options": [
+        {
+          "key": "A",
+          "text": "Nisha diverted the original while it was under her recorded custody, ordered an unapproved reprint, then tried to pass it off as the original to avoid disrupting the sponsor photo."
+        },
+        {
+          "key": "B",
+          "text": "Kabir stole the original after accepting it at 14:46."
+        },
+        {
+          "key": "C",
+          "text": "Aarav deliberately printed too few badges and hid the rest."
+        },
+        {
+          "key": "D",
+          "text": "Leena received all 12 badges but miscounted them."
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "join records on stable ids",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "Best explanation: {value}",
+      "explanation": "Nisha’s own messages ask for a hold, a reprint without approval, and for the replacement to be treated as the original, which her custody scans and the approval audit do not support.",
+      "reference_sql": [
+        "SELECT m.sent_at,m.sender_id,m.message_text FROM sql03_messages m WHERE m.sender_id='NISHA' ORDER BY m.sent_at"
+      ]
+    }
+  ]
+}

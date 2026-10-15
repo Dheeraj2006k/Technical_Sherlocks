@@ -1,0 +1,385 @@
+{
+  "tasks": [
+    {
+      "key": "q1",
+      "thread": "t1",
+      "title": "WHAT THE CHECKLIST SHOWS",
+      "prompt": "**What does the awards checklist actually establish?**",
+      "answer_type": "CHOICE",
+      "answer": "B",
+      "options": [
+        {
+          "key": "A",
+          "text": "The trophy was definitely on the stand at 4:25 PM."
+        },
+        {
+          "key": "B",
+          "text": "The display was considered ready at 4:05 PM, but there is no close item verification after that time."
+        },
+        {
+          "key": "C",
+          "text": "Sameer stole the trophy because he moved a crate."
+        },
+        {
+          "key": "D",
+          "text": "The trophy could not have been moved because the checklist was signed."
+        }
+      ],
+      "points": 5,
+      "reward_schedule": [
+        5,
+        4,
+        3,
+        2,
+        1
+      ],
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The checklist: {value}",
+      "explanation": "It shows the display was considered ready at 4:05 PM with no item verification afterwards.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_1 where evidence_id in ('A') order by evidence_id"
+      ]
+    },
+    {
+      "key": "q2",
+      "thread": "t1",
+      "title": "THE FIRST LEAD",
+      "prompt": "**Which movement is the most useful lead to investigate first?**",
+      "answer_type": "CHOICE",
+      "answer": "B",
+      "options": [
+        {
+          "key": "A",
+          "text": "Arjun's movement of empty stage risers at 4:03 PM."
+        },
+        {
+          "key": "B",
+          "text": "Sameer's movement of the grey crate at 4:11 PM, because its contents and destination are not independently verified."
+        },
+        {
+          "key": "C",
+          "text": "Naina's photography, because cameras always reveal the entire room."
+        },
+        {
+          "key": "D",
+          "text": "Vikram's general note that the awards display looked ready."
+        }
+      ],
+      "points": 5,
+      "reward_schedule": [
+        5,
+        4,
+        3,
+        2,
+        1
+      ],
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "First lead: {value}",
+      "explanation": "Sameer's crate move at 4:11 PM has an unchecked content and destination.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_1 where evidence_id in ('C') order by evidence_id"
+      ]
+    },
+    {
+      "key": "q3",
+      "thread": "t1",
+      "title": "WHAT TO ESTABLISH NEXT",
+      "prompt": "**What is the most important fact to establish next?**",
+      "answer_type": "CHOICE",
+      "answer": "B",
+      "options": [
+        {
+          "key": "A",
+          "text": "Who dislikes the winning team."
+        },
+        {
+          "key": "B",
+          "text": "Whether the trophy was moved for an approved activity, and what record should identify its destination."
+        },
+        {
+          "key": "C",
+          "text": "Whether the stage risers were heavy."
+        },
+        {
+          "key": "D",
+          "text": "Whether the closing ceremony can proceed without a trophy.\n---\n# Phase 2 — Following the Object\n## Evidence E — Temporary Movement Slip\n**Source:** Awards desk carbon-copy form\nA movement slip was opened at 4:06 PM:\n- Item: Founders' Trophy\n- Reason: “Photo setup”\n- Destination field: “Photo Bay”\n- Return confirmation: blank\n- Initiated by: Kavya Sen\nThe form authorizes a temporary move for photography. It does not record that the trophy was returned to the display stand.\n## Evidence F — Photographer's Statement\n**Source:** Naina's recorded interview\nNaina says:\n*“I asked for the trophy to be brought to the awards table for a group photograph. I took the group shot at about 4:08. I saw the trophy on the table then. I did not take it away, and I did not ask anyone to store it.”*\nHer camera's timestamp confirms that the group photograph was taken at 4:08 PM. The photograph includes the trophy on the awards table, but the image does not show who carried it there.\n## Evidence G — Storage Crate Register\n**Source:** Logistics desk record\n- 4:07 PM — Grey crate G-14 assigned to banner hardware.\n- 4:11 PM — Sameer records G-14 as moved toward the storage area.\n- 4:19 PM — G-14 marked “returned to storage.”\n- The register does not list individual contents.\n- No one signed a content check at return.\n## Evidence H — Engraving Proof\n**Source:** Vendor proof sheet found in the awards folder\nThe approved proof sheet displays the correct event title but lists the wrong winning team in the small nameplate text. A handwritten note beside it says:\n*“Check final plate before presentation.”*\nThe note is initialled “K.S.” The sheet does not show whether the error was corrected.\n## Evidence I — Stage Volunteer Statement\n**Source:** Arjun's interview\nArjun says he moved only the empty display stand to make room for the photographer. He says the trophy was already on the awards table when he moved the stand. The photo timestamp supports the fact that the trophy was on the table at 4:08, but does not independently confirm the exact time Arjun moved the stand."
+        }
+      ],
+      "points": 5,
+      "reward_schedule": [
+        5,
+        4,
+        3,
+        2,
+        1
+      ],
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "Next fact to establish: {value}",
+      "explanation": "Whether the trophy was moved for an approved activity, and what record should show its destination.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_1 where evidence_id in ('A', 'C', 'D') order by evidence_id"
+      ]
+    },
+    {
+      "key": "q4",
+      "thread": "t2",
+      "title": "THE MOVEMENT SLIP",
+      "prompt": "**What can investigators conclude from the temporary movement slip?**",
+      "answer_type": "CHOICE",
+      "answer": "B",
+      "options": [
+        {
+          "key": "A",
+          "text": "The trophy was stolen by the photographer."
+        },
+        {
+          "key": "B",
+          "text": "The trophy was authorized to leave the display for photography, but its return was never recorded."
+        },
+        {
+          "key": "C",
+          "text": "Kavya definitely hid the trophy in the grey crate."
+        },
+        {
+          "key": "D",
+          "text": "The movement slip is proof that the trophy was returned."
+        }
+      ],
+      "points": 5,
+      "reward_schedule": [
+        5,
+        4,
+        3,
+        2,
+        1
+      ],
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The slip: {value}",
+      "explanation": "The slip authorises the photo move but never records the return.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_2 where evidence_id in ('E') order by evidence_id"
+      ]
+    },
+    {
+      "key": "q5",
+      "thread": "t2",
+      "title": "NAINA'S ROLE",
+      "prompt": "**Which statement best describes Naina's role based on the evidence?**",
+      "answer_type": "CHOICE",
+      "answer": "A",
+      "options": [
+        {
+          "key": "A",
+          "text": "She had a legitimate reason to have the trophy at the awards table, but the photo alone does not show who later moved it."
+        },
+        {
+          "key": "B",
+          "text": "She must have stolen it because she requested the photo setup."
+        },
+        {
+          "key": "C",
+          "text": "She could not have seen the trophy because the checklist was signed earlier."
+        },
+        {
+          "key": "D",
+          "text": "Her statement proves the trophy stayed on the table until 4:25 PM."
+        }
+      ],
+      "points": 5,
+      "reward_schedule": [
+        5,
+        4,
+        3,
+        2,
+        1
+      ],
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "Naina: {value}",
+      "explanation": "She had a legitimate reason to have the trophy at the table, but the photo does not show later custody.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_1 where evidence_id in ('B') order by evidence_id",
+        "select evidence_id, title from evidence_phase_2 where evidence_id in ('F') order by evidence_id"
+      ]
+    },
+    {
+      "key": "q6",
+      "thread": "t2",
+      "title": "A REASON TO CONCEAL",
+      "prompt": "**Which lead most directly connects the missing trophy to a possible reason for concealing it?**",
+      "answer_type": "CHOICE",
+      "answer": "B",
+      "options": [
+        {
+          "key": "A",
+          "text": "The empty stage risers."
+        },
+        {
+          "key": "B",
+          "text": "The engraving proof with the wrong winning-team name and the handwritten instruction to check the final plate."
+        },
+        {
+          "key": "C",
+          "text": "The general schedule reminder."
+        },
+        {
+          "key": "D",
+          "text": "The fact that Naina took a photograph.\n---\n# Phase 3 — Chain of Custody\n## Evidence J — Awards Folder Contents\n**Source:** Inventory of Kavya's signed awards-preparation folder\nThe folder contains:\n- The temporary movement slip for the trophy.\n- The engraving proof with the incorrect team name.\n- A blank correction request form.\n- A note reading: *“Do not announce until confirmed.”*\nThe correction request form has no vendor receipt or submission timestamp.\n## Evidence K — Storage Area Inspection\n**Source:** Joint inspection report\nGrey crate G-14 is found in the storage area behind rolled banners. The crate contains banner brackets and a padded compartment that can hold a trophy upright. The compartment is empty at inspection.\nA strip of protective felt inside the compartment matches the felt used under the Founders' Trophy base. This establishes that the crate was suitable for transporting the trophy, but does not prove the trophy was inside it at 4:11 PM.\n## Evidence L — Revised Ceremony Draft\n**Source:** Schedule file history\nAt 4:17 PM, Kavya drafts a note stating:\n*“Presentation may need a short delay while the award is checked.”*\nAt 4:23 PM, after the trophy is reported missing, the draft is changed to:\n*“Presentation delayed due to missing trophy.”*\nThe file history records both edits. It does not show that the first draft was sent to anyone.\n## Evidence M — Vendor Call Record\n**Source:** Event desk call log\nAt 4:12 PM, Kavya calls the engraving vendor. The call lasts 46 seconds. The desk log records the time and recipient, but not the conversation. Meera confirms that Kavya had been asking whether a replacement nameplate could be prepared quickly.\nThe call record supports a link between Kavya and the engraving issue; it does not, by itself, establish what she said or did with the trophy.\n## Evidence N — Final Location Check\n**Source:** Search log completed by event staff\nAt 4:32 PM, staff check:\n- The awards display and table.\n- The photo bay.\n- The stage wings.\n- The AV booth.\n- The storage area, including the space behind the rolled banners.\nThe trophy is not found. G-14 is located, but the padded compartment is empty. The search log does not include a search of the locked awards office, which is opened later by the event lead."
+        }
+      ],
+      "points": 5,
+      "reward_schedule": [
+        5,
+        4,
+        3,
+        2,
+        1
+      ],
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The concealment lead: {value}",
+      "explanation": "The engraving proof with the wrong winning-team name and the note to check the final plate.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_2 where evidence_id in ('H') order by evidence_id"
+      ]
+    },
+    {
+      "key": "q7",
+      "thread": "t3",
+      "title": "THE SUPPORTED TIMELINE",
+      "prompt": "**Which timeline is supported by the records?**",
+      "answer_type": "CHOICE",
+      "answer": "B",
+      "options": [
+        {
+          "key": "A",
+          "text": "The trophy was on the display stand continuously from 3:40 PM until 4:25 PM."
+        },
+        {
+          "key": "B",
+          "text": "The trophy was moved for photography by 4:08 PM; its return was not recorded, and a storage crate was moved at 4:11 PM."
+        },
+        {
+          "key": "C",
+          "text": "The trophy was first moved after it was reported missing at 4:25 PM."
+        },
+        {
+          "key": "D",
+          "text": "The trophy was inside G-14 at 4:32 PM."
+        }
+      ],
+      "points": 5,
+      "reward_schedule": [
+        5,
+        4,
+        3,
+        2,
+        1
+      ],
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "Supported timeline: {value}",
+      "explanation": "Moved for photography by 4:08, return not recorded, crate moved at 4:11.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_1 where evidence_id in ('B') order by evidence_id",
+        "select evidence_id, title from evidence_phase_2 where evidence_id in ('E', 'G') order by evidence_id"
+      ]
+    },
+    {
+      "key": "q8",
+      "thread": "t3",
+      "title": "ENGRAVING AND SCHEDULE DRAFTS",
+      "prompt": "**What is the strongest interpretation of the engraving evidence and schedule drafts?**",
+      "answer_type": "CHOICE",
+      "answer": "B",
+      "options": [
+        {
+          "key": "A",
+          "text": "They prove Meera stole the trophy."
+        },
+        {
+          "key": "B",
+          "text": "They show a possible reason to delay the presentation and connect Kavya to the unresolved engraving problem, but they need to be combined with movement evidence."
+        },
+        {
+          "key": "C",
+          "text": "They prove the trophy was never real."
+        },
+        {
+          "key": "D",
+          "text": "They are irrelevant because the nameplate is small."
+        }
+      ],
+      "points": 5,
+      "reward_schedule": [
+        5,
+        4,
+        3,
+        2,
+        1
+      ],
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "Engraving evidence: {value}",
+      "explanation": "A possible reason to delay and a link to the engraving problem; motive must be combined with the movement evidence.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_2 where evidence_id in ('E', 'H') order by evidence_id"
+      ]
+    },
+    {
+      "key": "q9",
+      "thread": "t3",
+      "title": "THE BEST HYPOTHESIS",
+      "prompt": "**Which hypothesis best explains the combined evidence?**",
+      "answer_type": "CHOICE",
+      "answer": "C",
+      "options": [
+        {
+          "key": "A",
+          "text": "Naina took the trophy after the photograph and left the event."
+        },
+        {
+          "key": "B",
+          "text": "Arjun hid the trophy while moving the empty stand."
+        },
+        {
+          "key": "C",
+          "text": "Kavya used the authorized photo movement as an opportunity to divert the trophy, failed to record its return, and prepared to delay the presentation while the engraving error was addressed."
+        },
+        {
+          "key": "D",
+          "text": "Sameer stole the trophy for its metal value.\n---"
+        }
+      ],
+      "points": 5,
+      "reward_schedule": [
+        5,
+        4,
+        3,
+        2,
+        1
+      ],
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "Best hypothesis: {value}",
+      "explanation": "The only hypothesis explaining the custody gap and the early draft is a diversion during the unrecorded return.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_2 where evidence_id in ('E', 'G', 'H') order by evidence_id",
+        "select evidence_id, title from evidence_phase_3 where evidence_id in ('K', 'L', 'M') order by evidence_id"
+      ]
+    }
+  ]
+}

@@ -81,16 +81,21 @@ async function joinAsHead(body: Record<string, unknown>): Promise<Joined> {
       | { id: string; team_ref: string; team_size: number; registration_status: string; assignment_id: string | null; case_id: string | null; case_code: string | null; password_hash: string | null; status: string | null }
       | undefined;
     const pwOk = await checkPassword(body.case_password, r?.password_hash ?? undefined);
-    if (!r || !pwOk || r.registration_status === "withdrawn" || !r.case_id || !code || code !== r.case_code || r.status !== "published") throw fail();
+    if (!r || !pwOk || r.registration_status === "withdrawn" || !r.case_id || !code || code !== r.case_code) throw fail();
 
-    // A registration owns at most one team: rejoining as its head restores that head.
+    // A registration owns at most one team: rejoining as its head restores that head. A team stays pinned to the content
+    // version it started with, so rejoining still works after that version has been disabled for NEW assignments.
     const existing = await tx.query(
       `select t.id as team_id, t.team_code, t.team_name, p.id as player_id, p.display_name, p.role
          from teams t join players p on p.team_id = t.id and p.role = 'head'
         where t.registration_id = $1`,
       [r.id],
     );
-    if (existing.rows[0]) return { ...(existing.rows[0] as Omit<Joined, "replay">), replay: true };
+    if (existing.rows[0]) {
+      if (r.status !== "published" && r.status !== "disabled") throw fail();
+      return { ...(existing.rows[0] as Omit<Joined, "replay">), replay: true };
+    }
+    if (r.status !== "published") throw fail(); // only a published version can start a new team
 
     let team: { id: string; team_code: string; team_name: string } | undefined;
     for (let i = 0; i < 20 && !team; i++) {
@@ -130,7 +135,8 @@ async function joinAsTeamMember(body: Record<string, unknown>): Promise<Joined> 
       [code],
     );
     const team = t.rows[0];
-    if (!team || team.status !== "published") throw fail();
+    // investigators join a team that is pinned to its version: published, or retired (disabled) after the team started
+    if (!team || (team.status !== "published" && team.status !== "disabled")) throw fail();
 
     // Same display name (any case) = rejoin: same player, same role.
     const ex = await tx.query("select id, display_name, role from players where team_id = $1 and lower(display_name) = lower($2)", [team.id, name]);

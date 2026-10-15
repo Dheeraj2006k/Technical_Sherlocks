@@ -1,0 +1,8 @@
+{
+  "columns": ["notification_id","report_id","recipient","sent_at","delivery_status"],
+  "rows": [
+    ["N-1","MR-184","Rohit Kulkarni","2026-10-16 20:47:00","DELIVERED"],
+    ["N-2","MR-184","Arjun Varma","2026-10-16 20:47:00","DELIVERED"],
+    ["N-3","MR-184","Kavya Iyer","2026-10-16 20:47:00","DELIVERED"]
+  ]
+}

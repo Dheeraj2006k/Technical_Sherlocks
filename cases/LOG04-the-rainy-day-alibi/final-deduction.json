@@ -1,0 +1,27 @@
+{
+  "culprit": {
+    "points": 25,
+    "note": "Pick the responsible person from the suspect list"
+  },
+  "mechanism": {
+    "points": 15,
+    "options": [
+      {
+        "label": "Devika accidentally printed an old copy; the judges approved the new tie-break later.",
+        "correct": false
+      },
+      {
+        "label": "Devika knowingly introduced an unsigned replacement tie-break summary without a new judge decision, and used the rain-based alibi to distance herself from the corridor and revision window.",
+        "correct": true
+      },
+      {
+        "label": "Farah removed the original during delivery, and the weather record proves she did it.",
+        "correct": false
+      },
+      {
+        "label": "Kabir altered the result from the public waiting area.",
+        "correct": false
+      }
+    ]
+  }
+}

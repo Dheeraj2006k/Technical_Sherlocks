@@ -1,0 +1,59 @@
+{
+  "scoring": {
+    "reward_schedule": [
+      10,
+      8,
+      6,
+      4,
+      2
+    ],
+    "wrong_answer_penalty": 2,
+    "sql_errors_free": true,
+    "retries_allowed": true,
+    "each_component_awards_points_once": true
+  },
+  "hints": {
+    "t1": [
+      "Compare the actual duration with the planned duration.",
+      "The cue calls for 2:00.",
+      "The incident card says playback stopped after 00:42.",
+      "The title was Comet’s, but the run was too short.",
+      "Choose the mismatch without guessing its cause."
+    ],
+    "t2": [
+      "The receipt is evidence of submission, not later playback.",
+      "The upload was at 3:36 PM.",
+      "It records a 2-minute file and checksum 91C4.",
+      "The later player report has a different checksum.",
+      "Select what the receipt proves directly."
+    ],
+    "t3": [
+      "Separate physical custody from the file’s earlier preparation.",
+      "The seal was intact when returned.",
+      "Arjun did not open the drive according to the log.",
+      "The mismatch must be investigated before handoff.",
+      "Choose the conclusion supported by the seal and custody record."
+    ],
+    "t4": [
+      "Compare the source and duration in the export record.",
+      "The export was 42 seconds.",
+      "Its source was Comet_Rehearsal_cut.mp4.",
+      "The account was Nisha’s, but that alone does not prove intent.",
+      "Choose the exact relationship between source, name and account."
+    ],
+    "t5": [
+      "The photo and audit answer different questions.",
+      "The photo is timestamped 3:50 PM.",
+      "It shows Nisha at the workstation and an export in progress.",
+      "Pair that with the 3:49 PM audit, but avoid overclaiming.",
+      "Choose the conclusion that combines timing and limits."
+    ],
+    "t6": [
+      "The original upload remains intact.",
+      "The playback copy has a different checksum and matches the rehearsal cut.",
+      "The export happened before the drive was sealed, and the photo places Nisha at the workstation.",
+      "Read the cue draft alongside the export and rehearsal-only end card.",
+      "Choose the explanation that fits the file trail, timing and motive without blaming custody unsupportedly."
+    ]
+  }
+}

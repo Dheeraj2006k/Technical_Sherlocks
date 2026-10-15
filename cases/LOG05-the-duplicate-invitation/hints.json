@@ -1,0 +1,59 @@
+{
+  "scoring": {
+    "reward_schedule": [
+      10,
+      8,
+      6,
+      4,
+      2
+    ],
+    "wrong_answer_penalty": 2,
+    "sql_errors_free": true,
+    "retries_allowed": true,
+    "each_component_awards_points_once": true
+  },
+  "hints": {
+    "t1": [
+      "Start by comparing the printed time with the official schedule.",
+      "The desk note says the QR was accepted but the time conflicted.",
+      "The master run sheet lists Orbit at 4:00 PM.",
+      "The received invitation photograph shows 4:30 PM.",
+      "Choose the option that states the contradiction without adding a cause."
+    ],
+    "t2": [
+      "Separate opportunity from proof.",
+      "More than one person could approach the printer.",
+      "The board describes roles and times, not a specific print job.",
+      "Do not treat access as proof of action.",
+      "Choose the option that respects the limits of the shift board."
+    ],
+    "t3": [
+      "Read the archived attachment details, not the later paper.",
+      "The archive records a successful delivery.",
+      "The sent PDF lists 4:00 PM.",
+      "The code is the same team code seen on the later copy.",
+      "Choose the option that describes the original sent version."
+    ],
+    "t4": [
+      "The print queue and photo answer different questions.",
+      "The queue records the account and job.",
+      "The photo shows Aanya collecting a page, but its text is unreadable.",
+      "Combine them without claiming either proves the whole act.",
+      "Choose the option that states both what is supported and what remains unproven."
+    ],
+    "t5": [
+      "The proof contains more than the wrong time.",
+      "Compare the QR and time with the invitation received by Orbit.",
+      "Notice the handwritten margin note and its match to Aanya’s marker/lettering.",
+      "This is a physical link; read it alongside the print log and photo.",
+      "Choose the option that combines the specific matches without relying on a single clue."
+    ],
+    "t6": [
+      "The master schedule never moved Orbit to 4:30 PM.",
+      "The official email had the correct time, while a later paper had the wrong time.",
+      "Connect the ANAIR print job, Aanya at the tray, the rejected proof and the shift note.",
+      "The motive note says to change Orbit’s copy only and leave the master alone.",
+      "Choose the explanation that accounts for the wrong copy, unchanged master, reused QR and stated motive."
+    ]
+  }
+}

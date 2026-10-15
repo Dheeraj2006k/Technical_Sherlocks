@@ -1,0 +1,10 @@
+{
+  "columns": ["evidence_id","title","source_label","body"],
+  "rows": [
+    ["E","The Prototype Identification Sheet","Aditya's pre-event technical checklist","The genuine Aster has three identifying features:\n\n1. A small blue inspection mark on the underside of its base.\n2. A short scratch beside the left mounting screw.\n3. A green indicator that lights up when the device is powered.\n\nThe display replica was made for photographs and has the same outer shell, but it has no functioning indicator and no internal electronics."],
+    ["F","The Enlarged 4:18 Photograph","Enhanced crop of Naina's original photograph","The photograph reveals the display's left mounting screw and the label on its base. The blue inspection mark is absent. The green indicator is dark, and its lens is a solid piece rather than the transparent lens fitted to the genuine prototype.\n\nThe image does not prove that the device is switched off: the lens itself is visibly different."],
+    ["G","Rohan's Account","Recorded interview","Rohan says:\n\n*“I went to the corridor at about 4:08 to collect our presentation file. I did not enter the room. I saw Vikram carrying a flat black event case near the AV booth, but I thought it held cables.”*\n\nRohan initially denied being near the room, then corrected himself when shown the movement sheet. His first answer was misleading, but the second part of his account is independently testable."],
+    ["H","AV Booth Equipment Register","Event equipment checkout sheet","- 4:02 PM — Vikram signs out a flat black equipment case.\n- 4:24 PM — The case is listed as returned to the AV booth.\n- The register does not record what was placed inside the case.\n- No one records an inspection of the case at return."],
+    ["I","Maintenance Record","Imran's signed work note","Imran repaired the display lighting at 3:35 PM. He records that he did not remove the display's backing panel and that the case was left open for Aditya's inspection afterward.\n\nAditya's signature confirms the case was open during the inspection. No evidence places Imran inside the room during the later 4:07–4:20 period."]
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "columns": ["message_id","message_at","sender","recipient","message_text","channel"],
+  "rows": [
+    ["RM1","2026-10-16 21:26:00","Rohit Kulkarni","Priya Nair","No spare. We're screwed.","CHAT"],
+    ["RM2","2026-10-16 21:28:00","Priya Nair","Rohit Kulkarni","Sandeep sir wants full brightness for the 10 PM demo.","CHAT"],
+    ["RM3","2026-10-16 21:30:00","Rohit Kulkarni","Priya Nair","Give me ten minutes.","CHAT"]
+  ]
+}

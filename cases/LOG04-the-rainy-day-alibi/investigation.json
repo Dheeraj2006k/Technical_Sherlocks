@@ -1,0 +1,83 @@
+{
+  "phases": [
+    {
+      "phase": 1,
+      "name": "The Alibi",
+      "tables": [
+        "evidence_phase_1"
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "The Record Changes",
+      "tables": [
+        "evidence_phase_2"
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "The Contradiction",
+      "tables": [
+        "evidence_phase_3"
+      ]
+    }
+  ],
+  "threads": [
+    {
+      "key": "t1",
+      "phase": 1,
+      "position": 1,
+      "title": "The Alibi",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Test Devika's rain alibi and the corridor log against what each record can really prove.",
+      "outcome_text": "The weather record contradicts the rain alibi and the access log shows a granted R-14 swipe, though neither locates the person.",
+      "unlocks": []
+    },
+    {
+      "key": "t2",
+      "phase": 2,
+      "position": 1,
+      "title": "The Record Changes",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Compare the original and replacement summaries and read the printer audit with care.",
+      "outcome_text": "Only the tie-break changed, and the printer shows the D.RAO account produced the revision at 3:28 PM.",
+      "unlocks": []
+    },
+    {
+      "key": "t3",
+      "phase": 3,
+      "position": 1,
+      "title": "The Contradiction",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Weigh the independent records together and identify the explanation that does not overclaim.",
+      "outcome_text": "The badge, the account, the contradicted alibi and the missing judge approval converge on one person.",
+      "unlocks": []
+    }
+  ],
+  "story_events": [
+    {
+      "thread": "t1",
+      "title": "The rain had stopped",
+      "body": "The rainfall station recorded zero rain from 3:16 PM, while Devika says heavy rain kept her at the loading bay until nearly 3:40 PM. The corridor reader also granted her badge entry at 3:23 PM. Neither record alone proves where she was, but the story she told no longer fits."
+    },
+    {
+      "thread": "t2",
+      "title": "Same points, new winner",
+      "body": "The replacement summary keeps the total points but names Team Meridian as tie-break winner instead of Team Northstar. It was printed at 3:28 PM under the D.RAO account. The printer audit shows an account, not a person."
+    },
+    {
+      "thread": "t3",
+      "title": "Converging evidence",
+      "body": "The badge custody register shows no transfer of R-14, the judge confirms she never authorised a replacement, and the secretary notes the account and badge records alongside the rain contradiction. The evidence converges on Devika Rao without any single record being decisive."
+    }
+  ]
+}

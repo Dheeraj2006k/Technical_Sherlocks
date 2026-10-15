@@ -1,0 +1,125 @@
+{
+  "tasks": [
+    {
+      "key": "t1",
+      "thread": "t1",
+      "title": "THE GRANT CREDIT",
+      "prompt": "What was the grant credit amount? Enter the amount in rupees as a number.",
+      "answer_type": "NUMBER",
+      "answer": "42000",
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "join records on stable ids",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The grant credit: ₹{value}",
+      "explanation": "Ledger entry L001 credits ₹42,000 for the prototype grant.",
+      "reference_sql": [
+        "select amount from ledger_entries where entry_type = 'CREDIT'"
+      ]
+    },
+    {
+      "key": "t2",
+      "thread": "t1",
+      "title": "THE ORIGINAL RESERVE PAYMENT",
+      "prompt": "Which reference is the original reserve payment?",
+      "answer_type": "TEXT",
+      "answer": "PAY-712",
+      "alt_answers": [
+        "PAY712"
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "join records on stable ids",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The original reserve payment: {value}",
+      "explanation": "The ₹12,000 emergency equipment reserve debit before the reversal is PAY-712.",
+      "reference_sql": [
+        "select reference_code from ledger_entries where entry_type = 'DEBIT' and description = 'Emergency equipment reserve'"
+      ]
+    },
+    {
+      "key": "t3",
+      "thread": "t2",
+      "title": "THE REUSED APPROVAL",
+      "prompt": "Which approval code was reused for the replacement request?",
+      "answer_type": "TEXT",
+      "answer": "APR-103",
+      "alt_answers": [
+        "APR103"
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "join records on stable ids",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The approval code reused: {value}",
+      "explanation": "PAY-712B cites APR-103, the same approval as PAY-712.",
+      "reference_sql": [
+        "select approval_code from payment_requests where request_id = 'PAY-712B'"
+      ]
+    },
+    {
+      "key": "t4",
+      "thread": "t2",
+      "title": "WHO CREATED THE REPLACEMENT",
+      "prompt": "Who created the replacement request?",
+      "answer_type": "TEXT",
+      "answer": "Dev Malhotra",
+      "alt_answers": [
+        "Dev"
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "join records on stable ids",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "Replacement request created by: {value}",
+      "explanation": "PAY-712B was requested by Dev Malhotra, confirmed by the CREATE_REQUEST audit event at 15:42:30 on FIN-02.",
+      "reference_sql": [
+        "select requested_by from payment_requests where request_id = 'PAY-712B'"
+      ]
+    },
+    {
+      "key": "t5",
+      "thread": "t3",
+      "title": "WHAT CHANGED IN THE TRANSFER",
+      "prompt": "What changed between the original and replacement gateway transfers?",
+      "answer_type": "TEXT",
+      "answer": "destination fingerprint",
+      "alt_answers": [
+        "destination",
+        "destination fingerprint changed",
+        "the destination fingerprint",
+        "the destination",
+        "dest-north-44 to dest-north-84"
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "join records on stable ids",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "What changed: {value}",
+      "explanation": "The original transfer went to DEST-NORTH-44 and the replacement to DEST-NORTH-84, with the same amount and payee.",
+      "reference_sql": [
+        "select case when count(distinct destination_fingerprint) > 1 then 'destination fingerprint' end from gateway_events where reference_code in ('PAY-712', 'PAY-712B') and event_type = 'TRANSFER'"
+      ]
+    },
+    {
+      "key": "t6",
+      "thread": "t3",
+      "title": "THE AUDIT ACTION",
+      "prompt": "What audit action allowed the replacement to proceed?",
+      "answer_type": "TEXT",
+      "answer": "MANUAL_OVERRIDE",
+      "alt_answers": [
+        "manual override"
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "join records on stable ids",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The audit action: {value}",
+      "explanation": "A successful MANUAL_OVERRIDE by Dev Malhotra on PAY-712B at 15:43 allowed the replacement through.",
+      "reference_sql": [
+        "select action from access_audit where object_ref = 'PAY-712B' and action = 'MANUAL_OVERRIDE' and result = 'SUCCESS'"
+      ]
+    }
+  ]
+}

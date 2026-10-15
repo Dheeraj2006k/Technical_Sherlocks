@@ -1,0 +1,41 @@
+{
+  "victim": "Team Comet",
+  "characters": [
+    {
+      "name": "Nisha Rao",
+      "role": "AV coordinator; prepares the playback package and stage cue list.",
+      "profile": "AV coordinator; prepares the playback package and stage cue list.",
+      "suspect": true
+    },
+    {
+      "name": "Dev Malhotra",
+      "role": "Team Comet captain; submitted the final demo video.",
+      "profile": "Team Comet captain; submitted the final demo video.",
+      "suspect": true
+    },
+    {
+      "name": "Tara Iyer",
+      "role": "AV trainee; helps copy files and label media.",
+      "profile": "AV trainee; helps copy files and label media.",
+      "suspect": true
+    },
+    {
+      "name": "Arjun Kapoor",
+      "role": "Stage runner; transports the sealed playback drive.",
+      "profile": "Stage runner; transports the sealed playback drive.",
+      "suspect": true
+    },
+    {
+      "name": "Zoya Khan",
+      "role": "Team Orbit captain; competing for the final showcase slot.",
+      "profile": "Team Orbit captain; competing for the final showcase slot.",
+      "suspect": true
+    },
+    {
+      "name": "Milan Das",
+      "role": "Event photographer; records setup and the playback desk.",
+      "profile": "Event photographer; records setup and the playback desk.",
+      "suspect": true
+    }
+  ]
+}

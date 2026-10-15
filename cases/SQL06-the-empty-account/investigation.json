@@ -1,0 +1,88 @@
+{
+  "phases": [
+    {
+      "phase": 1,
+      "name": "The Balance",
+      "tables": [
+        "account_snapshots",
+        "ledger_entries"
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "The Approval Trail",
+      "tables": [
+        "payment_requests",
+        "approval_registry",
+        "staff_directory"
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "The Gateway",
+      "tables": [
+        "gateway_events",
+        "access_audit",
+        "reconciliation_notes"
+      ]
+    }
+  ],
+  "threads": [
+    {
+      "key": "t1",
+      "phase": 1,
+      "position": 1,
+      "title": "The Balance",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Separate a stale dashboard from money that really left the fund.",
+      "outcome_text": "The grant was ₹42,000 and the original reserve payment is PAY-712.",
+      "unlocks": []
+    },
+    {
+      "key": "t2",
+      "phase": 2,
+      "position": 1,
+      "title": "The Approval Trail",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Compare the replacement request with the original approval and the people involved.",
+      "outcome_text": "The replacement reused APR-103 and was created by Dev Malhotra.",
+      "unlocks": []
+    },
+    {
+      "key": "t3",
+      "phase": 3,
+      "position": 1,
+      "title": "The Gateway",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Compare the gateway rows and the audit trail and test the routine-retry explanation.",
+      "outcome_text": "The destination fingerprint changed and a manual override let the replacement through.",
+      "unlocks": []
+    }
+  ],
+  "story_events": [
+    {
+      "thread": "t1",
+      "title": "Zero on the dashboard",
+      "body": "The ledger credits ₹42,000 and debits supplier payments, then the reserve payment PAY-712 is reversed and a replacement debit follows. The snapshots show the dashboard emptying overnight."
+    },
+    {
+      "thread": "t2",
+      "title": "The same approval, twice",
+      "body": "PAY-712 and PAY-712B both cite APR-103. The registry approved ₹12,000 for the emergency equipment reserve at Northstar Equipment."
+    },
+    {
+      "thread": "t3",
+      "title": "Not a retry",
+      "body": "The gateway shows PAY-712 to DEST-NORTH-44 rejected, then PAY-712B to DEST-NORTH-84 accepted and settled. The audit shows a successful manual override on PAY-712B."
+    }
+  ]
+}

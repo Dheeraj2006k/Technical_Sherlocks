@@ -1,0 +1,9 @@
+{
+  "columns": ["evidence_id","title","source_label","body"],
+  "rows": [
+    ["E09","The Rejected Proof","Recovered from the paper-recycling bin","A discarded proof reads “TEAM ORBIT — CHECK-IN 4:30 PM” and includes QR ORB-041. In the lower margin, handwritten in purple ink, are the words “duplicate QR OK.” The shift board’s setup note, written by Aanya, uses the same distinctive purple marker and letter forms. No other recovered proof has this combination of time and code."],
+    ["E10","Aanya’s Shift Note","Registration clipboard, back page","A note in Aanya’s handwriting reads: “If Orbit checks in after sound check, Nova keeps first demo slot. Change Orbit copy only; leave master alone.” It is dated that afternoon. The note does not name a specific method, so it must be read alongside the print and photograph records."],
+    ["E11","Rohan’s Revision History","Schedule file audit","Rohan’s 3:42 PM change moved opening remarks by five minutes. The file’s before-and-after versions show Team Orbit remained at 4:00 PM and Team Nova at 4:10 PM. The schedule change is real, but it cannot explain the 4:30 PM printed invitation."],
+    ["E12","Team Nova’s Check-in Receipt","Registration system receipt","Team Nova checked in at 4:09 PM, one minute before its listed time, and did not receive a revised invitation. The check-in system records the team’s arrival; it does not show that Nova requested or knew about the altered Orbit copy."]
+  ]
+}

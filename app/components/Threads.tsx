@@ -4,7 +4,8 @@ import { useId, useRef, useState } from "react";
 import type { Act, GameState, Notify, OutcomeType, Question, Thread } from "../types";
 import { friendlyError } from "./api";
 import { Avatar, Icon } from "./ui";
-import { KIND_LABEL, phaseTitle } from "../phases";
+import { KIND_LABEL } from "../phases";
+import { phaseLabel } from "./CaseFile";
 
 const OUTCOME_LABEL: Record<OutcomeType, string> = {
   CLEARED: "Person cleared",
@@ -21,6 +22,18 @@ function AnswerInput({ q, value, onChange, roster, labelId }: { q: Question; val
         <option value="">Choose a person…</option>
         {roster.map((c) => <option key={c.id} value={c.id}>{c.name}{c.role ? ` · ${c.role}` : ""}</option>)}
       </select>
+    );
+  }
+  if (q.answer_type === "CHOICE") {
+    return (
+      <fieldset className="choice" aria-labelledby={labelId}>
+        {(q.options ?? []).map((o) => (
+          <label key={o.key} className={`choice-opt${value === o.key ? " on" : ""}`}>
+            <input type="radio" name={`choice-${q.id}`} value={o.key} checked={value === o.key} onChange={() => onChange(o.key)} />
+            <b>{o.key}</b> <span>{o.text}</span>
+          </label>
+        ))}
+      </fieldset>
     );
   }
   if (q.answer_type === "TIME") return <input {...common} type="time" value={value} onChange={(e) => onChange(e.target.value)} />;
@@ -176,7 +189,7 @@ export default function Threads({ gs, act, notify }: { gs: GameState; act: Act; 
   const phases = [...new Set(gs.threads.map((t) => t.phase))].sort();
 
   return (
-    <section className="tasks" aria-label="Investigation threads">
+    <section className="tasks" aria-label="Investigation threads" data-tour="threads">
       <header className="side-head">
         <h2>Investigation threads</h2>
         {all.length > 0 && <span className="progress-count" aria-label={`${answered} of ${all.length} questions answered`}>{answered}/{all.length} answered</span>}
@@ -189,7 +202,7 @@ export default function Threads({ gs, act, notify }: { gs: GameState; act: Act; 
       {gs.state === "FINAL_DEDUCTION" && <p className="hint">All required threads are done. Optional threads stay open; they can only add points.</p>}
       {phases.map((p) => (
         <div key={p} className="phase-group">
-          <h3 className="phase-group-title">Phase {p}: {phaseTitle(p)}</h3>
+          <h3 className="phase-group-title">Phase {p}: {phaseLabel(gs, p)}</h3>
           {gs.threads.filter((t) => t.phase === p).map((t) => <ThreadCard key={t.id} t={t} gs={gs} act={act} notify={notify} />)}
         </div>
       ))}

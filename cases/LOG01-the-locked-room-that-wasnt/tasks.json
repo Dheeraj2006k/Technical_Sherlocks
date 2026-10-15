@@ -1,0 +1,384 @@
+{
+  "tasks": [
+    {
+      "key": "q1",
+      "thread": "t1",
+      "title": "WHAT THE CLOSURE LOG SHOWS",
+      "prompt": "**Which conclusion is actually supported by the closure log?**",
+      "answer_type": "CHOICE",
+      "answer": "B",
+      "options": [
+        {
+          "key": "A",
+          "text": "Rohan stole Aster because he was near the room."
+        },
+        {
+          "key": "B",
+          "text": "The room was reported closed at 4:20 PM, but the log does not prove when Aster was last physically present."
+        },
+        {
+          "key": "C",
+          "text": "Aster was definitely present at 4:20 PM."
+        },
+        {
+          "key": "D",
+          "text": "Devika must have taken Aster because she held the key."
+        }
+      ],
+      "points": 5,
+      "reward_schedule": [
+        5,
+        4,
+        3,
+        2,
+        1
+      ],
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The closure log: {value}",
+      "explanation": "The log records a 4:20 PM closure but cannot show when Aster was last physically present.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_1 where evidence_id in ('A') order by evidence_id"
+      ]
+    },
+    {
+      "key": "q2",
+      "thread": "t1",
+      "title": "THE CLEAREST MOTIVE SO FAR",
+      "prompt": "**Which suspect has the clearest apparent motive from the evidence available so far?**",
+      "answer_type": "CHOICE",
+      "answer": "A",
+      "options": [
+        {
+          "key": "A",
+          "text": "Rohan"
+        },
+        {
+          "key": "B",
+          "text": "Naina"
+        },
+        {
+          "key": "C",
+          "text": "Imran"
+        },
+        {
+          "key": "D",
+          "text": "Devika"
+        }
+      ],
+      "points": 5,
+      "reward_schedule": [
+        5,
+        4,
+        3,
+        2,
+        1
+      ],
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "Clearest apparent motive so far: {value}",
+      "explanation": "Rohan's documented rivalry gives him the clearest apparent motive, but motive is not proof.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_1 where evidence_id in ('B', 'D') order by evidence_id"
+      ]
+    },
+    {
+      "key": "q3",
+      "thread": "t1",
+      "title": "THE NEXT STEP",
+      "prompt": "**What is the most useful next step?**",
+      "answer_type": "CHOICE",
+      "answer": "B",
+      "options": [
+        {
+          "key": "A",
+          "text": "Accuse Rohan before he can leave."
+        },
+        {
+          "key": "B",
+          "text": "Verify whether the object in the 4:18 photograph is the genuine Aster."
+        },
+        {
+          "key": "C",
+          "text": "Assume the key register proves no one could have removed the prototype."
+        },
+        {
+          "key": "D",
+          "text": "Investigate every person who has ever worked in the lab.\n---\n# Phase 2 — Investigation\n## Evidence E — The Prototype Identification Sheet\n**Source:** Aditya's pre-event technical checklist\nThe genuine Aster has three identifying features:\n1. A small blue inspection mark on the underside of its base.\n2. A short scratch beside the left mounting screw.\n3. A green indicator that lights up when the device is powered.\nThe display replica was made for photographs and has the same outer shell, but it has no functioning indicator and no internal electronics.\n## Evidence F — The Enlarged 4:18 Photograph\n**Source:** Enhanced crop of Naina's original photograph\nThe photograph reveals the display's left mounting screw and the label on its base. The blue inspection mark is absent. The green indicator is dark, and its lens is a solid piece rather than the transparent lens fitted to the genuine prototype.\nThe image does not prove that the device is switched off: the lens itself is visibly different.\n## Evidence G — Rohan's Account\n**Source:** Recorded interview\nRohan says:\n*“I went to the corridor at about 4:08 to collect our presentation file. I did not enter the room. I saw Vikram carrying a flat black event case near the AV booth, but I thought it held cables.”*\nRohan initially denied being near the room, then corrected himself when shown the movement sheet. His first answer was misleading, but the second part of his account is independently testable.\n## Evidence H — AV Booth Equipment Register\n**Source:** Event equipment checkout sheet\n- 4:02 PM — Vikram signs out a flat black equipment case.\n- 4:24 PM — The case is listed as returned to the AV booth.\n- The register does not record what was placed inside the case.\n- No one records an inspection of the case at return.\n## Evidence I — Maintenance Record\n**Source:** Imran's signed work note\nImran repaired the display lighting at 3:35 PM. He records that he did not remove the display's backing panel and that the case was left open for Aditya's inspection afterward.\nAditya's signature confirms the case was open during the inspection. No evidence places Imran inside the room during the later 4:07–4:20 period."
+        }
+      ],
+      "points": 5,
+      "reward_schedule": [
+        5,
+        4,
+        3,
+        2,
+        1
+      ],
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "Next step: {value}",
+      "explanation": "The second photograph is angled with a glare-obscured label, so the sensible next step is to verify the object shown.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_1 where evidence_id in ('C') order by evidence_id"
+      ]
+    },
+    {
+      "key": "q4",
+      "thread": "t2",
+      "title": "THE 4:18 PHOTOGRAPH",
+      "prompt": "**What does the 4:18 photograph establish?**",
+      "answer_type": "CHOICE",
+      "answer": "B",
+      "options": [
+        {
+          "key": "A",
+          "text": "Aster was definitely present because a device-shaped object is visible."
+        },
+        {
+          "key": "B",
+          "text": "The genuine Aster was likely replaced by the display replica before the room was closed."
+        },
+        {
+          "key": "C",
+          "text": "Naina stole Aster because she took the photograph."
+        },
+        {
+          "key": "D",
+          "text": "The room's lock was defective."
+        }
+      ],
+      "points": 5,
+      "reward_schedule": [
+        5,
+        4,
+        3,
+        2,
+        1
+      ],
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The photograph shows: {value}",
+      "explanation": "The enlarged photograph lacks the inspection mark and has a solid lens: the replica was in place before closure.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_2 where evidence_id in ('E', 'F') order by evidence_id"
+      ]
+    },
+    {
+      "key": "q5",
+      "thread": "t2",
+      "title": "ROHAN'S ACCOUNT",
+      "prompt": "**Which conclusion about Rohan is best supported now?**",
+      "answer_type": "CHOICE",
+      "answer": "B",
+      "options": [
+        {
+          "key": "A",
+          "text": "He is guilty because he initially denied being near the room."
+        },
+        {
+          "key": "B",
+          "text": "His account contains a contradiction that must be checked, but his presence alone does not prove he entered or removed Aster."
+        },
+        {
+          "key": "C",
+          "text": "He is innocent because he eventually told the truth."
+        },
+        {
+          "key": "D",
+          "text": "He must have used Imran's tools."
+        }
+      ],
+      "points": 5,
+      "reward_schedule": [
+        5,
+        4,
+        3,
+        2,
+        1
+      ],
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "About Rohan: {value}",
+      "explanation": "His first answer was misleading, but his sighting of Vikram with a black case is independently confirmed; neither fact proves he removed Aster.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_2 where evidence_id in ('G', 'H') order by evidence_id"
+      ]
+    },
+    {
+      "key": "q6",
+      "thread": "t2",
+      "title": "THE NEXT LEAD",
+      "prompt": "**Which lead should investigators pursue next to test the removal timeline?**",
+      "answer_type": "CHOICE",
+      "answer": "A",
+      "options": [
+        {
+          "key": "A",
+          "text": "Search the AV booth and determine whether the returned equipment case could still contain Aster."
+        },
+        {
+          "key": "B",
+          "text": "Accuse Naina because the replica appears in her photograph."
+        },
+        {
+          "key": "C",
+          "text": "Reopen Imran's maintenance work without checking the later timeline."
+        },
+        {
+          "key": "D",
+          "text": "Treat Devika's closure checklist as proof that the genuine prototype was present at 4:20.\n---\n# Phase 3 — Reconstruction\n## Evidence J — The Rehearsal Follow-up\n**Source:** Aditya's message to the showcase team\nAt 4:00 PM, Aditya sends the team a message:\n*“Aster failed the output check again. I need ten minutes to inspect it. Please don't announce that it's ready yet.”*\nThe message is delivered to the event preparation group, which includes Vikram. The delivery record confirms that Vikram's account received it at 4:01 PM.\n## Evidence K — The Unsent Schedule Change\n**Source:** Event coordinator's draft schedule\nAt 4:14 PM, Vikram drafts a schedule update stating that Aster's demonstration may be delayed because of a *“security incident in Innovation Room B.”*\nThe draft is never sent. Its creation time is recorded by the event scheduling system. The draft alone does not prove that Vikram caused the incident; it does show he was preparing for a delay before the missing prototype was officially reported.\n## Evidence L — AV Booth Inspection\n**Source:** Joint inspection by the event staff\nThe flat black case Vikram signed out is found in the AV booth. Inside it is a foam insert cut to fit the Aster prototype. A small piece of blue protective tape matching the prototype's packaging is stuck to the insert.\nThe prototype is not inside the case when it is inspected. The insert proves the case was configured to carry a device of Aster's size, but does not independently prove that the genuine Aster was inside it.\n## Evidence M — Aditya's Final Identification\n**Source:** Comparison of the replica with the genuine prototype's build notes\nAditya confirms that the object in the 4:18 photograph is the replica, not the working Aster. The replica's solid indicator lens, missing inspection mark and different mounting screw are all consistent with his identification sheet.\nHe also confirms that the genuine Aster was functioning earlier in the afternoon but had failed the 4:00 PM output check. He had not authorized anyone to replace it with the display model.\n## Evidence N — The Witness Timeline\n**Source:** Independently collected statements\n- **Aditya:** sent the failure warning at 4:00 PM and did not authorize a swap.\n- **Rohan:** saw Vikram with the black case near the AV booth around 4:08 PM.\n- **Naina:** took the photograph showing the replica at 4:18 PM.\n- **Devika:** closed the room at 4:20 PM based on the visual checklist.\n- **Vikram:** drafted a security-incident schedule change at 4:14 PM.\nThe statements and records establish a sequence, but no single item directly captures Vikram physically taking Aster."
+        }
+      ],
+      "points": 5,
+      "reward_schedule": [
+        5,
+        4,
+        3,
+        2,
+        1
+      ],
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "Next lead: {value}",
+      "explanation": "The register does not say what the case held, so the AV booth case is the lead to test.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_2 where evidence_id in ('H', 'I') order by evidence_id"
+      ]
+    },
+    {
+      "key": "q7",
+      "thread": "t3",
+      "title": "THE CONSISTENT TIMELINE",
+      "prompt": "**Which timeline is consistent with all the evidence?**",
+      "answer_type": "CHOICE",
+      "answer": "B",
+      "options": [
+        {
+          "key": "A",
+          "text": "The room was locked at 4:20, then someone entered and replaced Aster with the replica."
+        },
+        {
+          "key": "B",
+          "text": "Vikram learned about the failed output check, prepared for a possible security-related delay, and the replica was in place before the room closed."
+        },
+        {
+          "key": "C",
+          "text": "Rohan removed Aster after 4:20, then returned the replica without being seen."
+        },
+        {
+          "key": "D",
+          "text": "Imran's 3:35 lighting repair proves he took Aster."
+        }
+      ],
+      "points": 5,
+      "reward_schedule": [
+        5,
+        4,
+        3,
+        2,
+        1
+      ],
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The timeline: {value}",
+      "explanation": "Message, draft, photograph and closure log in order show a pre-closure substitution.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_1 where evidence_id in ('A', 'C') order by evidence_id",
+        "select evidence_id, title from evidence_phase_3 where evidence_id in ('J', 'K') order by evidence_id"
+      ]
+    },
+    {
+      "key": "q8",
+      "thread": "t3",
+      "title": "THE BLACK CASE",
+      "prompt": "**What is the strongest interpretation of the black equipment case?**",
+      "answer_type": "CHOICE",
+      "answer": "C",
+      "options": [
+        {
+          "key": "A",
+          "text": "It conclusively proves Vikram transported the genuine Aster."
+        },
+        {
+          "key": "B",
+          "text": "It is irrelevant because the prototype was not found inside it."
+        },
+        {
+          "key": "C",
+          "text": "It independently links Vikram to a container prepared for an object of Aster's size, supporting—but not proving—the removal theory."
+        },
+        {
+          "key": "D",
+          "text": "It proves Rohan lied about everything."
+        }
+      ],
+      "points": 5,
+      "reward_schedule": [
+        5,
+        4,
+        3,
+        2,
+        1
+      ],
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The black case: {value}",
+      "explanation": "The fitted insert and tape support the removal theory without conclusively proving the case's contents.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_2 where evidence_id in ('H') order by evidence_id",
+        "select evidence_id, title from evidence_phase_3 where evidence_id in ('L') order by evidence_id"
+      ]
+    },
+    {
+      "key": "q9",
+      "thread": "t3",
+      "title": "THE BEST HYPOTHESIS",
+      "prompt": "**Which hypothesis best explains the full set of evidence with the fewest unsupported assumptions?**",
+      "answer_type": "CHOICE",
+      "answer": "C",
+      "options": [
+        {
+          "key": "A",
+          "text": "Rohan entered the locked room after 4:20 and somehow replaced the genuine prototype."
+        },
+        {
+          "key": "B",
+          "text": "Imran used his maintenance knowledge to bypass the room's lock after closure."
+        },
+        {
+          "key": "C",
+          "text": "Vikram used the failed rehearsal as a reason to remove Aster before closure, substitute the replica, and prepare a security-related delay."
+        },
+        {
+          "key": "D",
+          "text": "Naina accidentally photographed a different prototype and caused the entire incident through a camera error.\n---"
+        }
+      ],
+      "points": 5,
+      "reward_schedule": [
+        5,
+        4,
+        3,
+        2,
+        1
+      ],
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "Best hypothesis: {value}",
+      "explanation": "Only Vikram's removal before closure explains the failed output check, the early draft, the case and the pre-closure replica.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_3 where evidence_id in ('J', 'K', 'L', 'M', 'N') order by evidence_id"
+      ]
+    }
+  ]
+}

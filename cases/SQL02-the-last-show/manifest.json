@@ -1,0 +1,26 @@
+{
+  "case_code": "SQL02",
+  "track": "SQL",
+  "title": "The Last Show",
+  "slug": "the-last-show",
+  "content_version": 2,
+  "status": "review",
+  "duration_minutes": 20,
+  "recommended_team_size": 3,
+  "setting": "QUBIT 2026 closing performance, backstage prop bay and stage-left wing",
+  "incident": "The original Starfall Mask was missing after the finale; a replica had been used in the final reveal",
+  "source": {
+    "files": [
+      "docs/SQL02_The_Last_Show.zip",
+      "docs/SQL02_Player_Release.zip"
+    ],
+    "content_version": "1.0.0",
+    "original_release_status": "review"
+  },
+  "reviewer": {
+    "author": "Supplied case content (docs/*.zip), packaged for the runtime by Claude Code",
+    "human_reviewer": null,
+    "note": "No human has reviewed or blind-playtested this version; see review.json"
+  },
+  "publication_eligible": false
+}

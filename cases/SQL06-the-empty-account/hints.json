@@ -1,0 +1,47 @@
+{
+  "scoring": {
+    "reward_schedule": [
+      10,
+      8,
+      6,
+      4,
+      2
+    ],
+    "wrong_answer_penalty": 2,
+    "sql_errors_free": true,
+    "retries_allowed": true,
+    "each_component_awards_points_once": true
+  },
+  "hints": {
+    "t1": [
+      "A credit increases the balance.",
+      "Filter the ledger to CREDIT entries and inspect the amount.",
+      "Find the credit entry, not the latest snapshot."
+    ],
+    "t2": [
+      "The reserve payment is not the replacement.",
+      "Look at the original request submitted before 15:40.",
+      "Look for the ₹12,000 reserve request before the reversal."
+    ],
+    "t3": [
+      "Both requests cite an approval code.",
+      "Compare the approval_code values for PAY-712 and PAY-712B.",
+      "Compare PAY-712 with PAY-712B."
+    ],
+    "t4": [
+      "The request record has a requested_by field.",
+      "Confirm it against the access audit.",
+      "Use the payment request or audit trail."
+    ],
+    "t5": [
+      "A routine retry should preserve destination details.",
+      "Compare destination_fingerprint values in gateway_events.",
+      "Compare the gateway rows for PAY-712 and PAY-712B."
+    ],
+    "t6": [
+      "One event is more powerful than a normal request creation.",
+      "Find the successful override action in access_audit.",
+      "Check the successful audit events for PAY-712B."
+    ]
+  }
+}

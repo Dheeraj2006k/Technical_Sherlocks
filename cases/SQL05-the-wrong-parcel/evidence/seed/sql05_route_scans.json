@@ -1,0 +1,10 @@
+{
+  "columns": ["scan_id","parcel_id","event_at","scan_location","scan_type","scanned_label_destination","note"],
+  "rows": [
+    ["RS-01","PX-14","2026-10-16 15:38:00","Dispatch Exit","OUTBOUND","Storage Bay","Scanner reads current label; no contents inspection."],
+    ["RS-02","PX-41","2026-10-16 15:38:30","Dispatch Exit","OUTBOUND","Demo Desk","Scanner reads current label; no contents inspection."],
+    ["RS-03","PX-41","2026-10-16 15:51:00","Demo Desk","ARRIVAL","Demo Desk","Arrival follows label code."],
+    ["RS-04","PX-14","2026-10-16 15:53:00","Storage Bay","ARRIVAL","Storage Bay","Arrival follows label code."],
+    ["RS-05","PX-14","2026-10-16 16:05:00","Storage Bay","DELIVERED","Storage Bay","Dashboard status is route-based, not contents-verified."]
+  ]
+}

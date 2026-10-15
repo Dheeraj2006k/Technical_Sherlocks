@@ -1,6 +1,6 @@
 import { HttpError } from "./http";
 
-export type AnswerType = "SINGLE_CHARACTER" | "NUMBER" | "TIME" | "TEXT";
+export type AnswerType = "SINGLE_CHARACTER" | "NUMBER" | "TIME" | "TEXT" | "CHOICE";
 
 export const MAX_PLAYERS = 3;
 
@@ -11,29 +11,39 @@ export function normalize(type: string, raw: string): string | null {
     case "SINGLE_CHARACTER":
       return v.toLowerCase();
     case "NUMBER": {
-      if (!/^[+-]?\d+(\.\d+)?$/.test(v)) return null;
-      const n = Number(v);
+      // tolerate a currency mark, thousands commas and a trailing unit word ("₹42,000", "42000 rupees"): same number, same answer
+      const n0 = v.replace(/^(₹|rs\.?\s*|inr\s*)/i, "").replace(/\s*(rupees|inr|rs)$/i, "").replace(/,/g, "").trim();
+      if (!/^[+-]?\d+(\.\d+)?$/.test(n0)) return null;
+      const n = Number(n0);
       return Number.isFinite(n) ? String(n === 0 ? 0 : n) : null;
     }
     case "TIME": {
-      const m = /^(\d{1,2}):(\d{2})$/.exec(v);
+      // 21:32, 9:32 PM and 21:32:00 are the same time
+      const m = /^(\d{1,2}):(\d{2})(?::\d{2})?\s*([ap]m)?$/i.exec(v);
       if (!m) return null;
-      const h = Number(m[1]);
+      let h = Number(m[1]);
       const min = Number(m[2]);
+      if (m[3]) {
+        if (h < 1 || h > 12) return null;
+        h = (h % 12) + (m[3].toLowerCase() === "pm" ? 12 : 0);
+      }
       if (h > 23 || min > 59) return null;
       return `${String(h).padStart(2, "0")}:${String(min).padStart(2, "0")}`;
     }
     case "TEXT":
-      return v.toLowerCase();
+      return v.toLowerCase().replace(/\s+/g, " ");
+    case "CHOICE":
+      return /^[A-Za-z0-9]{1,8}$/.test(v) ? v.toLowerCase() : null;
     default:
       return null;
   }
 }
 
-export function grade(type: string, submitted: string, correct: string): boolean {
+// Exact-match grading only. `alts` are other wordings the author accepts for the same answer (same normalisation, no fuzzy matching).
+export function grade(type: string, submitted: string, correct: string, alts: string[] = []): boolean {
   const a = normalize(type, submitted);
-  const b = normalize(type, correct);
-  return a !== null && b !== null && a === b;
+  if (a === null) return false;
+  return [correct, ...alts].some((c) => normalize(type, c) === a);
 }
 
 export function cleanName(v: unknown): string {

@@ -1,0 +1,9 @@
+{
+  "columns": ["audit_id","request_id","action_at","actor_id","action","approval_ref","result","note"],
+  "rows": [
+    ["AA-01","REQ-170","2026-10-16 14:30:00","DEV","APPROVE","APR-170","APPROVED","Approved original batch B-17 for 12 finalist badges."],
+    ["AA-02","REQ-171","2026-10-16 14:54:00","NISHA","REQUEST_REPRINT","APR-044","REJECTED","Approval reference belongs to lanyard order L-04; no valid replacement approval."],
+    ["AA-03","REQ-171","2026-10-16 14:56:00","DEV","REVIEW","APR-044","PENDING","Supervisor has not approved replacement request."],
+    ["AA-04","INC-17","2026-10-16 15:20:00","LEENA","OPEN_INCIDENT",null,"OPEN","Missing original batch reported by registration desk."]
+  ]
+}

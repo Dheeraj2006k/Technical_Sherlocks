@@ -3,7 +3,7 @@
 import { useState } from "react";
 import type { Act, GameState, Notify } from "../types";
 import { friendlyError } from "./api";
-import { Avatar, Icon, StatusPill } from "./ui";
+import { Avatar, Icon, Prose, StatusPill } from "./ui";
 
 export default function Lobby({ gs, act, notify }: { gs: GameState; act: Act; notify: Notify }) {
   const isHead = gs.me.role === "head";
@@ -30,7 +30,8 @@ export default function Lobby({ gs, act, notify }: { gs: GameState; act: Act; no
       <section className="file-card" aria-labelledby="case-title">
         <p className="eyebrow dark"><Icon name="folder" size={14} /> Case file</p>
         <h1 id="case-title" className="file-title">{gs.case.title}</h1>
-        {gs.case.hook_text && <p className="file-hook">{gs.case.hook_text}</p>}
+        {gs.case.hook_text && <Prose className="file-hook" text={gs.case.hook_text} />}
+        <p className="file-note">Read this before you start: it is the story you are about to investigate. Each phase adds a new briefing, new evidence and new questions, and you can reopen the whole case file at any time.</p>
         <div className="file-meta">
           <span>Status: <b>awaiting briefing</b></span>
           <span>Case: <b>{gs.case.code}</b></span>

@@ -1,0 +1,27 @@
+{
+  "culprit": {
+    "points": 25,
+    "note": "Pick the responsible person from the suspect list"
+  },
+  "mechanism": {
+    "points": 15,
+    "options": [
+      {
+        "label": "Ravi deliberately swapped the labels to route the sensor module to storage until he found its calibration sheet.",
+        "correct": true
+      },
+      {
+        "label": "Sana made a random courier mistake while handing over parcels.",
+        "correct": false
+      },
+      {
+        "label": "Joel replaced the module after receiving the parcel.",
+        "correct": false
+      },
+      {
+        "label": "The route scanner verified contents and confirmed the module at the desk.",
+        "correct": false
+      }
+    ]
+  }
+}

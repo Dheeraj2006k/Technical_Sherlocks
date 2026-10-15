@@ -1,0 +1,65 @@
+{
+  "victim": "Team Pulse",
+  "motive": "A slot dispute: Karthik's private note says he needed a reason to move Pulse and that a safety concern was enough if it was marked faculty-approved.",
+  "method": "A real but already fixed cable concern led an unidentified caller to ask the control desk at 4:10 PM to hold Pulse. Sana recorded the caller as unidentified and could not reach Karthik. At 4:12 PM Karthik wrote that the faculty had cancelled Pulse and at 4:13 PM posted an announcement claiming faculty confirmation, although no connected faculty-office call to him exists in either phone log.",
+  "explanation": "The control desk and faculty office logs agree that no call connected between the faculty office and Karthik before the announcement; the 4:11 call was an unanswered outgoing call from the control desk to him. The caller at 4:10 asked only for a hold and never claimed faculty authority. The procedure card required verification before changing the running order, and his private note shows a slot-related motive. The identity of the 4:10 caller is intentionally not part of the answer.",
+  "timeline": [
+    {
+      "time": "4:05 PM",
+      "event": "Ritesh reports a loose cable",
+      "evidence": "A, D"
+    },
+    {
+      "time": "4:09 PM",
+      "event": "The cable is secured and tested; stage power checked at 4:10",
+      "evidence": "D"
+    },
+    {
+      "time": "4:10 PM",
+      "event": "An unidentified caller asks the control desk to hold Pulse pending a check (18 seconds)",
+      "evidence": "B, F"
+    },
+    {
+      "time": "4:11 PM",
+      "event": "Sana's outgoing call to Karthik does not connect",
+      "evidence": "B, F"
+    },
+    {
+      "time": "4:12 PM",
+      "event": "Karthik writes that the faculty cancelled Pulse and drafts the announcement",
+      "evidence": "A, G"
+    },
+    {
+      "time": "4:13 PM",
+      "event": "The announcement is posted and Pulse is removed from the running order",
+      "evidence": "A, G"
+    },
+    {
+      "time": "4:14 PM",
+      "event": "The faculty office's return call to the control desk is missed",
+      "evidence": "B, E"
+    },
+    {
+      "time": "4:35 PM",
+      "event": "Ananya arrives and disputes the cancellation",
+      "evidence": "A"
+    }
+  ],
+  "causal_chain": [
+    "A genuine cable concern existed and was fixed by 4:10 PM.",
+    "An unidentified caller asked only for a temporary hold.",
+    "No connected faculty-office call to Karthik appears in either independent phone log.",
+    "Karthik announced a faculty cancellation anyway, and his private note shows why."
+  ],
+  "resolution": {
+    "motive": "A schedule dispute over the Pulse slot: his own note says a safety concern was enough if it was marked faculty-approved.",
+    "method": "He turned an unverified request to hold the slot into a claimed faculty cancellation, announcing it at 4:13 PM although no faculty-office call connected to him.",
+    "chain": [
+      "The only 4:11 PM call was an unanswered outgoing call from the control desk to Karthik.",
+      "The faculty office log shows no connected call to Karthik before the announcement.",
+      "The 4:10 caller asked only to hold the slot and did not claim faculty authority; the procedure card required verification.",
+      "His private note says a safety concern was enough if marked faculty-approved."
+    ]
+  },
+  "culprit": "Karthik Menon"
+}

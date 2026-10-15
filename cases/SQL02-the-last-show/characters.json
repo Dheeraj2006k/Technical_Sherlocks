@@ -1,0 +1,41 @@
+{
+  "victim": "The Starfall Mask and the finale audience",
+  "characters": [
+    {
+      "name": "Arjun Das",
+      "role": "Backstage access marshal",
+      "profile": "Managed the staff-door access console.",
+      "suspect": true
+    },
+    {
+      "name": "Dev Malhotra",
+      "role": "Prop lead",
+      "profile": "Responsible for the original Starfall Mask and the backup prop.",
+      "suspect": true
+    },
+    {
+      "name": "Isha Menon",
+      "role": "Costume assistant",
+      "profile": "Worked near the stage-left wing.",
+      "suspect": true
+    },
+    {
+      "name": "Kavya Sen",
+      "role": "AV cue operator",
+      "profile": "Triggered the final reveal from the cue desk.",
+      "suspect": true
+    },
+    {
+      "name": "Nikhil Rao",
+      "role": "Lead performer",
+      "profile": "Performed the finale and argued against using the mask after rehearsal.",
+      "suspect": true
+    },
+    {
+      "name": "Sana Iyer",
+      "role": "Assistant stage manager",
+      "profile": "Recorded prop hand-offs and stage movement.",
+      "suspect": true
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "columns": ["staff_id","full_name","role_title","normal_duties","known_context"],
+  "rows": [
+    ["ST1","Asha Rao","Student finance coordinator","Creates supplier requests and tracks receipts","Works supplier requests from finance workstation FIN-03."],
+    ["ST2","Dev Malhotra","Equipment logistics lead","Coordinates reserve equipment and supplier handoffs","Works from finance workstation FIN-02."],
+    ["ST3","Dr Meera Iyer","Faculty approver","Approves budgeted purchases","Approves budgeted purchases against a payee, a purpose and an amount limit."],
+    ["ST4","Rohan Das","Gateway support assistant","Checks gateway status and reconciliation timing","Can read gateway events but has no payment creation permission."]
+  ]
+}

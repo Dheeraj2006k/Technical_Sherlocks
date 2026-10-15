@@ -1,0 +1,26 @@
+{
+  "case_code": "SQL03",
+  "track": "SQL",
+  "title": "The Missing Batch",
+  "slug": "the-missing-batch",
+  "content_version": 2,
+  "status": "review",
+  "duration_minutes": 20,
+  "recommended_team_size": 2,
+  "setting": "QUBIT finalist badge production, logistics cage, dispatch bay and registration desk",
+  "incident": "Batch B-17 of 12 finalist badges never reached registration; only an empty sleeve arrived and an unrequested reprint appeared",
+  "source": {
+    "files": [
+      "docs/SQL03_The_Missing_Batch.zip",
+      "docs/SQL03_Player_Release.zip"
+    ],
+    "content_version": "1.0.0",
+    "original_release_status": "content_complete_staging_validation_required"
+  },
+  "reviewer": {
+    "author": "Supplied case content (docs/*.zip), packaged for the runtime by Claude Code",
+    "human_reviewer": null,
+    "note": "No human has reviewed or blind-playtested this version; see review.json"
+  },
+  "publication_eligible": false
+}

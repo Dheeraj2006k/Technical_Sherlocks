@@ -1,0 +1,132 @@
+{
+  "inferences": [
+    {
+      "id": "I1",
+      "claim": "PX-14 with the sensor module was expected at the Demo Desk.",
+      "tasks": [
+        "t1"
+      ],
+      "evidence": [
+        {
+          "table": "sql05_delivery_expectations",
+          "summary": "EX-01 PX-14 SENSOR-MODULE",
+          "verify_sql": "select expectation_id from sql05_delivery_expectations where expectation_id = 'EX-01' and parcel_id = 'PX-14' and expected_contents = 'SENSOR-MODULE'"
+        }
+      ]
+    },
+    {
+      "id": "I2",
+      "claim": "Joel received stage clips in PX-41.",
+      "tasks": [
+        "t2"
+      ],
+      "evidence": [
+        {
+          "table": "sql05_receipts",
+          "summary": "RC-01 STAGE-CLIPS",
+          "verify_sql": "select receipt_id from sql05_receipts where receipt_id = 'RC-01' and contents_observed = 'STAGE-CLIPS'"
+        }
+      ]
+    },
+    {
+      "id": "I3",
+      "claim": "Both parcel codes were swapped in opposite directions by one actor.",
+      "tasks": [
+        "t3"
+      ],
+      "evidence": [
+        {
+          "table": "sql05_label_audit",
+          "summary": "LA-02 PX-14 to PX-41",
+          "verify_sql": "select audit_id from sql05_label_audit where audit_id = 'LA-02' and field_changed = 'PARCEL_CODE' and new_value = 'PX-41'"
+        },
+        {
+          "table": "sql05_label_audit",
+          "summary": "LA-03 PX-41 to PX-14",
+          "verify_sql": "select audit_id from sql05_label_audit where audit_id = 'LA-03' and field_changed = 'PARCEL_CODE' and new_value = 'PX-14'"
+        }
+      ]
+    },
+    {
+      "id": "I4",
+      "claim": "The dashboard follows labels and does not check contents.",
+      "tasks": [
+        "t4"
+      ],
+      "evidence": [
+        {
+          "table": "sql05_route_scans",
+          "summary": "RS-05 route-based status",
+          "verify_sql": "select scan_id from sql05_route_scans where scan_id = 'RS-05' and note ilike '%not contents-verified%'"
+        }
+      ]
+    },
+    {
+      "id": "I5",
+      "claim": "Ravi performed the label changes.",
+      "tasks": [
+        "t5"
+      ],
+      "evidence": [
+        {
+          "table": "sql05_label_audit",
+          "summary": "LA-02 and LA-03 actor Ravi",
+          "verify_sql": "select audit_id from sql05_label_audit where audit_id = 'LA-03' and actor_id = 'RAVI' and field_changed = 'PARCEL_CODE'"
+        }
+      ]
+    },
+    {
+      "id": "I6",
+      "claim": "His message states the aim of delaying the demo.",
+      "tasks": [
+        "t6"
+      ],
+      "evidence": [
+        {
+          "table": "sql05_messages",
+          "summary": "MSG-01 calibration sheet",
+          "verify_sql": "select message_id from sql05_messages where message_id = 'MSG-01' and sender_id = 'RAVI' and message_text ilike '%calibration sheet%'"
+        }
+      ]
+    }
+  ],
+  "red_herrings": [
+    {
+      "suspect": "Sana Qureshi",
+      "why_suspicious": "She coordinated the courier handoff and knew about the swap.",
+      "innocent_explanation": "The audit lists no label change by her, and her messages say she did not edit either label and that scans follow what was printed.",
+      "evidence": [
+        {
+          "table": "sql05_messages",
+          "verify_sql": "select message_id from sql05_messages where message_id = 'MSG-02' and sender_id = 'SANA' and message_text ilike '%did not edit%'"
+        }
+      ]
+    },
+    {
+      "suspect": "Joel D'Souza",
+      "why_suspicious": "He was the one holding the wrong parcel.",
+      "innocent_explanation": "His receipt records what arrived at 16:02 and the expected module absent; he reported it at once.",
+      "evidence": [
+        {
+          "table": "sql05_receipts",
+          "verify_sql": "select receipt_id from sql05_receipts where receipt_id = 'RC-01' and note ilike '%Expected sensor module absent%'"
+        },
+        {
+          "table": "sql05_messages",
+          "verify_sql": "select message_id from sql05_messages where message_id = 'MSG-04' and sender_id = 'JOEL'"
+        }
+      ]
+    },
+    {
+      "suspect": "Mira Patel",
+      "why_suspicious": "She requested the delivery and is the team lead.",
+      "innocent_explanation": "She asked for PX-14 to go to the Demo Desk and was told of the discrepancy; no audit entry or scan names her.",
+      "evidence": [
+        {
+          "table": "sql05_delivery_expectations",
+          "verify_sql": "select expectation_id from sql05_delivery_expectations where expectation_id = 'EX-01' and requested_by = 'MIRA'"
+        }
+      ]
+    }
+  ]
+}

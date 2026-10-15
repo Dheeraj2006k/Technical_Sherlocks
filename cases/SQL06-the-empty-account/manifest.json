@@ -1,0 +1,26 @@
+{
+  "case_code": "SQL06",
+  "track": "SQL",
+  "title": "The Empty Account",
+  "slug": "the-empty-account",
+  "content_version": 2,
+  "status": "review",
+  "duration_minutes": 20,
+  "recommended_team_size": 1,
+  "setting": "QUBIT Prototype Fund finance portal and payment gateway, the day before the fest opens",
+  "incident": "The fund dashboard shows ₹0 after a ₹12,000 payment was reversed and apparently sent again",
+  "source": {
+    "files": [
+      "docs/SQL06_The_Empty_Account.zip",
+      "docs/SQL06_Player_Release.zip"
+    ],
+    "content_version": "packaged",
+    "original_release_status": "CONTENT_PACKAGED_NOT_PRODUCTION_CERTIFIED"
+  },
+  "reviewer": {
+    "author": "Supplied case content (docs/*.zip), packaged for the runtime by Claude Code",
+    "human_reviewer": null,
+    "note": "No human has reviewed or blind-playtested this version; see review.json"
+  },
+  "publication_eligible": false
+}

@@ -1,0 +1,40 @@
+{
+  "queries": [
+    {
+      "name": "the controller ON event is 21:32 after correction",
+      "sql": "select to_char(controller_at + interval '3 minutes', 'HH24:MI') from power_controller_log where controller_event_id = 'P2'",
+      "expect": [
+        [
+          "21:32"
+        ]
+      ]
+    },
+    {
+      "name": "the rear-door motion is 21:32 after correction",
+      "sql": "select to_char(camera_at - interval '4 minutes', 'HH24:MI') from corridor_camera_events where camera_event_id = 'C9'",
+      "expect": [
+        [
+          "21:32"
+        ]
+      ]
+    },
+    {
+      "name": "the player-facing controller log never names Rohit",
+      "sql": "select count(*) from power_controller_log where actor_hint ilike '%rohit%'",
+      "expect": [
+        [
+          "0"
+        ]
+      ]
+    },
+    {
+      "name": "only one door skips RFID",
+      "sql": "select count(*) from building_access_points where records_rfid = false",
+      "expect": [
+        [
+          "1"
+        ]
+      ]
+    }
+  ]
+}

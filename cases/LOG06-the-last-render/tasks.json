@@ -1,0 +1,216 @@
+{
+  "tasks": [
+    {
+      "key": "t1",
+      "thread": "t1",
+      "title": "THE MISMATCH",
+      "prompt": "What is established by the incident card and approved run sheet?",
+      "answer_type": "CHOICE",
+      "answer": "C",
+      "options": [
+        {
+          "key": "A",
+          "text": "Team Comet voluntarily ended its demo early."
+        },
+        {
+          "key": "B",
+          "text": "The judges changed the slot before the demo."
+        },
+        {
+          "key": "C",
+          "text": "The demo played for 42 seconds even though the approved cue called for a 2-minute file."
+        },
+        {
+          "key": "D",
+          "text": "Team Orbit’s video was played instead of Comet’s."
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "Established: {value}",
+      "explanation": "The demo ran 42 seconds although the approved cue called for 2:00.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_1 where evidence_id in ('E01', 'E02') order by evidence_id"
+      ]
+    },
+    {
+      "key": "t2",
+      "thread": "t1",
+      "title": "WHAT THE RECEIPT PROVES",
+      "prompt": "What does Dev’s submission receipt rule out?",
+      "answer_type": "CHOICE",
+      "answer": "A",
+      "options": [
+        {
+          "key": "A",
+          "text": "The final 2-minute file was successfully submitted before the cutoff."
+        },
+        {
+          "key": "B",
+          "text": "Dev personally loaded the USB drive."
+        },
+        {
+          "key": "C",
+          "text": "The playback machine used the submitted file."
+        },
+        {
+          "key": "D",
+          "text": "No one could access the AV booth after submission."
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The receipt proves: {value}",
+      "explanation": "The receipt proves a 2-minute file was submitted before the cutoff and nothing about playback.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_1 where evidence_id in ('E03') order by evidence_id"
+      ]
+    },
+    {
+      "key": "t3",
+      "thread": "t2",
+      "title": "THE SEALED DRIVE",
+      "prompt": "What is the strongest conclusion from the handoff log and seal record?",
+      "answer_type": "CHOICE",
+      "answer": "D",
+      "options": [
+        {
+          "key": "A",
+          "text": "Arjun edited the file after receiving the drive."
+        },
+        {
+          "key": "B",
+          "text": "Tara must have changed the file because she wrote the labels."
+        },
+        {
+          "key": "C",
+          "text": "The sealed drive contained the correct file beyond doubt."
+        },
+        {
+          "key": "D",
+          "text": "Arjun’s logged custody does not explain the mismatch; the drive was returned with its seal intact."
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The handoff log: {value}",
+      "explanation": "The drive was returned with the seal intact, so Arjun's custody does not explain the mismatch.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_2 where evidence_id in ('E05') order by evidence_id"
+      ]
+    },
+    {
+      "key": "t4",
+      "thread": "t2",
+      "title": "THE EXPORT HISTORY",
+      "prompt": "What does the export history establish when compared with the playback report?",
+      "answer_type": "CHOICE",
+      "answer": "B",
+      "options": [
+        {
+          "key": "A",
+          "text": "Tara exported the file because she wrote the label."
+        },
+        {
+          "key": "B",
+          "text": "A short rehearsal source was exported under Nisha’s account using the same filename as the final file."
+        },
+        {
+          "key": "C",
+          "text": "The final file was corrupted during Dev’s upload."
+        },
+        {
+          "key": "D",
+          "text": "The player automatically shortened any video to 42 seconds."
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The export: {value}",
+      "explanation": "A 42-second file from the rehearsal source was exported under Nisha's account with the final filename.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_2 where evidence_id in ('E06', 'E07') order by evidence_id"
+      ]
+    },
+    {
+      "key": "t5",
+      "thread": "t3",
+      "title": "THE REFLECTION PHOTO",
+      "prompt": "Why is the booth reflection photo important?",
+      "answer_type": "CHOICE",
+      "answer": "A",
+      "options": [
+        {
+          "key": "A",
+          "text": "It independently places Nisha at the workstation during the short export, while still not proving intent on its own."
+        },
+        {
+          "key": "B",
+          "text": "It proves Nisha wrote every line in the source video."
+        },
+        {
+          "key": "C",
+          "text": "It proves Tara never entered the booth."
+        },
+        {
+          "key": "D",
+          "text": "It proves the judges requested a shorter demo."
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "The photo: {value}",
+      "explanation": "The photo independently places Nisha at the workstation during the export without proving intent.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_2 where evidence_id in ('E07') order by evidence_id",
+        "select evidence_id, title from evidence_phase_3 where evidence_id in ('E09') order by evidence_id"
+      ]
+    },
+    {
+      "key": "t6",
+      "thread": "t3",
+      "title": "THE BEST EXPLANATION",
+      "prompt": "Which explanation best accounts for the complete evidence set?",
+      "answer_type": "CHOICE",
+      "answer": "C",
+      "options": [
+        {
+          "key": "A",
+          "text": "Dev uploaded a corrupted final file, and the playback machine shortened it."
+        },
+        {
+          "key": "B",
+          "text": "Arjun broke the seal and replaced the file after collection."
+        },
+        {
+          "key": "C",
+          "text": "Nisha knowingly exported the 42-second rehearsal cut under the final filename before the drive was sealed, intending to disrupt Comet’s reveal and create an opening for Orbit."
+        },
+        {
+          "key": "D",
+          "text": "Tara accidentally mislabeled a correct two-minute file, causing the player to stop early."
+        }
+      ],
+      "points": 10,
+      "difficulty": "medium",
+      "concept": "cross-check independent records",
+      "evidence_kind": "OBJECT",
+      "evidence_label": "Best explanation: {value}",
+      "explanation": "Only the explanation that fits the file trail, the timing before sealing, the photo and the cue draft.",
+      "reference_sql": [
+        "select evidence_id, title from evidence_phase_2 where evidence_id in ('E07') order by evidence_id",
+        "select evidence_id, title from evidence_phase_3 where evidence_id in ('E09', 'E10', 'E11', 'E12') order by evidence_id"
+      ]
+    }
+  ]
+}

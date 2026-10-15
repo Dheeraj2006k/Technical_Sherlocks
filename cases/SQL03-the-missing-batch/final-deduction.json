@@ -1,0 +1,27 @@
+{
+  "culprit": {
+    "points": 25,
+    "note": "Pick the responsible person from the suspect list"
+  },
+  "mechanism": {
+    "points": 15,
+    "options": [
+      {
+        "label": "Nisha diverted B-17 during her custody and used an unapproved reprint to cover the gap.",
+        "correct": true
+      },
+      {
+        "label": "Kabir lost the original after accepting it in the dispatch bay.",
+        "correct": false
+      },
+      {
+        "label": "Aarav used the wrong printer template by accident.",
+        "correct": false
+      },
+      {
+        "label": "Leena counted the original batch incorrectly at the registration desk.",
+        "correct": false
+      }
+    ]
+  }
+}

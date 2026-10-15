@@ -1,0 +1,142 @@
+{
+  "inferences": [
+    {
+      "id": "I1",
+      "claim": "The 4:11 PM call was an outgoing, unconnected call from the control desk to Karthik.",
+      "tasks": [
+        "t1"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_1",
+          "summary": "4:11 PM outgoing call to Karthik, duration 00:00",
+          "verify_sql": "select evidence_id from evidence_phase_1 where evidence_id = 'B' and body ilike '%Outgoing call to Karthik | 00:00%'"
+        },
+        {
+          "table": "evidence_phase_1",
+          "summary": "Karthik's claim of a 4:11 faculty-office call",
+          "verify_sql": "select evidence_id from evidence_phase_1 where evidence_id = 'C' and body ilike '%At about 4:11, the faculty office called me%'"
+        }
+      ]
+    },
+    {
+      "id": "I2",
+      "claim": "The cable concern was real and fixed before the cancellation.",
+      "tasks": [
+        "t2"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_1",
+          "summary": "Cable secured and tested at 4:09, no continuing fault",
+          "verify_sql": "select evidence_id from evidence_phase_1 where evidence_id = 'D' and body ilike '%Cable secured and tested%'"
+        }
+      ]
+    },
+    {
+      "id": "I3",
+      "claim": "The 4:10 caller only asked for a hold.",
+      "tasks": [
+        "t3"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_2",
+          "summary": "Sana's clarification of the caller's words",
+          "verify_sql": "select evidence_id from evidence_phase_2 where evidence_id = 'F' and body ilike '%Please hold the Pulse slot%'"
+        }
+      ]
+    },
+    {
+      "id": "I4",
+      "claim": "Both phone systems show no connected faculty call to Karthik.",
+      "tasks": [
+        "t4"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_2",
+          "summary": "Faculty office log: no call to Karthik",
+          "verify_sql": "select evidence_id from evidence_phase_2 where evidence_id = 'E' and body ilike '%No outgoing call to Karthik recorded%'"
+        }
+      ]
+    },
+    {
+      "id": "I5",
+      "claim": "The procedure required verification before any change.",
+      "tasks": [
+        "t5"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_3",
+          "summary": "Procedure card steps 2-4",
+          "verify_sql": "select evidence_id from evidence_phase_3 where evidence_id = 'I' and body ilike '%not the same as a cancellation%'"
+        },
+        {
+          "table": "evidence_phase_3",
+          "summary": "Approved callback number ends in 204; no connected callback before 4:13",
+          "verify_sql": "select evidence_id from evidence_phase_3 where evidence_id = 'J' and body ilike '%No connected callback%'"
+        }
+      ]
+    },
+    {
+      "id": "I6",
+      "claim": "Karthik's private note supplies a motive and shows knowing misrepresentation.",
+      "tasks": [
+        "t6"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_3",
+          "summary": "Note: safety concern is enough if marked faculty-approved",
+          "verify_sql": "select evidence_id from evidence_phase_3 where evidence_id = 'K' and body ilike '%marked faculty-approved%'"
+        },
+        {
+          "table": "evidence_phase_3",
+          "summary": "Combined timeline shows no connected call",
+          "verify_sql": "select evidence_id from evidence_phase_3 where evidence_id = 'L' and body ilike '%do not show a connected call%'"
+        }
+      ]
+    }
+  ],
+  "red_herrings": [
+    {
+      "suspect": "Dev Malhotra",
+      "why_suspicious": "He called the control desk at 4:06 PM and his own team was affected.",
+      "innocent_explanation": "His call was an inquiry that the slot was still listed; his call history shows no call to the faculty office and a 4:15 message saying nobody had told them why.",
+      "evidence": [
+        {
+          "table": "evidence_phase_2",
+          "verify_sql": "select evidence_id from evidence_phase_2 where evidence_id = 'H' and body ilike '%No call to the faculty office%'"
+        }
+      ]
+    },
+    {
+      "suspect": "Ritesh Shah",
+      "why_suspicious": "His loose-cable report started the safety concern.",
+      "innocent_explanation": "The cable was genuinely loose, he secured and tested it by 4:10 PM, and his checklist still lists Pulse as safe to proceed.",
+      "evidence": [
+        {
+          "table": "evidence_phase_1",
+          "verify_sql": "select evidence_id from evidence_phase_1 where evidence_id = 'D' and body ilike '%listed as safe to proceed%'"
+        }
+      ]
+    },
+    {
+      "suspect": "Sana Ali",
+      "why_suspicious": "She answered the unidentified 4:10 call and was on the control desk.",
+      "innocent_explanation": "Her incident note recorded the caller as unidentified, she tried to call Karthik back at 4:11, and the caller never claimed faculty authority.",
+      "evidence": [
+        {
+          "table": "evidence_phase_3",
+          "verify_sql": "select evidence_id from evidence_phase_3 where evidence_id = 'I' and body ilike '%Caller unidentified%'"
+        },
+        {
+          "table": "evidence_phase_2",
+          "verify_sql": "select evidence_id from evidence_phase_2 where evidence_id = 'F' and body ilike '%attempted to call Karthik back at 4:11%'"
+        }
+      ]
+    }
+  ]
+}

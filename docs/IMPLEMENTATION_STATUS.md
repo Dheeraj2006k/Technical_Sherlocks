@@ -19,11 +19,11 @@ Legend: DONE (implemented and covered by an automated test) · PARTIAL · NOT DO
 
 | PRD area | Status | Evidence / note |
 |---|---|---|
-| Two tracks on one engine (SQL01-10, LOG01-10) | DONE | `game_track`; 20 cases seeded and validated |
+| Two tracks on one engine (SQL01-06, LOG01-06) | DONE | `game_track`; 12 case packs validated (scope decision 2026-10-15) |
 | Registrations, manual assignment, audit | DONE | `v5_admin`, `v5_join`; import with or without your own references |
 | Head join with registration + assigned case code + password; generic 401; one team per registration | DONE | `v5_join`, `v5_security` |
 | Team size cap from the registration, rejoin, recovery | DONE | `v5_join`, `v5_recovery` |
-| Threads (required/optional, prerequisites, outcomes, story events, thread-level unlocks, solo-completable) | DONE | `v5_engine`, `v5_evidence`, validator, solo rehearsal of all 20 cases |
+| Threads (required/optional, prerequisites, outcomes, story events, thread-level unlocks, solo-completable) | DONE | `v5_engine`, `v5_evidence`, validator, solo rehearsal of all 12 cases |
 | Questions: attempts vs completions, idempotency, 10/8/6/4/2 hints, -2 floor 0, exact 100 | DONE | `v5_engine`, `v5_cases` |
 | Two-part final deduction (responsibility + 4 options), retries, finish on both | DONE | `v5_engine`, E2E |
 | Evidence Browser (search/filter/sort/paginate, allow-listed, parameterised) | DONE | `v5_evidence`, E2E |
@@ -49,3 +49,12 @@ admin/pause/reset/export/recovery -> `v5_admin`, `v5_recovery`; presence/cleanup
 2. Have someone who does not know the answers play several cases; fix content.
 3. Run the realtime suite and `check:env` against the event Supabase project.
 4. Decide whether to hand-author distinct central tricks and larger dossiers.
+
+
+## Update: case packs, versions, onboarding, story
+
+Done and verified locally: twelve case packs validated (structural + database), version pinning and lifecycle, idempotent seeding, CHOICE answers, SQL Field Guide, guided tour, Help menu, prominent story (banner + Case File), admin case catalogue, function lockdown, leak scan of private pack text. Lint 0 errors, type check, build and the full test suite (unit, integration, E2E) pass; realtime tests are skipped locally.
+
+Not done: production audit, migration, seeding and deployment (blocked by permission controls); human review and blind playtest of every case (required before `tested`/`published`); Vercel production branch verification.
+
+PRD addendum (help and onboarding) requirements, case packs, lifecycle, seeding and story visibility: Done. Human review and playtest, production migration, deploy and smoke: Open.

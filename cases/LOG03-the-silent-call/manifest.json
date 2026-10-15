@@ -1,0 +1,27 @@
+{
+  "case_code": "LOG03",
+  "track": "LOGIC",
+  "title": "The Silent Call",
+  "slug": "the-silent-call",
+  "content_version": 2,
+  "status": "review",
+  "duration_minutes": 15,
+  "recommended_team_size": 2,
+  "setting": "QUBIT stage control desk and faculty office, before the 4:30 PM Pulse demonstration",
+  "incident": "The Pulse demonstration is cancelled on a claimed faculty confirmation that the supervisor denies ever giving",
+  "source": {
+    "files": [
+      "docs/LOG03_The_Silent_Call.zip",
+      "docs/LOG03_Player_Release.zip",
+      "docs/Sherlocks_Logic_Database_Pack.zip"
+    ],
+    "content_version": "1.0.0",
+    "original_release_status": "content_final_pending_platform_qa_and_live_playtest"
+  },
+  "reviewer": {
+    "author": "Supplied case content (docs/*.zip), packaged for the runtime by Claude Code",
+    "human_reviewer": null,
+    "note": "No human has reviewed or blind-playtested this version; see review.json"
+  },
+  "publication_eligible": false
+}

@@ -1,0 +1,10 @@
+{
+  "columns": ["character_id","display_name","role"],
+  "rows": [
+    ["JOEL","Joel D'Souza","Demo desk receiver"],
+    ["KARAN","Karan Shah","Storage bay attendant"],
+    ["MIRA","Mira Patel","Prototype team lead"],
+    ["RAVI","Ravi Menon","Dispatch clerk"],
+    ["SANA","Sana Qureshi","Courier handoff coordinator"]
+  ]
+}

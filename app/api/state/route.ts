@@ -36,11 +36,11 @@ select b.realtime_token, b.team_code, b.team_name, b.started_at, b.finished_at, 
                                                      'online', coalesce(p.last_seen_at > now() - interval '45 seconds', false))
                                   order by (p.role = 'head') desc, p.display_name), '[]'::jsonb)
           from players p where p.team_id = b.team_id) as players,
-       (select coalesce(jsonb_agg(jsonb_build_object('phase', cp.phase_number, 'clue_text', cp.clue_text)
+       (select coalesce(jsonb_agg(jsonb_build_object('phase', cp.phase_number, 'name', cp.phase_name, 'clue_text', cp.clue_text)
                                   order by cp.phase_number), '[]'::jsonb)
           from case_phases cp where cp.case_id = b.case_id and cp.phase_number <= b.reached) as narrative,
-       (select coalesce(jsonb_agg(jsonb_build_object('id', ch.id, 'name', ch.name, 'role', ch.role_in_story) order by ch.name), '[]'::jsonb)
-          from characters ch where ch.case_id = b.case_id and b.reached >= 1) as roster,
+       (select coalesce(jsonb_agg(jsonb_build_object('id', ch.id, 'name', ch.name, 'role', ch.role_in_story, 'profile', ch.public_profile) order by ch.name), '[]'::jsonb)
+          from characters ch where ch.case_id = b.case_id and ch.is_suspect and b.reached >= 1) as roster,
        (select coalesce(jsonb_agg(jsonb_build_object(
                   'id', th.id, 'phase', th.phase_number, 'position', th.position, 'title', th.title,
                   'subject_character_id', th.subject_character_id, 'intro_text', th.intro_text, 'required', th.required,
@@ -51,11 +51,14 @@ select b.realtime_token, b.team_code, b.team_name, b.started_at, b.finished_at, 
                     select coalesce(jsonb_agg(jsonb_build_object(
                         'id', tk.id, 'position', tk.position, 'title', tk.title, 'prompt_text', tk.prompt_text,
                         'answer_type', tk.answer_type, 'kind', tk.evidence_kind, 'base_points', tk.base_points,
+                        'options', (select jsonb_agg(jsonb_build_object('key', o.option_key, 'text', o.option_text) order by o.position) from task_options o where o.task_id = tk.id),
                         'reward_schedule', tk.reward_schedule,
                         'completed', (c.task_id is not null), 'points_awarded', c.points_awarded,
                         'answer', case when c.task_id is not null then
                                     case when tk.answer_type = 'SINGLE_CHARACTER'
                                          then (select c2.name from characters c2 where c2.id::text = tk.correct_answer)
+                                         when tk.answer_type = 'CHOICE'
+                                         then (select o2.option_text from task_options o2 where o2.task_id = tk.id and o2.option_key = tk.correct_answer)
                                          else tk.correct_answer end end,
                         'hints_total', (select count(*)::int from task_hints h where h.task_id = tk.id),
                         'hints', (select coalesce(jsonb_agg(jsonb_build_object('position', h.position, 'text', h.hint_text) order by h.position), '[]'::jsonb)
@@ -88,7 +91,8 @@ select b.realtime_token, b.team_code, b.team_name, b.started_at, b.finished_at, 
           from final_options fo where fo.case_id = b.case_id and fo.component = 'mechanism'
            and b.state in ('FINAL_DEDUCTION', 'FINISHED')) as mechanism_options,
        (select coalesce(jsonb_object_agg(f.component, f.points_awarded), '{}'::jsonb) from team_final_completions f where f.team_id = b.team_id) as final_done,
-       (select count(*)::int from final_attempts fa where fa.team_id = b.team_id and not fa.is_correct) as final_wrong
+       (select count(*)::int from final_attempts fa where fa.team_id = b.team_id and not fa.is_correct) as final_wrong,
+       (select p.tour_state from players p where p.id = $2) as tour_state
   from b
   join cases ca on ca.id = b.case_id
   join team_scores sc on sc.team_id = b.team_id`;
@@ -101,7 +105,7 @@ export async function GET(req: Request) {
       "update players set last_seen_at = now() where id = $1 and (last_seen_at is null or last_seen_at < now() - interval '10 seconds')",
       [s.player_id],
     ).catch(() => {});
-    const r = await query(STATE_SQL, [s.team_id]);
+    const r = await query(STATE_SQL, [s.team_id, s.player_id]);
     const row = r.rows[0];
     if (!row) throw new HttpError(401, "Session no longer valid");
     const done = row.final_done as Record<string, number>;
@@ -112,7 +116,8 @@ export async function GET(req: Request) {
       realtime_channel: row.realtime_token,
       paused: row.paused_at !== null,
       case: { code: row.case_code, title: row.case_title, hook_text: row.hook_text, track: row.game_track, target_minutes: row.target_duration_minutes },
-      me: { player_id: s.player_id, display_name: s.display_name, role: s.role },
+      // the guided tour state is the PLAYER's own (completed / dismissed / null) and is not part of any game table
+      me: { player_id: s.player_id, display_name: s.display_name, role: s.role, tour_state: row.tour_state ?? null },
       players: row.players,
       threads: row.threads,
       story: row.story,

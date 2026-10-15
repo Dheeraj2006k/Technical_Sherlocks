@@ -1,0 +1,26 @@
+{
+  "case_code": "LOG05",
+  "track": "LOGIC",
+  "title": "The Duplicate Invitation",
+  "slug": "the-duplicate-invitation",
+  "content_version": 2,
+  "status": "review",
+  "duration_minutes": 15,
+  "recommended_team_size": 1,
+  "setting": "QUBIT Innovation Showcase, registration desk, print desk and schedule office, before the prototype reveal check-in",
+  "incident": "Team Orbit receives a paper invitation with a 4:30 PM check-in while the official schedule says 4:00 PM",
+  "source": {
+    "files": [
+      "docs/LOG05_The_Duplicate_Invitation.zip",
+      "docs/LOG05_Player_Release.zip"
+    ],
+    "content_version": "1.0.0",
+    "original_release_status": "draft_pending_independent_review_staging_and_playtest"
+  },
+  "reviewer": {
+    "author": "Supplied case content (docs/*.zip), packaged for the runtime by Claude Code",
+    "human_reviewer": null,
+    "note": "No human has reviewed or blind-playtested this version; see review.json"
+  },
+  "publication_eligible": false
+}

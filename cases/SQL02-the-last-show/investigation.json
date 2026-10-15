@@ -1,0 +1,87 @@
+{
+  "phases": [
+    {
+      "phase": 1,
+      "name": "The Empty Stand",
+      "tables": [
+        "sql02_characters",
+        "sql02_role_assignments",
+        "sql02_inventory_checks"
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "The Swap Window",
+      "tables": [
+        "sql02_access_events",
+        "sql02_prop_movements"
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "The Cover Story",
+      "tables": [
+        "sql02_cue_log",
+        "sql02_messages"
+      ]
+    }
+  ],
+  "threads": [
+    {
+      "key": "t1",
+      "phase": 1,
+      "position": 1,
+      "title": "The Empty Stand",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Find out what stood on the display stand and who formally looked after the prop.",
+      "outcome_text": "The finale used the replica, the original turned up later in a repair case, and Dev held the custody duty.",
+      "unlocks": []
+    },
+    {
+      "key": "t2",
+      "phase": 2,
+      "position": 1,
+      "title": "The Swap Window",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Separate being nearby from handling the mask, and rebuild the minutes in which the replica took its place.",
+      "outcome_text": "Nikhil was onstage before the original came back, and the movements show Dev moving both masks.",
+      "unlocks": []
+    },
+    {
+      "key": "t3",
+      "phase": 3,
+      "position": 1,
+      "title": "The Cover Story",
+      "subject": null,
+      "required": true,
+      "prerequisite": null,
+      "outcome_type": "COMPLETED",
+      "intro": "Test the cue operator theory and read the private messages that explain why the move was kept quiet.",
+      "outcome_text": "Kavya’s cue shows the wrong item but no handling, and Dev’s messages explain and admit the unlogged move.",
+      "unlocks": []
+    }
+  ],
+  "story_events": [
+    {
+      "thread": "t1",
+      "title": "A replica at the reveal",
+      "body": "The post-finale check finds the replica on the display stand and no original serial plate. A later check finds the original, clasp taped, in Repair Case 2. The role table names Dev as prop custody lead."
+    },
+    {
+      "thread": "t2",
+      "title": "Eight minutes",
+      "body": "Between 18:55 and 19:08 the original comes back to the prop bay, the replica goes to the stage-left wing and then to the display stand. Nikhil’s credential exits toward the stage at 18:54."
+    },
+    {
+      "thread": "t3",
+      "title": "Do not update the producer",
+      "body": "Dev’s direct message at 18:58 asks Sana to put the backup on the wing and not to update the producer. At 19:16 he writes that the original is in Repair Case 2 and that he should have logged the move."
+    }
+  ]
+}

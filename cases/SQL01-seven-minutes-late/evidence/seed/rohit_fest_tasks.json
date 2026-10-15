@@ -1,0 +1,8 @@
+{
+  "columns": ["task_id","task_at","assigned_to","task_text","task_status","location"],
+  "rows": [
+    ["RT1","2026-10-16 21:10:00","Rohit Kulkarni","Prepare Pulse demo","IN_PROGRESS","Main Auditorium"],
+    ["RT2","2026-10-16 21:26:00","Rohit Kulkarni","Find spare LED power module","NO_SPARE_FOUND","Rear Storage"],
+    ["RT3","2026-10-16 21:30:00","Rohit Kulkarni","Restore full-brightness demo","INCOMPLETE","Workshop area"]
+  ]
+}

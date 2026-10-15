@@ -1,0 +1,140 @@
+{
+  "inferences": [
+    {
+      "id": "I1",
+      "claim": "The rain stopped at 3:16 PM, contradicting the claim, but weather does not place her.",
+      "tasks": [
+        "t1"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_1",
+          "summary": "Rainfall station: 0 mm/hour from 3:16 PM",
+          "verify_sql": "select evidence_id from evidence_phase_1 where evidence_id = 'A' and body ilike '%3:16 PM | 0 mm/hour%'"
+        },
+        {
+          "table": "evidence_phase_1",
+          "summary": "Devika says heavy rain kept her at the bay until nearly 3:40",
+          "verify_sql": "select evidence_id from evidence_phase_1 where evidence_id = 'B' and body ilike '%heavy rain%'"
+        }
+      ]
+    },
+    {
+      "id": "I2",
+      "claim": "Badge R-14 was granted corridor entry at 3:23 PM; a swipe is not a face.",
+      "tasks": [
+        "t2"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_1",
+          "summary": "Staff access log entry for R-14 at 3:23 PM",
+          "verify_sql": "select evidence_id from evidence_phase_1 where evidence_id = 'C' and body ilike '%3:23 PM%R-14%Entry granted%'"
+        }
+      ]
+    },
+    {
+      "id": "I3",
+      "claim": "The replacement changed the tie-break only; the total is unchanged.",
+      "tasks": [
+        "t3"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_2",
+          "summary": "Total points unchanged, tie-break differs",
+          "verify_sql": "select evidence_id from evidence_phase_2 where evidence_id = 'F' and body ilike '%Total points are unchanged%'"
+        }
+      ]
+    },
+    {
+      "id": "I4",
+      "claim": "The D.RAO account printed the revision at 3:28 PM.",
+      "tasks": [
+        "t4"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_2",
+          "summary": "Printer audit 3:28 PM D.RAO revision",
+          "verify_sql": "select evidence_id from evidence_phase_2 where evidence_id = 'G' and body ilike '%3:28 PM%D.RAO%Aster_summary_revision%'"
+        }
+      ]
+    },
+    {
+      "id": "I5",
+      "claim": "Two independent records conflict with the alibi; neither is conclusive alone.",
+      "tasks": [
+        "t5"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_3",
+          "summary": "Badge custody: no transfer of R-14 is recorded",
+          "verify_sql": "select evidence_id from evidence_phase_3 where evidence_id = 'I' and body ilike '%No transfer is recorded%'"
+        }
+      ]
+    },
+    {
+      "id": "I6",
+      "claim": "The replacement was never authorised by the judge.",
+      "tasks": [
+        "t6"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_3",
+          "summary": "Judge confirms no later tie-break decision and no signature on the revision",
+          "verify_sql": "select evidence_id from evidence_phase_3 where evidence_id = 'L' and body ilike '%did not sign the revision%'"
+        }
+      ]
+    }
+  ],
+  "red_herrings": [
+    {
+      "suspect": "Isha Reddy",
+      "why_suspicious": "Her badge shows a denied corridor attempt at 3:27 PM and she used the results-desk printer at 3:29 PM.",
+      "innocent_explanation": "Her access was denied, and the 3:29 PM job is a separate badge-reprint job, not the Aster revision.",
+      "evidence": [
+        {
+          "table": "evidence_phase_1",
+          "verify_sql": "select evidence_id from evidence_phase_1 where evidence_id = 'C' and body ilike '%I-07%Access denied%'"
+        },
+        {
+          "table": "evidence_phase_2",
+          "verify_sql": "select evidence_id from evidence_phase_2 where evidence_id = 'G' and body ilike '%I.REDDY%Badge_reprint_17%'"
+        }
+      ]
+    },
+    {
+      "suspect": "Nikhil Verma",
+      "why_suspicious": "He was working near the loading bay and had a denied badge attempt at 3:31 PM.",
+      "innocent_explanation": "His signed service ticket explains why he was near the bay, and his access attempt was denied, so he did not reach the corridor.",
+      "evidence": [
+        {
+          "table": "evidence_phase_3",
+          "verify_sql": "select evidence_id from evidence_phase_3 where evidence_id = 'J' and body ilike '%Nikhil checks the outer cable cover%'"
+        },
+        {
+          "table": "evidence_phase_1",
+          "verify_sql": "select evidence_id from evidence_phase_1 where evidence_id = 'C' and body ilike '%N-09%Access denied%'"
+        }
+      ]
+    },
+    {
+      "suspect": "Farah Khan",
+      "why_suspicious": "She carried the original summary to the judges' office.",
+      "innocent_explanation": "Her 3:12 PM delivery was acknowledged by Judge Leena at 3:14 PM, and the folder inventory shows the original still present then.",
+      "evidence": [
+        {
+          "table": "evidence_phase_1",
+          "verify_sql": "select evidence_id from evidence_phase_1 where evidence_id = 'D' and body ilike '%Judge Leena acknowledges receipt%'"
+        },
+        {
+          "table": "evidence_phase_2",
+          "verify_sql": "select evidence_id from evidence_phase_2 where evidence_id = 'E' and body ilike '%Original signed Aster summary | Present%'"
+        }
+      ]
+    }
+  ]
+}

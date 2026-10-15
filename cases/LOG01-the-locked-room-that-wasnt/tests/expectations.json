@@ -1,0 +1,31 @@
+{
+  "queries": [
+    {
+      "name": "phase 1 opens four documents",
+      "sql": "select count(*) from evidence_phase_1",
+      "expect": [
+        [
+          "4"
+        ]
+      ]
+    },
+    {
+      "name": "phase 2 opens five documents",
+      "sql": "select count(*) from evidence_phase_2",
+      "expect": [
+        [
+          "5"
+        ]
+      ]
+    },
+    {
+      "name": "phase 3 opens five documents",
+      "sql": "select count(*) from evidence_phase_3",
+      "expect": [
+        [
+          "5"
+        ]
+      ]
+    }
+  ]
+}

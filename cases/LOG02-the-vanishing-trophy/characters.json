@@ -1,0 +1,41 @@
+{
+  "victim": "QUBIT Founders' Trophy",
+  "characters": [
+    {
+      "name": "Kavya Sen",
+      "role": "Awards coordinator",
+      "profile": "Awards coordinator",
+      "suspect": true
+    },
+    {
+      "name": "Arjun Rao",
+      "role": "Stage volunteer",
+      "profile": "Stage volunteer",
+      "suspect": true
+    },
+    {
+      "name": "Naina Rao",
+      "role": "Event photographer",
+      "profile": "Event photographer",
+      "suspect": true
+    },
+    {
+      "name": "Sameer Khan",
+      "role": "Logistics volunteer",
+      "profile": "Logistics volunteer",
+      "suspect": true
+    },
+    {
+      "name": "Meera Iyer",
+      "role": "Engraving liaison",
+      "profile": "Engraving liaison",
+      "suspect": true
+    },
+    {
+      "name": "Vikram Sethi",
+      "role": "Showcase coordinator",
+      "profile": "Showcase coordinator",
+      "suspect": true
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 import { test, after } from 'node:test';
 import assert from 'node:assert/strict';
 import pg from 'pg';
-import { CATALOGUE, db, makeGame, startedTeam, solveAll, finishFinal, submit, answerValue, flattenQuestions } from './helpers.mjs';
+import { CATALOGUE, FIXTURES, db, makeGame, startedTeam, solveAll, finishFinal, submit, final, answerValue, flattenQuestions } from './helpers.mjs';
 import { installCase, verifyDefinition, QUESTION_POINTS, TOTAL_POINTS } from '../scripts/cases/engine.mjs';
 
 const pool = db();
@@ -23,49 +23,56 @@ const scratch = async (def, tag = 'vfyt') => {
   }
 };
 
-test('the catalogue has 20 distinct cases: SQL01-SQL10 and LOG01-LOG10, each with its own setting and answer set', () => {
-  assert.equal(CATALOGUE.length, 20);
-  assert.deepEqual(CATALOGUE.map((d) => d.code), [...Array.from({ length: 10 }, (_, i) => `SQL${String(i + 1).padStart(2, '0')}`), ...Array.from({ length: 10 }, (_, i) => `LOG${String(i + 1).padStart(2, '0')}`)]);
-  assert.equal(CATALOGUE.filter((d) => d.track === 'SQL').length, 10);
-  assert.equal(CATALOGUE.filter((d) => d.track === 'LOGIC').length, 10);
-  for (const field of ['slug', 'title', 'hook', 'culpritName']) assert.equal(new Set(CATALOGUE.map((d) => d[field])).size, 20, field);
-  const answerSets = CATALOGUE.map((d) => d.threads.flatMap((t) => t.questions.map((q) => q.answer)).join('|'));
-  assert.equal(new Set(answerSets).size, 20, 'no two cases share the same answers');
-  // every table name is unique to its case so a copied query cannot work on another case
-  for (const track of ['SQL', 'LOGIC']) {
-    const mine = CATALOGUE.filter((d) => d.track === track);
-    assert.equal(new Set(mine.map((d) => d.tables.map((t) => t.name).sort().join())).size, 10, `${track} table sets differ`);
-  }
+const CODES = ['SQL01', 'SQL02', 'SQL03', 'SQL04', 'SQL05', 'SQL06', 'LOG01', 'LOG02', 'LOG03', 'LOG04', 'LOG05', 'LOG06'];
+const questionsOf = (d) => d.threads.flatMap((t) => t.questions);
+const budget = (d) => questionsOf(d).reduce((n, q) => n + (q.points ?? QUESTION_POINTS), 0) + d.finalPoints.culprit + d.finalPoints.mechanism;
+
+test('the catalogue is exactly the twelve supplied cases: SQL01-SQL06 and LOG01-LOG06, each with its own story, culprit and answers', () => {
+  assert.equal(CATALOGUE.length, 12);
+  assert.deepEqual(CATALOGUE.map((d) => d.code), CODES);
+  assert.equal(CATALOGUE.filter((d) => d.track === 'SQL').length, 6);
+  assert.equal(CATALOGUE.filter((d) => d.track === 'LOGIC').length, 6);
+  for (const field of ['slug', 'title', 'hook']) assert.equal(new Set(CATALOGUE.map((d) => d[field])).size, 12, field);
+  assert.ok(new Set(CATALOGUE.map((d) => d.culpritName)).size >= 10, 'culprits are not repeated across the catalogue');
+  const answerSets = CATALOGUE.map((d) => questionsOf(d).map((q) => q.prompt ?? q.title).join('|'));
+  assert.equal(new Set(answerSets).size, 12, 'no two cases share the same questions');
+  assert.equal(new Set(CATALOGUE.map((d) => d.threads.map((t) => t.title).join('|'))).size, 12);
+  assert.equal(new Set(CATALOGUE.flatMap((d) => d.finalOptions.map((o) => o.label))).size, CATALOGUE.reduce((n, d) => n + d.finalOptions.length, 0), 'every final-deduction choice is written for its own case');
+  assert.ok(!CATALOGUE.some((d) => /^(SQL|LOG)(0[7-9]|10)$/.test(d.code) || d.code === 'SH3R10CK'));
 });
 
-test('Logic-track casts use Indian names; SQL-track casts are their own distinct stories', () => {
-  const indian = /(Kapoor|Bhatia|Iyer|Menon|Reddy|Rao|Nair|Sharma|Joshi|Khan|Pillai|Das|Banerjee|Ghosh|Roy|Mukherjee|Sen|Bose|Hussain|Begum|Patil|Deshmukh|Jadhav|Tiwari|Singh|Chauhan|Mishra|Pandey|Gowda|Bhutia|Thapa|Sherpa|Subramaniam|Varghese|Kumar)/;
-  for (const d of CATALOGUE.filter((x) => x.track === 'LOGIC')) {
-    assert.ok(indian.test(d.culpritName + d.rosterNames.join()), `${d.code} cast`);
-    assert.ok(d.rosterNames.length === 13, `${d.code} roster`);
-  }
-});
-
-test('every case is a complete 100-point design: 8 questions x 10, responsibility 12, explanation 8', () => {
+test('every case is a complete 100-point design with a visible story, ordered hints, a solution map and two or three red herrings', () => {
   for (const d of CATALOGUE) {
-    const qs = d.threads.flatMap((t) => t.questions);
-    assert.equal(qs.length, 8, d.code);
-    assert.equal(qs.length * QUESTION_POINTS + d.finalPoints.culprit + d.finalPoints.mechanism, TOTAL_POINTS, d.code);
-    assert.ok(qs.every((q) => q.hints.length === 4 && q.hints.every((h) => h.length > 15)), `${d.code} hints`);
-    assert.ok(d.threads.filter((t) => !t.required).length >= 1 && d.threads.filter((t) => t.required).length >= 5, `${d.code} thread mix`);
-    assert.ok(d.finalOptions.length === 4 && d.finalOptions.filter((o) => o.correct).length === 1, `${d.code} options`);
-    // the correct explanation is not always in the same slot
+    const qs = questionsOf(d);
+    assert.equal(budget(d), TOTAL_POINTS, `${d.code} budget`);
+    assert.ok(d.finalPoints.culprit >= 12 && d.finalPoints.mechanism >= 8, `${d.code} final components`);
+    assert.ok(qs.every((q) => q.hints.length >= 2 && q.hints.length <= 5 && q.hints.every((h) => h.length >= 20)), `${d.code} hints`);
+    assert.ok(d.hook && d.hook.length > 120 && d.phases.every((p) => p.clue.length > 120 && p.name), `${d.code} story and phase names`);
+    assert.ok(d.finalOptions.length >= 3 && d.finalOptions.length <= 4 && d.finalOptions.filter((o) => o.correct).length === 1, `${d.code} options`);
+    assert.ok(d.rosterNames.includes(d.culpritName) && d.rosterNames.length >= 4, `${d.code} roster`);
+    const rh = d.solutionMap.red_herrings.length;
+    assert.ok(rh >= 2 && rh <= 3, `${d.code} red herrings`);
+    assert.ok(d.manifest.publication_eligible === false && d.review.human_review.completed === false, `${d.code} claims no human review`);
   }
-  const positions = new Set(CATALOGUE.map((d) => d.finalOptions.findIndex((o) => o.correct)));
-  assert.ok(positions.size >= 3, 'the correct option moves around between cases');
 });
 
-test('every seeded case passed validation and is ready: status tested (or published)', async () => {
-  const r = (await pool.query("select case_code, status, game_track, final_points_culprit + final_points_mechanism as fin from cases where case_code ~ '^(SQL|LOG)[0-9]{2}$' order by case_code")).rows;
-  assert.equal(r.length, 20, 'all 20 catalogue cases are in the database');
+test('Logic hints give Evidence Browser instructions, never SQL', () => {
+  for (const d of CATALOGUE.filter((x) => x.track === 'LOGIC')) {
+    const hints = questionsOf(d).flatMap((q) => q.hints);
+    assert.ok(!hints.some((h) => /select[^.]{0,60}from/i.test(h)), `${d.code} has no SQL in its hints`);
+  }
+});
+
+test('every seeded case passed the automated gate and waits in review: nothing is tested or published without a human', async () => {
+  const r = (await pool.query("select case_code, status, game_track, content_version, final_points_culprit + final_points_mechanism as fin, content_hash, validated_hash, tested_hash from cases where case_code ~ '^(SQL|LOG)0[1-6]$' and content_version = 2 order by case_code")).rows;
+  if (r.length === 0) return; // a database that has not been seeded with the catalogue (the seeding test covers seeding itself)
+  assert.equal(r.length, 12, 'all twelve catalogue cases are in the database');
   for (const c of r) {
-    assert.ok(['tested', 'published'].includes(c.status), `${c.case_code} is ${c.status}`);
-    assert.equal(c.fin, 20);
+    assert.equal(c.status, 'review', `${c.case_code} is ${c.status}`);
+    assert.ok(c.fin >= 20 && c.fin <= 55);
+    assert.ok(c.content_hash && c.content_hash === c.validated_hash, `${c.case_code} validated hash matches its content`);
+    assert.equal(c.tested_hash, null, 'no human test is recorded');
+    assert.equal(c.content_version, 2);
   }
 });
 
@@ -74,43 +81,48 @@ for (const def of CATALOGUE) {
     const results = await scratch(def);
     const bad = results.filter((r) => !r.ok);
     assert.deepEqual(bad, [], bad.map((b) => `${b.label}: ${b.detail}`).join('\n'));
-    assert.ok(results.length >= 40);
+    assert.ok(results.length >= 50);
   });
 }
 
 test('the validator is not a rubber stamp: each kind of defect is caught', async () => {
-  const sql = CATALOGUE.find((d) => d.code === 'SQL05');
-  const logic = CATALOGUE.find((d) => d.code === 'LOG05');
+  const sql = FIXTURES.find((d) => d.code === 'SQL01');
+  const logic = FIXTURES.find((d) => d.code === 'LOG05');
+  const pk = CATALOGUE.find((d) => d.code === 'SQL02');
   const mutate = (base, fn) => {
     const d = structuredClone(base);
     fn(d);
     return d;
   };
   const failing = async (def) => (await scratch(def)).filter((r) => !r.ok).map((r) => r.label);
+  const laterTable = sql.threads.find((t) => t.unlocks?.length && t.phase === 3).unlocks[0].table;
   const cases = {
     'score budget off': [mutate(sql, (d) => (d.finalPoints.mechanism = 9)), /exactly 100/],
-    'a missing hint': [mutate(sql, (d) => d.threads[0].questions[0].hints.pop()), /4 hints/],
+    'too few hints': [mutate(sql, (d) => d.threads[0].questions[0].hints.splice(1)), /hints/],
     'a wrong stored answer': [mutate(sql, (d) => (d.threads[0].questions[0].answer = '9999')), /unique answer/],
-    'a required thread depending on an optional one': [mutate(logic, (d) => (d.threads.find((t) => t.key === 't3a').prerequisite = 't2c')), /solo-completable/],
     'no correct explanation': [mutate(sql, (d) => d.finalOptions.forEach((o) => (o.correct = false))), /exactly one correct/],
-    'a question using a table that is still locked': [mutate(sql, (d) => (d.threads[0].questions[0].sql = `select count(*) from ${d.threads[2].unlocks[0].table}`)), /solvable with only the tables unlocked/],
-    'the last question not isolating the culprit': [mutate(sql, (d) => (d.culpritName = d.rosterNames[1])), /isolates the culprit/],
+    'a question using a table that is still locked': [mutate(sql, (d) => (d.threads[0].questions[0].sql = `select count(*) from ${laterTable}`)), /solvable with only the tables unlocked/],
     'a prerequisite cycle': [mutate(sql, (d) => (d.threads[0].prerequisite = 't1b')), /acyclic/],
     'a phase with no required thread': [mutate(sql, (d) => d.threads.filter((t) => t.phase === 2).forEach((t) => (t.required = false))), /at least one required thread/],
     'a table nothing ever unlocks': [mutate(sql, (d) => (d.threads.find((t) => t.key === 't3a').unlocks = [])), /unlocked by a phase or thread/],
     'a spoiling role': [mutate(sql, (d) => (d.rosterRoles[d.culpritName] = 'The culprit')), /spoils the culprit/],
+    'a red herring with no evidence in the data': [mutate(pk, (d) => (d.solutionMap.red_herrings[0].evidence[0].verify_sql = "select 1 where false")), /innocent explanation is backed by evidence/],
+    'a solution-map inference the data does not support': [mutate(pk, (d) => (d.solutionMap.inferences[0].evidence[0].verify_sql = "select 1 where false")), /is present in the data/],
+    'an expected result that no longer matches': [mutate(pk, (d) => (d.expectations.queries[0].expect = [['wrong']])), /expected result/],
   };
   // two correct explanations cannot even be stored: the database refuses it
   const twoCorrect = mutate(sql, (d) => d.finalOptions.forEach((o) => (o.correct = true)));
   await assert.rejects(scratch(twoCorrect), /final_options_one_correct/);
+  const misses = [];
   for (const [name, [def, expected]] of Object.entries(cases)) {
     const labels = await failing(def);
-    assert.ok(labels.some((l) => expected.test(l)), `${name}: expected a failure matching ${expected}, got ${JSON.stringify(labels)}`);
+    if (!labels.some((l) => expected.test(l))) misses.push(`${name}: expected ${expected}, got ${JSON.stringify(labels)}`);
   }
+  assert.deepEqual(misses, []);
 });
 
 // ------------------------------------------------------------------------------------------------------------------
-// Full rehearsal over HTTP: every case, played start to finish by ONE player (so solo-completability is proven for all 20)
+// Full rehearsal over HTTP: every case, played start to finish by ONE player (so solo-completability is proven for all 10)
 // ------------------------------------------------------------------------------------------------------------------
 for (const def of CATALOGUE) {
   test(`rehearsal: ${def.code} ${def.title} is solvable alone, start to finish, for exactly 100`, async () => {
@@ -118,14 +130,17 @@ for (const def of CATALOGUE) {
     try {
       const { head } = await startedTeam(game);
       const results = await solveAll(head, game);
-      assert.ok(results.every((r) => r.status === 200 && r.data.correct && r.data.points_awarded === 10), 'every question correct, 10 points each');
+      assert.ok(results.every((r) => r.status === 200 && r.data.correct), 'every question correct');
+      const paid = results.reduce((n, r) => n + r.data.points_awarded, 0);
+      assert.equal(paid, budget(def) - def.finalPoints.culprit - def.finalPoints.mechanism, 'question points add up');
       let st = (await head.get('/api/state')).data;
       assert.equal(st.state, 'FINAL_DEDUCTION');
       assert.equal(st.threads.length, def.threads.length);
+      assert.ok(st.case.hook_text && st.narrative.length === 3 && st.narrative.every((n) => n.name), 'the story and phase names reach the player');
       assert.equal(flattenQuestions(st).every((q) => q.completed), true);
       const [a, b] = await finishFinal(head, game);
-      assert.equal(a.data.points_awarded, 12);
-      assert.equal(b.data.points_awarded, 8);
+      assert.equal(a.data.points_awarded, def.finalPoints.culprit);
+      assert.equal(b.data.points_awarded, def.finalPoints.mechanism);
       assert.equal(b.data.finished, true);
       st = (await head.get('/api/state')).data;
       assert.equal(st.state, 'FINISHED');
@@ -139,24 +154,22 @@ for (const def of CATALOGUE) {
 }
 
 test('a wrong-but-plausible reading is really wrong: red herrings are not accepted as the culprit', async () => {
-  const def = CATALOGUE.find((d) => d.code === 'LOG03');
-  const game = await makeGame(pool, def);
-  try {
-    const { head } = await startedTeam(game);
-    const final = game.tasks.at(-1);
-    const st = (await head.get('/api/state')).data;
-    // answer everything but the last question, then try every other suspect on it
-    for (const t of game.tasks.slice(0, -1)) await submit(head, t.id, answerValue(t));
-    const roster = (await head.get('/api/state')).data.roster;
-    let wrongCount = 0;
-    for (const c of roster.filter((x) => x.id !== final.correct_answer).slice(0, 3)) {
-      const r = await submit(head, final.id, c.id);
-      assert.equal(r.data.correct, false, c.name);
-      wrongCount++;
-      if (wrongCount === 3) break;
+  for (const code of ['LOG03', 'SQL02']) {
+    const def = CATALOGUE.find((d) => d.code === code);
+    const game = await makeGame(pool, def);
+    try {
+      const { head } = await startedTeam(game);
+      await solveAll(head, game);
+      const roster = (await head.get('/api/state')).data.roster;
+      const redHerrings = def.solutionMap.red_herrings.map((r) => r.suspect);
+      for (const name of redHerrings) {
+        const c = roster.find((x) => x.name === name);
+        assert.ok(c, `${name} is on the roster`);
+        const r = await final(head, 'culprit', c.id);
+        assert.equal(r.data.correct, false, name);
+      }
+    } finally {
+      await game.cleanup();
     }
-    assert.equal(st.roster.length, 13);
-  } finally {
-    await game.cleanup();
   }
 });

@@ -1,0 +1,8 @@
+{
+  "columns": ["controller_event_id","controller_at","component_code","event_type","status","actor_hint"],
+  "rows": [
+    ["P1","2026-10-16 20:43:00","MODULE_04","POWER_STATE","OFF","KAVYA"],
+    ["P2","2026-10-16 21:29:00","MODULE_04","POWER_STATE","ON","UNKNOWN"],
+    ["P3","2026-10-16 21:52:00","MODULE_04","FAULT","OVERCURRENT","UNKNOWN"]
+  ]
+}

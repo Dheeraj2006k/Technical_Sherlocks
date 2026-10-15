@@ -1,0 +1,9 @@
+{
+  "columns": ["evidence_id","title","source_label","body"],
+  "rows": [
+    ["A","Awards Display Checklist","Signed awards checklist","- 3:40 PM — Trophy placed on the display stand.\n- 3:55 PM — Display area opened for official photographs.\n- 4:05 PM — Vikram notes: “Awards display looks ready.”\n- 4:25 PM — Missing trophy reported.\n- The checklist has no item-by-item verification between 4:05 PM and 4:25 PM.\n\nThe checklist confirms that the display was considered ready at 4:05 PM. It does not record a close inspection of the trophy after that time."],
+    ["B","Photograph Contact Sheet","Naina's event photo log","- Photo 12, 3:52 PM — Trophy on the display stand.\n- Photo 19, 4:09 PM — Empty display stand visible in the background; the trophy is not in frame elsewhere.\n- Photo 21, 4:16 PM — Awards table partly obscured by a grey equipment crate and rolled banners.\n\nThe contact sheet records what was captured, not everything happening outside the camera frame."],
+    ["C","Movement Notes","Volunteer movement sheet","- Arjun moved two empty stage risers at 4:03 PM.\n- Sameer moved a grey crate from the awards corridor toward the storage area at 4:11 PM.\n- Naina requested a short photo setup near the awards table.\n- Kavya signed out an awards-preparation folder at 4:00 PM.\n- No entry records the trophy's destination after it left the display stand."],
+    ["D","Ceremony Schedule","Final event schedule","The trophy presentation is scheduled for 5:00 PM. At 4:10 PM, the stage manager sends a reminder:\n\n*“Please confirm the trophy and certificates are ready. No changes to the running order after 4:30 without approval.”*"]
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "scoring": {
+    "reward_schedule": [
+      10,
+      8,
+      6,
+      4,
+      2
+    ],
+    "wrong_answer_penalty": 2,
+    "sql_errors_free": true,
+    "retries_allowed": true,
+    "each_component_awards_points_once": true
+  },
+  "hints": {
+    "t1": [
+      "Compare inventory counts over time.",
+      "Filter archive_inventory to ENV-TOKEN.",
+      "The quantity changes from one to zero."
+    ],
+    "t2": [
+      "A controller records credential use, not a person's face.",
+      "Inspect DE-03 and its controller note.",
+      "The badge ID is known; the carrier is not identified by this event."
+    ],
+    "t3": [
+      "Follow B-204 chronologically.",
+      "Find the RETURN_ACCEPTED event, then the later temporary scan.",
+      "Maya's custody begins after Ishaan's return."
+    ],
+    "t4": [
+      "Follow the request to its fulfillment location.",
+      "Inspect equipment_requests.fulfilled_from.",
+      "The cable came from a separate cabinet."
+    ],
+    "t5": [
+      "Separate assigned owner from later custody.",
+      "Order badge_custody by event_at.",
+      "Look for the person who took the badge after the return."
+    ],
+    "t6": [
+      "Your explanation must account for badge custody, the missing envelope, and the amended note.",
+      "Compare the 18:11 note with the signed return and the 18:26 message.",
+      "Do not treat the badge ID alone as proof of who carried it."
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "columns": ["manifest_id","batch_id","created_at","route_name","planned_runner","manifest_type","status","note"],
+  "rows": [
+    ["RM-17","B-17","2026-10-16 14:46:00","Print Room → Registration Desk","KABIR","PLANNED_ROUTE","GENERATED","Generated from planned route; not a physical custody acceptance."],
+    ["RM-17R","B-17R","2026-10-16 15:05:00","Print Room → Registration Desk","KABIR","PLANNED_ROUTE","GENERATED","Route manifest generated after replacement print."]
+  ]
+}

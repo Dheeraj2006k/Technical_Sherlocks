@@ -1,0 +1,7 @@
+{
+  "columns": ["access_point_id","door_name","access_method","records_rfid","camera_coverage","notes"],
+  "rows": [
+    ["D1","Main Workshop Door","RFID",true,"Cameras synced to same recorder","Normal badge access"],
+    ["D2","Rear Loading Door","MECHANICAL_LATCH",false,"CAM-REAR-2","No RFID event generated; used for moving bulky equipment"]
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "columns": ["evidence_id","title","source_label","body"],
+  "rows": [
+    ["A","Room Closure Log","Devika's signed checklist","- 4:05 PM — Aster checked in the display case.\n- 4:16 PM — Final room sweep started.\n- 4:20 PM — Room reported closed.\n- 4:21 PM — Key returned to the event desk.\n- 4:30 PM — Missing prototype reported.\n\nDevika's note reads: *“Display appeared complete before closure.”*"],
+    ["B","Access and Movement Notes","Staff movement sheet and witness statements","- Rohan was seen near Innovation Room B around 4:08 PM.\n- Imran worked on the display lighting earlier that afternoon.\n- Naina was inside the room for official photographs.\n- Vikram visited the room during preparation.\n- Devika was responsible for the key and closing checklist.\n\nThe sheet records **presence near the room**, not proof of entry at the time Aster disappeared."],
+    ["C","Two Photographs","Naina's official event photo set","- Photo 1: 4:07 PM — Aster in its display case.\n- Photo 2: 4:18 PM — The display case appears complete from the front.\n\nThe second photograph is slightly angled. A small label on the base is partly obscured by glare."],
+    ["D","The Rehearsal Note","Event preparation notebook","At 3:52 PM, Aditya wrote:\n\n*“Check the output before the live demo. If the fault returns, do not present it as fully working.”*\n\nThere is no signature beside the note and no indication that the issue was resolved."]
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "scoring": {
+    "reward_schedule": [
+      10,
+      8,
+      6,
+      4,
+      2
+    ],
+    "wrong_answer_penalty": 2,
+    "sql_errors_free": true,
+    "retries_allowed": true,
+    "each_component_awards_points_once": true
+  },
+  "hints": {
+    "q1": [
+      "Separate the record's timestamp from the conclusion someone draws from it.",
+      "What did the staff actually verify?",
+      "The checklist records a closure process, not a forensic identification of the object."
+    ],
+    "q2": [
+      "Identify the person with a documented conflict involving Aster's team.",
+      "Which conflict could plausibly motivate interference?",
+      "Rohan has the clearest apparent motive so far, but motive is not proof."
+    ],
+    "q3": [
+      "Before asking how an object left, verify which object is visible.",
+      "Compare the photograph with the identification sheet.",
+      "Look for physical features that cannot be explained by the device merely being switched off."
+    ],
+    "q4": [
+      "Compare the identification sheet with the enlarged photograph.",
+      "Look at the inspection mark and indicator lens.",
+      "The lens itself is different, not merely unlit."
+    ],
+    "q5": [
+      "Evaluate each part of Rohan's account separately.",
+      "Check the claim about the black case against an independent record.",
+      "The register confirms Vikram checked out a case, but neither fact alone proves theft."
+    ],
+    "q6": [
+      "Which object has an unverified chain of custody?",
+      "The equipment register does not state what the case contained.",
+      "Inspect the returned case and its insert."
+    ],
+    "q7": [
+      "Put the message, draft, photograph and closure log in time order.",
+      "The replica appears before the room is reported closed.",
+      "The evidence supports a pre-closure substitution, not a post-lock entry."
+    ],
+    "q8": [
+      "Separate what the case physically proves from what investigators infer.",
+      "The case has a fitted insert and packaging trace, but the prototype is absent.",
+      "It supports the removal theory without conclusively proving the case's contents at the critical time."
+    ],
+    "q9": [
+      "Compare how many independent records each hypothesis explains.",
+      "Consider who knew about the failed prototype and prepared for a security-related delay.",
+      "Combine the rehearsal warning, early draft, case evidence and pre-closure replica."
+    ]
+  }
+}

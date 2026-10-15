@@ -1,0 +1,60 @@
+{
+  "victim": "The QUBIT Prototype Fund",
+  "culprit": "Dev Malhotra",
+  "motive": "To delay discovery of the changed destination while keeping the appearance that the approved reserve payment was merely retried.",
+  "method": "After his destination edit on PAY-712 was denied he created PAY-712B, used a successful manual override, reused APR-103 and sent the same ₹12,000 to a different destination fingerprint, then called it a routine retry.",
+  "explanation": "The records prove a changed destination and a cover story. They do not identify the real-world account holder or what happened to the money after settlement.",
+  "timeline": [
+    {
+      "time": "15:28",
+      "event": "Asha creates PAY-712 under APR-103",
+      "evidence": "A1, PAY-712"
+    },
+    {
+      "time": "15:39",
+      "event": "Dev’s attempt to edit the destination of PAY-712 is denied",
+      "evidence": "A2"
+    },
+    {
+      "time": "15:41",
+      "event": "The gateway rejects PAY-712 on destination validation",
+      "evidence": "G1"
+    },
+    {
+      "time": "15:42",
+      "event": "Dev creates PAY-712B",
+      "evidence": "A3, PAY-712B"
+    },
+    {
+      "time": "15:43",
+      "event": "Dev’s manual override succeeds; PAY-712 is reversed",
+      "evidence": "A4, G2"
+    },
+    {
+      "time": "15:44",
+      "event": "PAY-712B is accepted to DEST-NORTH-84",
+      "evidence": "G3"
+    },
+    {
+      "time": "15:50",
+      "event": "Dev writes that the replacement was a routine retry",
+      "evidence": "N1"
+    }
+  ],
+  "causal_chain": [
+    "The original payment was rejected on destination validation and reversed.",
+    "Dev created a replacement under the same approval and overrode the controls.",
+    "The replacement went to a different destination fingerprint.",
+    "His note calls it a routine retry, which the changed fingerprint contradicts."
+  ],
+  "resolution": {
+    "motive": "To hide the changed destination behind a routine-retry story.",
+    "method": "He used a manual override to route the replacement to a different destination under an approval that covered the original destination.",
+    "chain": [
+      "PAY-712B was created by Dev (request record and audit).",
+      "A successful MANUAL_OVERRIDE sits on PAY-712B.",
+      "The fingerprint changed from DEST-NORTH-44 to DEST-NORTH-84.",
+      "APR-103 covers the original payee and purpose and does not authorise a changed destination."
+    ]
+  }
+}

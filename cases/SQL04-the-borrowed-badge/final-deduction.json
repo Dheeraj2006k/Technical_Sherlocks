@@ -1,0 +1,27 @@
+{
+  "culprit": {
+    "points": 25,
+    "note": "Pick the responsible person from the suspect list"
+  },
+  "mechanism": {
+    "points": 15,
+    "options": [
+      {
+        "label": "Maya used B-204 after taking custody of it, removed the envelope to delay the handover, and then tried to redirect suspicion toward Ishaan.",
+        "correct": true
+      },
+      {
+        "label": "Ishaan never returned his badge and took the envelope after the shift.",
+        "correct": false
+      },
+      {
+        "label": "Arjun took the envelope while collecting the HDMI cable.",
+        "correct": false
+      },
+      {
+        "label": "Pooja moved the envelope as part of the normal handover.",
+        "correct": false
+      }
+    ]
+  }
+}

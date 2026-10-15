@@ -1,0 +1,6 @@
+{
+  "columns": ["report_id","reported_at","reported_by","component_code","severity","report_text","status"],
+  "rows": [
+    ["MR-184","2026-10-16 20:46:00","Kavya Iyer","MODULE_04","HIGH","Connector temperature above safe operating range. Unit disconnected pending replacement. DO NOT POWER.","OPEN"]
+  ]
+}

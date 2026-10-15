@@ -49,10 +49,12 @@ async function live() {
     await a.query('select 1');
     add(true, 'DATABASE_URL connects and answers a query');
     const mig = await a.query("select count(*)::int n from schema_migrations").catch(() => null);
-    add(Boolean(mig) && mig.rows[0].n >= 8, 'all migrations are applied (8 or more)', 'run: npm run db:migrate');
-    const cases = (await a.query("select count(*)::int total, count(*) filter (where status in ('live','published'))::int live from cases")).rows[0];
-    add(cases.total >= 10, `cases installed (${cases.total} found, ${cases.live} published)`, 'run: node scripts/seed-cases.mjs');
-    const sample = (await a.query("select c.id, c.slug, k.key, k.table_name as tbl from cases c join case_table_keys k on k.case_id = c.id where c.case_code = 'SQL01' and k.table_name = (select tables_unlocked[1] from case_phases where case_id = c.id and phase_number = 1) limit 1")).rows[0];
+    add(Boolean(mig) && mig.rows[0].n >= 12, 'all migrations are applied (12 or more)', 'run: npm run db:migrate (010 adds content versions, the lifecycle and the guided-tour state)');
+    const cases = (await a.query("select count(*)::int total, count(distinct case_code) filter (where case_code ~ '^(SQL|LOG)0[1-6]$')::int catalogue, count(*) filter (where status = 'published')::int published, count(*) filter (where status = 'published' and not (case_code ~ '^(SQL|LOG)0[1-6]$'))::int stray from cases")).rows[0];
+    add(cases.catalogue === 12, `all twelve catalogue codes (SQL01-06, LOG01-06) have a version installed (${cases.catalogue} of 12)`, 'run: npm run db:seed');
+    add(cases.stray === 0, 'no case outside the twelve-case catalogue is still published', 'run: node scripts/retire-legacy-cases.mjs --apply');
+    add(cases.published >= 1, `at least one case version is published (${cases.published} published)`, 'promote a tested version: node scripts/case-lifecycle.mjs <CODE> <version> published');
+    const sample = (await a.query("select c.id, c.slug, k.key, k.table_name as tbl from cases c join case_table_keys k on k.case_id = c.id where c.case_code ~ '^(SQL|LOG)0[1-6]$' and k.table_name = (select tables_unlocked[1] from case_phases where case_id = c.id and phase_number = 1) order by (c.status = 'published') desc, c.content_version desc limit 1")).rows[0];
 
     const p = new pg.Client({ connectionString: E.DATABASE_URL_PLAYER });
     p.on('error', () => {});

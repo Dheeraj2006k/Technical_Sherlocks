@@ -1,0 +1,11 @@
+{
+  "columns": ["message_id","sent_at","sender_id","recipient_id","channel","subject","body"],
+  "rows": [
+    ["MSG01","2026-10-16 18:47:00","NIK","DEV","TEAM_CHAT","Clasp concern","The clasp snagged my sleeve in rehearsal. We should not use the original until it is checked."],
+    ["MSG02","2026-10-16 18:53:00","DEV","SAN","STAGE_CHAT","Quick inspection","Bring the original back to the prop bay for a clasp check; I will sign off before finale."],
+    ["MSG03","2026-10-16 18:58:00","DEV","SAN","DIRECT_MESSAGE","Backup plan","Put the backup on the wing for now. I will handle the original. Do not update the producer until the show is over; they will pull the finale if they hear the clasp is cracked."],
+    ["MSG04","2026-10-16 19:02:00","DEV","KAV","STAGE_CHAT","Cue confirmation","Run CUE-17 on schedule. The prop is sorted."],
+    ["MSG05","2026-10-16 19:12:00","SAN","DEV","DIRECT_MESSAGE","Inventory mismatch","The original is missing from the expected shelf. Please tell me where you put it."],
+    ["MSG06","2026-10-16 19:16:00","DEV","SAN","DIRECT_MESSAGE","Follow-up","It is in Repair Case 2. I should have logged the move and told the producer. I did not want the finale cancelled."]
+  ]
+}

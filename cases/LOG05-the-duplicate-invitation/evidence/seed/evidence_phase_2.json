@@ -1,0 +1,9 @@
+{
+  "columns": ["evidence_id","title","source_label","body"],
+  "rows": [
+    ["E05","Official Email Archive","Event mailbox export","The archived email sent to Team Orbit at 3:45 PM contains a PDF stating check-in at 4:00 PM and QR ORB-041. The message was delivered successfully. The archive preserves the sent attachment, not a copy of any later paper handed to the team."],
+    ["E06","Print Queue Receipt","Printer administration log","At 3:51 PM, a file named “Orbit_Final_v3.pdf” was printed from the registration printer under account ANAIR. The job contained one page. The log records the account and job, not the person standing at the printer or who collected the output."],
+    ["E07","The Duplicate QR Report","Check-in system audit","The QR code ORB-041 was scanned at 4:12 PM and resolved to Team Orbit’s original registration. The system did not create a second registration or issue a new invitation. The code identifies the team record; it does not authenticate the time printed beside it."],
+    ["E08","The Printer Tray Photograph","Sana’s setup photo, 3:54 PM","A timestamped photo shows Aanya at the registration printer collecting a single sheet. The page is partly turned away; the time printed on it cannot be read. The photo independently places Aanya at the output tray, but does not by itself prove what the sheet said or why she collected it."]
+  ]
+}

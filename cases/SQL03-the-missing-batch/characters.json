@@ -1,0 +1,41 @@
+{
+  "victim": "The finalist badge delivery and the registration desk",
+  "characters": [
+    {
+      "name": "Aarav Mehta",
+      "role": "Print-room operator",
+      "profile": "Operates the badge printer and logs print jobs.",
+      "suspect": true
+    },
+    {
+      "name": "Dev Malhotra",
+      "role": "Production supervisor",
+      "profile": "Owns print-room scheduling and signs routine job summaries.",
+      "suspect": false
+    },
+    {
+      "name": "Kabir Shah",
+      "role": "Delivery runner",
+      "profile": "Moves sealed packages along the event route.",
+      "suspect": true
+    },
+    {
+      "name": "Leena Das",
+      "role": "Registration lead",
+      "profile": "Receives badges at the registration desk.",
+      "suspect": true
+    },
+    {
+      "name": "Nisha Varma",
+      "role": "Event logistics coordinator",
+      "profile": "Controls the logistics cage and approves event movement records.",
+      "suspect": true
+    },
+    {
+      "name": "Tara Iyer",
+      "role": "Volunteer coordinator",
+      "profile": "Requested an unrelated lanyard order earlier that day.",
+      "suspect": false
+    }
+  ]
+}

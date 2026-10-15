@@ -1,0 +1,10 @@
+{
+  "columns": ["audit_id","parcel_id","event_at","actor_id","field_changed","old_value","new_value","reason"],
+  "rows": [
+    ["LA-01","PX-14","2026-10-16 15:26:00","RAVI","PARCEL_CODE","PX-14","PX-14","Initial correct label."],
+    ["LA-02","PX-14","2026-10-16 15:29:00","RAVI","PARCEL_CODE","PX-14","PX-41","Reprint; reason blank."],
+    ["LA-03","PX-41","2026-10-16 15:31:00","RAVI","PARCEL_CODE","PX-41","PX-14","Reciprocal label change; reason blank."],
+    ["LA-04","PX-14","2026-10-16 15:32:00","RAVI","DESTINATION","Demo Desk","Storage Bay","Destination follows swapped code."],
+    ["LA-05","PX-41","2026-10-16 15:33:00","RAVI","DESTINATION","Storage Bay","Demo Desk","Destination follows swapped code."]
+  ]
+}

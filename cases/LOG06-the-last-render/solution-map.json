@@ -1,0 +1,138 @@
+{
+  "inferences": [
+    {
+      "id": "I1",
+      "claim": "The approved cue was 2:00 but the demo ran 42 seconds.",
+      "tasks": [
+        "t1"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_1",
+          "summary": "Demo stopped after 42 seconds",
+          "verify_sql": "select evidence_id from evidence_phase_1 where evidence_id = 'E01' and body ilike '%after 42 seconds%'"
+        },
+        {
+          "table": "evidence_phase_1",
+          "summary": "Cue COMET_FINAL 2:00",
+          "verify_sql": "select evidence_id from evidence_phase_1 where evidence_id = 'E02' and body ilike '%2:00%'"
+        }
+      ]
+    },
+    {
+      "id": "I2",
+      "claim": "Dev's correct file was submitted before the cutoff.",
+      "tasks": [
+        "t2"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_1",
+          "summary": "Receipt: 02:00, checksum 91C4, before 3:45 PM",
+          "verify_sql": "select evidence_id from evidence_phase_1 where evidence_id = 'E03' and body ilike '%91C4%'"
+        }
+      ]
+    },
+    {
+      "id": "I3",
+      "claim": "The drive was sealed after preparation and returned unopened.",
+      "tasks": [
+        "t3"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_2",
+          "summary": "Seal AV-17, returned unopened",
+          "verify_sql": "select evidence_id from evidence_phase_2 where evidence_id = 'E05' and body ilike '%returned it unopened%'"
+        }
+      ]
+    },
+    {
+      "id": "I4",
+      "claim": "The playback file is a 42-second export from the rehearsal cut under Nisha's account.",
+      "tasks": [
+        "t4"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_2",
+          "summary": "Export 3:49 PM from Comet_Rehearsal_cut.mp4",
+          "verify_sql": "select evidence_id from evidence_phase_2 where evidence_id = 'E07' and body ilike '%Comet_Rehearsal_cut.mp4%'"
+        },
+        {
+          "table": "evidence_phase_2",
+          "summary": "Player checksum 7A20",
+          "verify_sql": "select evidence_id from evidence_phase_2 where evidence_id = 'E06' and body ilike '%7A20%'"
+        }
+      ]
+    },
+    {
+      "id": "I5",
+      "claim": "Nisha was at the workstation during the export.",
+      "tasks": [
+        "t5"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_3",
+          "summary": "Reflection photo 3:50 PM",
+          "verify_sql": "select evidence_id from evidence_phase_3 where evidence_id = 'E09' and body ilike '%Nisha at the workstation%'"
+        }
+      ]
+    },
+    {
+      "id": "I6",
+      "claim": "The original upload is intact and the cue draft states the aim.",
+      "tasks": [
+        "t6"
+      ],
+      "evidence": [
+        {
+          "table": "evidence_phase_3",
+          "summary": "Original archived with checksum 91C4",
+          "verify_sql": "select evidence_id from evidence_phase_3 where evidence_id = 'E12' and body ilike '%91C4%'"
+        },
+        {
+          "table": "evidence_phase_3",
+          "summary": "Cue draft: use the short render",
+          "verify_sql": "select evidence_id from evidence_phase_3 where evidence_id = 'E11' and body ilike '%Use the short render%'"
+        }
+      ]
+    }
+  ],
+  "red_herrings": [
+    {
+      "suspect": "Dev Malhotra",
+      "why_suspicious": "He submitted the file that played the wrong length.",
+      "innocent_explanation": "His receipt shows a correct 2-minute file with checksum 91C4 that still exists unchanged in the kiosk archive.",
+      "evidence": [
+        {
+          "table": "evidence_phase_3",
+          "verify_sql": "select evidence_id from evidence_phase_3 where evidence_id = 'E12' and body ilike '%original was not corrupted%'"
+        }
+      ]
+    },
+    {
+      "suspect": "Arjun Kapoor",
+      "why_suspicious": "He had custody of the drive between 4:02 and 4:31 PM.",
+      "innocent_explanation": "The seal AV-17 matches the booth photo and the drive was returned unopened, and the short file was made at 3:49 PM, before he collected it.",
+      "evidence": [
+        {
+          "table": "evidence_phase_2",
+          "verify_sql": "select evidence_id from evidence_phase_2 where evidence_id = 'E05' and body ilike '%seal number matches%'"
+        }
+      ]
+    },
+    {
+      "suspect": "Tara Iyer",
+      "why_suspicious": "She handled copying and labels in the booth.",
+      "innocent_explanation": "Her label sheet, written at 3:44 PM before the export, correctly describes the 2:00 final file and its checksum 91C4.",
+      "evidence": [
+        {
+          "table": "evidence_phase_2",
+          "verify_sql": "select evidence_id from evidence_phase_2 where evidence_id = 'E08' and body ilike '%before the 3:49 PM export%'"
+        }
+      ]
+    }
+  ]
+}

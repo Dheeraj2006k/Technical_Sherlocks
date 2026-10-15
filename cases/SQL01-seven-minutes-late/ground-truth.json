@@ -1,0 +1,65 @@
+{
+  "victim": "Arjun Varma",
+  "culprit": "Rohit Kulkarni",
+  "motive": "He needed the Pulse wall at full brightness for the 10 PM demonstration and had no spare module.",
+  "method": "After reading the high-severity DO NOT POWER warning at 20:49 and finding no spare, he restored power to Module 04 at a real 21:32 through the rear loading door. Arjun later entered by the main door and was shocked diagnosing the powered cabinet.",
+  "explanation": "Reckless, knowing conduct: he knew the unit was unsafe and powered it anyway. The records do not support an intentional attack.",
+  "timeline": [
+    {
+      "time": "20:43",
+      "event": "Kavya powers Module 04 off (controller reads 20:43, already the reference time)",
+      "evidence": "P1, W3"
+    },
+    {
+      "time": "20:46",
+      "event": "Kavya files MR-184: connector too hot, DO NOT POWER",
+      "evidence": "MR-184"
+    },
+    {
+      "time": "20:49",
+      "event": "Rohit opens the warning",
+      "evidence": "NA-1"
+    },
+    {
+      "time": "21:26",
+      "event": "Rohit finds no spare module",
+      "evidence": "RT2, E4"
+    },
+    {
+      "time": "21:28",
+      "event": "Priya reminds Rohit of the full-brightness demo; he answers \"Give me ten minutes\" at 21:30",
+      "evidence": "RM2, RM3"
+    },
+    {
+      "time": "21:32",
+      "event": "Controller shows ON at 21:29 (3 minutes slow) and the rear-door camera shows motion at displayed 21:36 (4 minutes fast)",
+      "evidence": "P2, C9"
+    },
+    {
+      "time": "21:38",
+      "event": "Arjun enters the main workshop door",
+      "evidence": "W8"
+    },
+    {
+      "time": "21:52",
+      "event": "Overcurrent fault; Arjun found unconscious",
+      "evidence": "P3, F8"
+    }
+  ],
+  "causal_chain": [
+    "Module 04 was reported unsafe and Rohit read the warning.",
+    "There was no spare and the demo was due at 10 PM.",
+    "After correcting the clocks the controller ON and the rear-door motion are the same real minute.",
+    "The rear door generates no RFID event, so no workshop entry exists for the person who restored power."
+  ],
+  "resolution": {
+    "motive": "Pressure to deliver the full-brightness demo at 10 PM with no spare module.",
+    "method": "He knowingly powered a quarantined module that had been marked DO NOT POWER.",
+    "chain": [
+      "He read the Module 04 warning at 20:49.",
+      "He found no spare and told Priya \"Give me ten minutes\".",
+      "The corrected controller time and the corrected rear-door camera time agree at 21:32.",
+      "The rear door produces no RFID record; his task list says restore full-brightness demo."
+    ]
+  }
+}

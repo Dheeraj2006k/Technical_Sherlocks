@@ -1,0 +1,27 @@
+{
+  "culprit": {
+    "points": 25,
+    "note": "Pick the responsible person from the suspect list"
+  },
+  "mechanism": {
+    "points": 15,
+    "options": [
+      {
+        "label": "Rohan accidentally moved Orbit’s check-in in the master schedule; the invitation accurately reflected that change.",
+        "correct": false
+      },
+      {
+        "label": "Aanya knowingly made a misleading copy with a 4:30 PM check-in and reused Orbit’s existing QR, intending to delay Orbit past sound check so Team Nova would retain the first demo slot; the official master schedule was left unchanged.",
+        "correct": true
+      },
+      {
+        "label": "Meera changed the invitation after receiving it to excuse her team’s late arrival.",
+        "correct": false
+      },
+      {
+        "label": "Irfan created a second registration for Orbit, and the duplicate record automatically changed the invitation time.",
+        "correct": false
+      }
+    ]
+  }
+}

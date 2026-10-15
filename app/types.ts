@@ -1,4 +1,4 @@
-export type AnswerType = "SINGLE_CHARACTER" | "NUMBER" | "TIME" | "TEXT";
+export type AnswerType = "SINGLE_CHARACTER" | "NUMBER" | "TIME" | "TEXT" | "CHOICE";
 export type Role = "head" | "investigator";
 export type Track = "SQL" | "LOGIC";
 export type EvidenceKind = "PERSON" | "ACCESS" | "OBJECT" | "MESSAGE" | "TIME" | "MOTIVE";
@@ -13,6 +13,7 @@ export type Question = {
   title: string | null;
   prompt_text: string;
   answer_type: AnswerType;
+  options: { key: string; text: string }[] | null; // CHOICE questions only (never says which is right)
   kind: EvidenceKind | null;
   base_points: number;
   reward_schedule: number[];
@@ -39,7 +40,7 @@ export type Thread = {
   tables: string[];
 };
 export type StoryEvent = { title: string; body: string };
-export type RosterEntry = { id: string; name: string; role: string | null };
+export type RosterEntry = { id: string; name: string; role: string | null; profile: string | null };
 export type Solution = { culprit: string | null; motive: string | null; method: string | null; chain: string[] };
 export type FinalOption = { id: string; label: string };
 
@@ -50,7 +51,7 @@ export type GameState = {
   realtime_channel: string;
   paused: boolean;
   case: { code: string; title: string; hook_text: string | null; track: Track; target_minutes: number };
-  me: { player_id: string; display_name: string; role: Role };
+  me: { player_id: string; display_name: string; role: Role; tour_state: "completed" | "dismissed" | null };
   players: Player[];
   threads: Thread[];
   story: StoryEvent[];
@@ -61,7 +62,7 @@ export type GameState = {
   };
   solution: Solution | null;
   scores: { total_pts: number; by_component: Record<string, number> };
-  narrative: { phase: number; clue_text: string | null }[];
+  narrative: { phase: number; name: string | null; clue_text: string | null }[];
   unlocked_tables: string[];
   roster: RosterEntry[];
 };

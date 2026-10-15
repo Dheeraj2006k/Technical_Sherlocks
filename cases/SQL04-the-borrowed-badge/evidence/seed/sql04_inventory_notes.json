@@ -1,0 +1,8 @@
+{
+  "columns": ["note_id","created_at","author_id","subject_id","note_status","note_text"],
+  "rows": [
+    ["IN-01","2026-10-16 17:31:00","MAYA","B-204","RECONCILIATION","Temporary scan of returned badge for inventory reconciliation."],
+    ["IN-02","2026-10-16 18:11:00","MAYA","B-204","AMENDED","Return unconfirmed; badge may still be with Ishaan."],
+    ["IN-03","2026-10-16 18:44:00","DEV","B-204","VERIFIED","Signed return accepted at 17:24; later note conflicts with desk record."]
+  ]
+}

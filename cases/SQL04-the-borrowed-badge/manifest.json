@@ -1,0 +1,26 @@
+{
+  "case_code": "SQL04",
+  "track": "SQL",
+  "title": "The Borrowed Badge",
+  "slug": "the-borrowed-badge",
+  "content_version": 2,
+  "status": "review",
+  "duration_minutes": 20,
+  "recommended_team_size": 2,
+  "setting": "QUBIT equipment archive, volunteer desk and demo-room handover",
+  "incident": "The demo-room access-token envelope went missing from the equipment archive and the door log names a volunteer’s returned badge",
+  "source": {
+    "files": [
+      "docs/SQL04_The_Borrowed_Badge.zip",
+      "docs/SQL04_Player_Release.zip"
+    ],
+    "content_version": "1.0.0",
+    "original_release_status": "content_complete_staging_validation_required"
+  },
+  "reviewer": {
+    "author": "Supplied case content (docs/*.zip), packaged for the runtime by Claude Code",
+    "human_reviewer": null,
+    "note": "No human has reviewed or blind-playtested this version; see review.json"
+  },
+  "publication_eligible": false
+}
