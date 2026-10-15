@@ -3,7 +3,7 @@
 // unlock rules, unique answers and hints.
 //
 // A v5 definition is plain data:
-//   { slug, code ('SQL01'..'LOG10'), track ('SQL'|'LOGIC'), title, hook, victimName, culpritName, rosterNames[], rosterRoles{},
+//   { slug, code ('SQL01'..'SQL06', 'LOG01'..'LOG06'), track ('SQL'|'LOGIC'), title, hook, victimName, culpritName, rosterNames[], rosterRoles{},
 //     solution{ motive, method, chain[] },
 //     tables:[{ name, ddl, columns, rows }],                         // schema case_<slug>
 //     phases:[{ clue, tables:[] } x3],                               // tables open for the whole phase

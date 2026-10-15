@@ -1,5 +1,5 @@
-// Retires cases that are no longer part of the ten-case catalogue (SQL01-SQL05, LOG01-LOG05): the old SQL06-SQL10,
-// LOG06-LOG10 and the SH3R10CK stub. They are set to `disabled`, so they cannot be assigned or newly joined, and NOTHING is
+// Retires cases that are no longer part of the twelve-case catalogue (SQL01-SQL06, LOG01-LOG06): the former generated
+// SQL07-SQL10, LOG07-LOG10 and the SH3R10CK stub. They are set to `disabled`, so they cannot be assigned or newly joined, and NOTHING is
 // deleted: teams, assignments, attempts and scores that exist stay exactly as they are and keep working.
 //
 //   node scripts/retire-legacy-cases.mjs            dry run (lists what would be disabled)

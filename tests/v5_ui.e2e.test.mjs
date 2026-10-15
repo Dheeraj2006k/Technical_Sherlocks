@@ -467,3 +467,58 @@ test('UI: mission control creates registrations, assigns a case, shows the team,
   }
   assert.deepEqual(problems, []);
 });
+
+test('UI onboarding: the case file opens first, the tour has Back/Next/Finish, a refresh does not relaunch it, Help reopens it, and the Field Guide keeps the query text (SQL and Logic)', { skip, timeout: 200000 }, async () => {
+  const problems = [];
+  for (const [game, label] of [[S, 'SQL'], [L, 'Logic']]) {
+    const ctx = await browser.newContext(ctxOpts());
+    const page = await ctx.newPage();
+    watch(page, problems);
+    const reg = await game.register({ teamRef: `E2E Onboarding ${label}`, size: 1 });
+    try {
+      await enterHead(page, game, reg, 'Irene');
+      await page.getByRole('button', { name: 'Start investigation' }).click();
+      await page.locator('.phase-no', { hasText: 'Phase 1 of 3' }).waitFor({ timeout: 10000 });
+      // 1. the story first
+      await page.getByTestId('case-file').waitFor();
+      await page.getByTestId('case-file-close').click();
+      await page.getByTestId('story-banner').waitFor();
+      // 2. the tour: forward, back, finish
+      const tour = page.getByTestId('tour');
+      await tour.getByRole('button', { name: 'Next' }).waitFor();
+      assert.equal(await tour.getByRole('button', { name: 'Back' }).isDisabled(), true, 'Back is disabled on the first step');
+      await tour.getByRole('button', { name: 'Next' }).click();
+      await tour.getByRole('button', { name: 'Back' }).click();
+      for (let i = 0; i < 12 && (await tour.getByRole('button', { name: 'Finish' }).count()) === 0; i++) await tour.getByRole('button', { name: 'Next' }).click();
+      await tour.getByRole('button', { name: 'Finish' }).click();
+      await tour.getByRole('button', { name: 'Finish' }).waitFor({ state: 'detached' });
+      // 3. a refresh relaunches neither the case file nor the tour (it was completed)
+      await page.reload();
+      await page.locator('.phase-no', { hasText: 'Phase 1 of 3' }).waitFor({ timeout: 10000 });
+      await page.waitForTimeout(1500);
+      assert.equal(await page.getByRole('button', { name: 'Skip tour' }).count(), 0, 'tour does not relaunch');
+      assert.equal(await page.getByTestId('case-file').count(), 0, 'case file does not reopen by itself');
+      // 4. Help reopens the tour and the case file; Esc closes the tour at any time
+      await page.getByTestId('help-button').click();
+      await page.getByTestId('help-tour').click();
+      await page.getByRole('button', { name: 'Skip tour' }).waitFor();
+      await page.keyboard.press('Escape');
+      await page.getByRole('button', { name: 'Skip tour' }).waitFor({ state: 'detached' });
+      await page.getByTestId('help-button').click();
+      await page.getByTestId('help-case-file').click();
+      await page.getByTestId('case-file').waitFor();
+      await page.getByTestId('case-file-close').click();
+      // 5. the Field Guide keeps the SQL editor text
+      if (label === 'Logic') await page.getByRole('tab', { name: /SQL console/ }).click();
+      const editor = page.getByLabel('SQL query');
+      await editor.fill('select 1 as keep_me');
+      await page.getByTestId('field-guide-button').click();
+      await page.getByRole('heading', { name: 'SQL Field Guide' }).first().waitFor();
+      await page.keyboard.press('Escape');
+      assert.equal(await editor.inputValue(), 'select 1 as keep_me', 'closing the Field Guide keeps the editor text');
+    } finally {
+      await ctx.close();
+    }
+  }
+  assert.deepEqual(problems, []);
+});

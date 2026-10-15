@@ -2,6 +2,8 @@
 
 Baseline of the repository as audited before this work, and what this work changed. Production was not inspected (see "Production").
 
+**Scope (2026-10-15):** the active catalogue is the twelve supplied packs (SQL01-06, LOG01-06). This supersedes the ten-case roster of the original addendum; see the scope decision in `ASSUMPTIONS_AND_DECISIONS.md`. The PRD PDF is historical and unchanged.
+
 ## Stack
 Next.js (App Router) + PostgreSQL (Supabase-compatible) + Vercel. Pooled `DATABASE_URL` for the app, `DATABASE_URL_PLAYER` for the restricted `player_exec` role. Realtime ping channel, DB-backed rate limits.
 

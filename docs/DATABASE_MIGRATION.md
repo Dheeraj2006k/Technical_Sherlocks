@@ -24,8 +24,8 @@ are no longer written by the application. They can be dropped in a later cleanup
 ## What it does not do
 
 * It does **not** convert v4 cases or v4 games. v4 cases have no threads, so they cannot be played by the v5 engine. The
-  content comes from `node scripts/seed-cases.mjs`, which installs SQL01-SQL10 and LOG01-LOG10 (replacing any case that holds
-  the same slug or catalogue code, **and deleting teams that played the replaced case**).
+  content comes from `node scripts/seed-cases.mjs`, which installs the twelve case packs (SQL01-SQL06, LOG01-LOG06). The current seeder
+  never deletes a case that a team references and never touches team state (see `seeding-spec.md`).
 * It does not create registrations. The organizer creates them in the admin screen (Registrations) before the event.
 
 ## Order of operations for the real database (needs the organizers' approval)
@@ -33,7 +33,7 @@ are no longer written by the application. They can be dropped in a later cleanup
 1. Pick a window with no event running. Take a Supabase backup / point-in-time marker.
 2. `npm run db:migrate` (applies 009; every file runs in its own transaction and is recorded in `schema_migrations`).
 3. `node scripts/setup-player-role.mjs` (idempotent; keeps the low-privilege `player_exec` role and its grants current).
-4. `SLC_ALLOW_REMOTE_DB=1 node scripts/seed-cases.mjs` (installs and validates the 20 cases; each becomes `tested` only if every
+4. `SLC_ALLOW_REMOTE_DB=1 node scripts/seed-cases.mjs` (installs and validates the 12 case packs; each lands in `review`, never `tested` only if every
    machine check passes).
 5. `SLC_ALLOW_REMOTE_DB=1 node scripts/gen-case-credentials.mjs --all --publish` (new passwords, printed once; cases become
    `published`).

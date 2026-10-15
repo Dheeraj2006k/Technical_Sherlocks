@@ -1,5 +1,9 @@
 # Assumptions and decisions (PRD v5 implementation)
 
+## SCOPE DECISION (2026-10-15): the active catalogue is the twelve supplied case packs
+
+The PRD v5 PDF (`docs/PRD__Sherlocks_Last_Case-_v5.pdf`, unchanged) and the first addendum describe a 10-case roster (SQL01-05, LOG01-05; earlier drafts 20 generated cases, SQL01-10 and LOG01-10). The owner then instructed, later and explicitly, to use the exact cases supplied in `docs/*.zip`. That later instruction supersedes the earlier rosters. **The authoritative catalogue is SQL01-SQL06 and LOG01-LOG06 (12 cases), `content_version` 2, all in `review`.** Everywhere else in this file, "ten", "20" and SQL07-10 / LOG07-10 are historical: they describe the earlier generated implementation, which now exists only as test fixtures (`tests/fixtures/legacy/`) and is retired with `scripts/retire-legacy-cases.mjs` (disable only). The supplied storylines, characters, evidence, tasks, hints and answers are preserved; the fairness corrections are listed under "Decisions from the case-pack work" below.
+
 Every item here is a judgment call made while implementing PRD v5 where the PRD was silent, ambiguous or truncated. Change
 any of them by editing the code and this file. The PRD text available to the implementation was the PDF plus a master prompt
 truncated at 50,000 characters; where the truncated part may have said something different, that is noted.

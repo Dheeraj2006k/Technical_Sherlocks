@@ -6,7 +6,7 @@ A competitive, browser-based **detective game** for a one-day Techfest. Teams of
 mysteries** on one of two tracks:
 
 * **SQL track** (`SQL01`-`SQL06`): query a live evidence database with SQL.
-* **Logic track** (`LOG01`-`LOG10`): browse, search, filter and sort the same kind of evidence in an **Evidence Browser**
+* **Logic track** (`LOG01`-`LOG06`): browse, search, filter and sort the same kind of evidence in an **Evidence Browser**
   (no SQL needed; an optional SQL console is there from the start for those who want it).
 
 Both tracks run on **one shared engine**: registrations, manual case assignment, investigation threads (required and optional),
@@ -56,7 +56,7 @@ can reach a remote database.
 cp .env.example .env.local        # fill in the values (see below). Never commit .env.local
 npm run db:migrate                # applies supabase/migrations/*.sql in order
 node scripts/setup-player-role.mjs        # creates the low-privilege player_exec login, writes DATABASE_URL_PLAYER
-SLC_ALLOW_REMOTE_DB=1 node scripts/seed-cases.mjs     # installs + validates all 20 cases (status: tested)
+SLC_ALLOW_REMOTE_DB=1 node scripts/seed-cases.mjs     # installs + validates the 12 case packs (status: review; nothing is published until a human review and blind playtest are recorded)
 SLC_ALLOW_REMOTE_DB=1 node scripts/gen-case-credentials.mjs --all --publish   # case passwords, shown once
 npm run dev
 ```
@@ -102,13 +102,10 @@ tables they have unlocked (they are in their own session) but cannot derive or f
 
 Twenty definitions in [scripts/cases](scripts/cases):
 
-* `SQL01`-`SQL06`: *Opening Night* (hand-authored) plus nine themed cases from one parametric skeleton (`skeleton-a.mjs`,
-  `themes.mjs`), converted by `to-v5.mjs` into threads, hints, story events and a two-part final deduction.
-* `LOG01`-`LOG10`: ten Indian-set cases from a second skeleton (`skeleton-b.mjs`, `themes-b.mjs`) built around contradictions
-  between statements and sightings.
+* `cases/`: the twelve supplied case packs (SQL01-SQL06, LOG01-LOG06), one folder per case (see `docs/case-authoring-standard.md` and `docs/case-roster.md`). The former generated cases survive only as test fixtures in `tests/fixtures/legacy/`.
 
 ```bash
-node scripts/seed-cases.mjs                      # install + validate all 20 (a case becomes 'tested' only if every check passes)
+node scripts/seed-cases.mjs                      # install + validate the 12 case packs (they land in 'review')
 node scripts/seed-cases.mjs --only LOG04
 node scripts/verify-case.mjs                     # validate without keeping anything
 node scripts/gen-case-credentials.mjs SQL03      # new password for one case, printed once   (--all, --publish)
@@ -140,7 +137,7 @@ npm run check:leaks:selftest
 | `v5_evidence` | console and Evidence Browser gating, per-table keys, injection, limits, thread-level unlocks |
 | `v5_security` | forged sessions, admin auth, leakage scans, mass assignment, RLS and grants, leaderboard exposure |
 | `v5_admin` | registrations, assignment, audit, reset, pause, dashboard, per-track leaderboard and export |
-| `v5_cases` | validator on all 20 cases, mutation tests of the validator, a solo start-to-finish rehearsal of every case |
+| `v5_cases` | validator on all 12 cases, mutation tests of the validator, a solo start-to-finish rehearsal of every case |
 | `v5_load` | 35 players on 12 teams (both tracks) at once |
 | `v5_recovery`, `v5_migration`, `v5_grading` | crash recovery, v4 -> v5 upgrade, answer grading rules |
 | `v5_realtime` | realtime pings (skipped locally; needs Supabase) |
