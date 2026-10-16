@@ -17,7 +17,7 @@ type Reg = {
   team_state: string | null;
   players_joined: number | null;
 };
-type CaseRow = { id: string; assignable: boolean; reason: string; case_code: string; title: string; track: string; status: string; content_version: number; validated: boolean; tested: boolean; active_assignments: number; teams_pinned: number };
+type CaseRow = { owner_exception?: boolean; id: string; assignable: boolean; reason: string; case_code: string; title: string; track: string; status: string; content_version: number; validated: boolean; tested: boolean; active_assignments: number; teams_pinned: number };
 type Audit = { id: number; created_at: string; action: string; actor: string; team_ref: string | null; case_code: string | null };
 type Toast = (tone: "success" | "error" | "info", text: string) => void;
 
@@ -176,7 +176,7 @@ export default function Registrations({ toast }: { toast: Toast }) {
                   <td><b>{c.case_code}</b> <span className="case-name">{c.track} · {c.title}</span></td>
                   <td className="mono">v{c.content_version}</td>
                   <td><StatusPill tone={c.status === "published" ? "green" : c.status === "disabled" ? "muted" : "cyan"}>{c.status}</StatusPill></td>
-                  <td className="case-name">{c.validated ? "validated" : "not validated"} · {c.tested ? "human-tested" : "not human-tested"}</td>
+                  <td className="case-name">{c.validated ? "validated" : "not validated"} · {c.tested ? (c.owner_exception ? "OWNER EXCEPTION: no review or playtest done" : "human-tested") : "not human-tested"}</td>
                   <td className="case-name">{c.active_assignments} assigned · {c.teams_pinned} team{c.teams_pinned === 1 ? "" : "s"}</td>
                   <td className="case-name" data-testid={`assignable-${c.case_code}-v${c.content_version}`}><b>{c.assignable ? "Yes" : "No"}</b> · {c.reason}</td>
                   <td>

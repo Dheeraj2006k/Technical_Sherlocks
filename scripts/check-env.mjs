@@ -54,7 +54,7 @@ async function live() {
     await a.query('select 1');
     add(true, 'DATABASE_URL connects and answers a query');
     const mig = await a.query("select count(*)::int n from schema_migrations").catch(() => null);
-    add(Boolean(mig) && mig.rows[0].n >= 12, 'all migrations are applied (12 or more)', 'run: npm run db:migrate (010 adds content versions, the lifecycle and the guided-tour state)');
+    add(Boolean(mig) && mig.rows[0].n >= 14, 'all migrations are applied (14 or more)', 'run: npm run db:migrate (010 adds content versions, the lifecycle and the guided-tour state)');
     // Version-aware release checks (the legacy catalogue is intentionally still present until it is retired).
     const rows = (await a.query(`select c.id, c.case_code, c.title, c.content_version, c.status, (c.content_hash is not null) as hashed,
         (c.content_hash is not null and c.tested_hash = c.content_hash) as tested,

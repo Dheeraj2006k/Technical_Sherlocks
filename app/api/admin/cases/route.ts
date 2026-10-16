@@ -13,6 +13,7 @@ export async function GET(req: Request) {
              (c.content_hash is not null and c.validated_hash = c.content_hash) as validated,
              (c.content_hash is not null and c.tested_hash = c.content_hash) as tested,
              (c.content_hash is not null) as hashed,
+             coalesce(c.review_record->>'owner_exception', 'false') = 'true' as owner_exception,
              c.published_at,
              (select count(*)::int from team_case_assignments a where a.case_id = c.id and a.status in ('assigned', 'started')) as active_assignments,
              (select count(*)::int from teams t where t.case_id = c.id) as teams_pinned

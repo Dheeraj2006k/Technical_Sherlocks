@@ -1,0 +1,323 @@
+skip   001_core_schema.sql
+skip   002_join_and_assignments.sql
+skip   003_team_state.sql
+skip   004_hardening.sql
+skip   005_query_gating.sql
+skip   006_culprit_and_pause.sql
+skip   007_realtime_token.sql
+skip   008_experience.sql
+skip   009_v5_engine.sql
+skip   010_versions_lifecycle_onboarding.sql
+skip   011_choice_answers.sql
+skip   012_story_visibility.sql
+skip   013_function_lockdown.sql
+apply  014_owner_exception.sql
+role player_exec: ready (existing), settings applied
+DATABASE_URL_PLAYER already present, unchanged
+seeding into: local database
+UNCHANGEDSQL01 v2 (sql01_v2) 17 tables, 82 evidence rows, 3 threads, 6 questions, status review, 0 team(s) pinned
+UNCHANGEDSQL02 v2 (sql02_v2) 7 tables, 44 evidence rows, 3 threads, 6 questions, status review, 0 team(s) pinned
+UNCHANGEDSQL03 v2 (sql03_v2) 7 tables, 31 evidence rows, 3 threads, 6 questions, status review, 0 team(s) pinned
+UNCHANGEDSQL04 v2 (sql04_v2) 8 tables, 32 evidence rows, 3 threads, 6 questions, status review, 0 team(s) pinned
+UNCHANGEDSQL05 v2 (sql05_v2) 7 tables, 25 evidence rows, 3 threads, 6 questions, status review, 0 team(s) pinned
+UNCHANGEDSQL06 v2 (sql06_v2) 8 tables, 33 evidence rows, 3 threads, 6 questions, status review, 0 team(s) pinned
+UNCHANGEDLOG01 v2 (log01_v2) 3 tables, 14 evidence rows, 3 threads, 9 questions, status review, 0 team(s) pinned
+UNCHANGEDLOG02 v2 (log02_v2) 3 tables, 14 evidence rows, 3 threads, 9 questions, status review, 0 team(s) pinned
+UNCHANGEDLOG03 v2 (log03_v2) 3 tables, 12 evidence rows, 3 threads, 6 questions, status review, 0 team(s) pinned
+UNCHANGEDLOG04 v2 (log04_v2) 3 tables, 13 evidence rows, 3 threads, 6 questions, status review, 0 team(s) pinned
+UNCHANGEDLOG05 v2 (log05_v2) 3 tables, 12 evidence rows, 3 threads, 6 questions, status review, 0 team(s) pinned
+UNCHANGEDLOG06 v2 (log06_v2) 3 tables, 12 evidence rows, 3 threads, 6 questions, status review, 0 team(s) pinned
+
+> sherlocks-last-case@0.1.0 build
+> next build
+
+▲ Next.js 16.4.0 (Turbopack)
+- Environments: .env.local
+✓ Running next.config.ts took 1374ms
+- Cache Components enabled
+- Partial Prefetching enabled
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 31.9s
+  Running TypeScript ...
+  Finished TypeScript in 11.0s ...
+  Collecting page data using 7 workers ...
+  Generating static pages using 7 workers (0/31) ...
+  Generating static pages using 7 workers (7/31) 
+  Generating static pages using 7 workers (15/31) 
+  Generating static pages using 7 workers (23/31) 
+✓ Generating static pages using 7 workers (31/31) in 1042ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /admin
+├ ƒ /api/admin/assign-case
+├ ƒ /api/admin/audit
+├ ƒ /api/admin/case-status
+├ ƒ /api/admin/cases
+├ ƒ /api/admin/dashboard
+├ ƒ /api/admin/export
+├ ƒ /api/admin/login
+├ ƒ /api/admin/logout
+├ ƒ /api/admin/pause
+├ ƒ /api/admin/registrations
+├ ƒ /api/admin/reset-team
+├ ƒ /api/admin/team
+├ ƒ /api/assign-thread
+├ ƒ /api/evidence
+├ ƒ /api/hint
+├ ƒ /api/join
+├ ƒ /api/leaderboard
+├ ƒ /api/logout
+├ ƒ /api/query
+├ ƒ /api/schema
+├ ƒ /api/start
+├ ƒ /api/state
+├ ƒ /api/submit-final
+├ ƒ /api/submit-task
+├ ƒ /api/tour
+└ ○ /leaderboard
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+TAP version 13
+# (node:24812) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///D:/College/Qubit/Technical_Sherlocks/lib/caseEligibility.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to D:\\College\\Qubit\\Technical_Sherlocks\\package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: the canonical catalogue carries exactly the twelve supplied titles
+ok 1 - the canonical catalogue carries exactly the twelve supplied titles
+  ---
+  duration_ms: 855.3614
+  type: 'test'
+  ...
+# Subtest: eligibility rule: only a published version is assignable, and a hashed version also needs its recorded human test
+ok 2 - eligibility rule: only a published version is assignable, and a hashed version also needs its recorded human test
+  ---
+  duration_ms: 0.9183
+  type: 'test'
+  ...
+# Subtest: the catalogue API explains every version; a review version is not assignable and the API refuses it
+ok 3 - the catalogue API explains every version; a review version is not assignable and the API refuses it
+  ---
+  duration_ms: 6221.6131
+  type: 'test'
+  ...
+# Subtest: exact-version pinning: publishing v2 after a real review makes v2 assignable and retires v1 for new assignments; the old assignment keeps v1
+ok 4 - exact-version pinning: publishing v2 after a real review makes v2 assignable and retires v1 for new assignments; the old assignment keeps v1
+  ---
+  duration_ms: 1844.6769
+  type: 'test'
+  ...
+# Subtest: a hashed version that is published without its human test is refused by the backend even if it was forced to published
+ok 5 - a hashed version that is published without its human test is refused by the backend even if it was forced to published
+  ---
+  duration_ms: 593.0349
+  type: 'test'
+  ...
+# Subtest: retirement plan: protects open assignments, unfinished teams and the last assignable version; retires the rest; cancelled history is noted
+ok 6 - retirement plan: protects open assignments, unfinished teams and the last assignable version; retires the rest; cancelled history is noted
+  ---
+  duration_ms: 1.059
+  type: 'test'
+  ...
+# Subtest: retirement dry run against a database: explains each decision and changes nothing
+ok 7 - retirement dry run against a database: explains each decision and changes nothing
+  ---
+  duration_ms: 1926.3196
+  type: 'test'
+  ...
+# Subtest: a cancelled historical assignment does not protect a version, is never rewritten, and keeps its history
+ok 8 - a cancelled historical assignment does not protect a version, is never rewritten, and keeps its history
+  ---
+  duration_ms: 802.8965
+  type: 'test'
+  ...
+# Subtest: owner exception: labelled, explicit, never recorded as a review or playtest; the normal gate is unchanged
+ok 9 - owner exception: labelled, explicit, never recorded as a review or playtest; the normal gate is unchanged
+  ---
+  duration_ms: 607.5257
+  type: 'test'
+  ...
+# Subtest: a populated v4 database upgrades in place to v5: nothing is lost, the new engine works beside the old data
+ok 10 - a populated v4 database upgrades in place to v5: nothing is lost, the new engine works beside the old data
+  ---
+  duration_ms: 8717.2355
+  type: 'test'
+  ...
+# Subtest: session forgery and replay: every variant is refused on every player endpoint
+ok 11 - session forgery and replay: every variant is refused on every player endpoint
+  ---
+  duration_ms: 3256.1815
+  type: 'test'
+  ...
+# Subtest: session cookie is HttpOnly and SameSite, and carries no case id
+ok 12 - session cookie is HttpOnly and SameSite, and carries no case id
+  ---
+  duration_ms: 27.8502
+  type: 'test'
+  ...
+# Subtest: admin endpoints refuse everything without an organizer session
+ok 13 - admin endpoints refuse everything without an organizer session
+  ---
+  duration_ms: 237.8585
+  type: 'test'
+  ...
+# Subtest: admin sign-in is rate limited per IP
+ok 14 - admin sign-in is rate limited per IP
+  ---
+  duration_ms: 61.6294
+  type: 'test'
+  ...
+# Subtest: admin state-changing requests from another origin are refused
+ok 15 - admin state-changing requests from another origin are refused
+  ---
+  duration_ms: 17.9138
+  type: 'test'
+  ...
+# Subtest: SQL-injection style payloads in every text field are inert and never cause a 500
+ok 16 - SQL-injection style payloads in every text field are inert and never cause a 500
+  ---
+  duration_ms: 1960.4743
+  type: 'test'
+  ...
+# Subtest: control characters and oversized bodies are rejected cleanly
+ok 17 - control characters and oversized bodies are rejected cleanly
+  ---
+  duration_ms: 36.1295
+  type: 'test'
+  ...
+# Subtest: credentials, keys and answers never appear in any player-facing response
+ok 18 - credentials, keys and answers never appear in any player-facing response
+  ---
+  duration_ms: 527.0603
+  type: 'test'
+  ...
+# Subtest: teams cannot see or touch each other: state, hints, answers and assignments are scoped to the session
+ok 19 - teams cannot see or touch each other: state, hints, answers and assignments are scoped to the session
+  ---
+  duration_ms: 210.1885
+  type: 'test'
+  ...
+# Subtest: mass assignment: extra fields in join, assign and submit bodies grant nothing
+ok 20 - mass assignment: extra fields in join, assign and submit bodies grant nothing
+  ---
+  duration_ms: 45.7472
+  type: 'test'
+  ...
+# Subtest: the public leaderboard exposes no credentials or ids, and is ordered by score then by who finished first
+ok 21 - the public leaderboard exposes no credentials or ids, and is ordered by score then by who finished first
+  ---
+  duration_ms: 177.5046
+  type: 'test'
+  ...
+# Subtest: an unfinished team cannot read the resolution; the answer to the final deduction is never in the state
+ok 22 - an unfinished team cannot read the resolution; the answer to the final deduction is never in the state
+  ---
+  duration_ms: 354.0363
+  type: 'test'
+  ...
+# Subtest: timing: an unknown reference, a wrong password and a draft case all take similar time (all run a bcrypt compare)
+ok 23 - timing: an unknown reference, a wrong password and a draft case all take similar time (all run a bcrypt compare)
+  ---
+  duration_ms: 822.6393
+  type: 'test'
+  ...
+# Subtest: the join rate limit applies per IP (11th attempt in a minute -> 429)
+ok 24 - the join rate limit applies per IP (11th attempt in a minute -> 429)
+  ---
+  duration_ms: 1383.0528
+  type: 'test'
+  ...
+# Subtest: every public table is locked down for Supabase roles (RLS on, no anon/authenticated grants)
+ok 25 - every public table is locked down for Supabase roles (RLS on, no anon/authenticated grants)
+  ---
+  duration_ms: 299.0025
+  type: 'test'
+  ...
+# Subtest: migration 010 is applied: versions are unique per code, one version can be published per code, and the lifecycle has five states
+ok 26 - migration 010 is applied: versions are unique per code, one version can be published per code, and the lifecycle has five states
+  ---
+  duration_ms: 288.7049
+  type: 'test'
+  ...
+# Subtest: content that a live team is pinned to is frozen: no edit of its questions, hints, threads, unlocks, options, story, roster or case row
+ok 27 - content that a live team is pinned to is frozen: no edit of its questions, hints, threads, unlocks, options, story, roster or case row
+  ---
+  duration_ms: 2139.111
+  type: 'test'
+  ...
+# Subtest: a team records the content version it started on and can never be moved to another case once started
+ok 28 - a team records the content version it started on and can never be moved to another case once started
+  ---
+  duration_ms: 1181.1458
+  type: 'test'
+  ...
+# Subtest: publishing a new content version never disturbs a live team: it keeps its questions, its answers and its ability to rejoin
+ok 29 - publishing a new content version never disturbs a live team: it keeps its questions, its answers and its ability to rejoin
+  ---
+  duration_ms: 1227.2713
+  type: 'test'
+  ...
+# Subtest: the lifecycle only moves along its gates: draft, review, tested, published; disabled stops new assignments
+ok 30 - the lifecycle only moves along its gates: draft, review, tested, published; disabled stops new assignments
+  ---
+  duration_ms: 2273.6892
+  type: 'test'
+  ...
+# Subtest: the organizer can publish only a tested version and disable any version, through the admin API, with an audit trail
+ok 31 - the organizer can publish only a tested version and disable any version, through the admin API, with an audit trail
+  ---
+  duration_ms: 475.88
+  type: 'test'
+  ...
+# Subtest: draft, review, tested and disabled versions cannot be assigned as if they were published
+ok 32 - draft, review, tested and disabled versions cannot be assigned as if they were published
+  ---
+  duration_ms: 1259.1271
+  type: 'test'
+  ...
+# Subtest: seeding is idempotent: a second run reports every case unchanged and changes no row, key or team
+ok 33 - seeding is idempotent: a second run reports every case unchanged and changes no row, key or team
+  ---
+  duration_ms: 3106.1841
+  type: 'test'
+  ...
+# Subtest: seeding output and logs never reveal passwords, hashes, keys or answers
+ok 34 - seeding output and logs never reveal passwords, hashes, keys or answers
+  ---
+  duration_ms: 959.7538
+  type: 'test'
+  ...
+# Subtest: seeding a live version is refused when its content changed (bump the version), and never touches the team on it
+ok 35 - seeding a live version is refused when its content changed (bump the version), and never touches the team on it
+  ---
+  duration_ms: 1649.1222
+  type: 'test'
+  ...
+# Subtest: case-lifecycle refuses tested without a recorded human review and blind playtest for this exact content
+ok 36 - case-lifecycle refuses tested without a recorded human review and blind playtest for this exact content
+  ---
+  duration_ms: 2524.2546
+  type: 'test'
+  ...
+# Subtest: retirement never touches a version with a live team or an open assignment: live teams keep playing and unstarted registrations can still start
+ok 37 - retirement never touches a version with a live team or an open assignment: live teams keep playing and unstarted registrations can still start
+  ---
+  duration_ms: 1673.8222
+  type: 'test'
+  ...
+1..37
+# tests 37
+# suites 0
+# pass 37
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 65935.3278
+server log check: none of 91 test credentials appear in the server log

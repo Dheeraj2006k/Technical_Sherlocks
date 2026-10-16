@@ -172,3 +172,26 @@ test('a cancelled historical assignment does not protect a version, is never rew
   assert.equal(await status(g.caseId), 'disabled');
   assert.deepEqual((await pool.query('select id, case_id, status from team_case_assignments where registration_id = $1', [reg.id])).rows, hist);
 });
+
+test('owner exception: labelled, explicit, never recorded as a review or playtest; the normal gate is unchanged', async () => {
+  const c = code();
+  const g = await makeGame(pool, defByCode('SQL01'), { caseCode: c, version: 2, status: 'review', contentHash: hashOf(7) });
+  cleanups.push(() => g.cleanup());
+  await pool.query('update cases set validated_hash = content_hash where id = $1', [g.caseId]);
+  // still refused without a reviewer and playtest, and an exception needs approver, reason and the honest playtest label
+  await assert.rejects(transition(g.caseId, 'tested', {}), /reviewer|playtest/i);
+  await assert.rejects(transition(g.caseId, 'tested', { owner_exception: true }), /approved_by/);
+  await assert.rejects(transition(g.caseId, 'tested', { owner_exception: true, approved_by: 'owner', reason: 'event', blind_playtest: 'completed' }), /not_performed/);
+  await transition(g.caseId, 'tested', { owner_exception: true, approved_by: 'owner', reason: 'owner decision for the event', blind_playtest: 'not_performed' });
+  const row = (await pool.query('select review_record, status from cases where id = $1', [g.caseId])).rows[0];
+  assert.equal(row.review_record.owner_exception, true);
+  assert.equal(row.review_record.blind_playtest, 'not_performed');
+  assert.ok(!row.review_record.reviewer, 'no reviewer is recorded');
+  await transition(g.caseId, 'published');
+  assert.equal(await status(g.caseId), 'published');
+  const list = (await catalogue()).find((r) => r.id === g.caseId);
+  assert.equal(list.owner_exception, true);
+  assert.equal(list.assignable, true);
+  const audit = (await pool.query("select details from admin_audit where case_id = $1 and details->>'to' = 'tested'", [g.caseId])).rows[0].details;
+  assert.equal(audit.owner_exception, true);
+});
