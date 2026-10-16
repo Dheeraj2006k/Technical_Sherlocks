@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 import pg from 'pg';
 import Cursor from 'pg-cursor';
 import { loadEnvLocal } from './lib/env.mjs';
+import { planRetirement } from './lib/retire.mjs';
 import { CATALOGUE_CODES, CANONICAL_TITLES, CANONICAL_VERSION } from './cases/pack.mjs';
 
 // Same rule as lib/caseEligibility.ts: a published version that carries a content hash needs a human test for that exact hash.
@@ -53,7 +54,7 @@ async function live() {
     await a.query('select 1');
     add(true, 'DATABASE_URL connects and answers a query');
     const mig = await a.query("select count(*)::int n from schema_migrations").catch(() => null);
-    add(Boolean(mig) && mig.rows[0].n >= 12, 'all migrations are applied (12 or more)', 'run: npm run db:migrate (010 adds content versions, the lifecycle and the guided-tour state)');
+    add(Boolean(mig) && mig.rows[0].n >= 14, 'all migrations are applied (14 or more)', 'run: npm run db:migrate (010 adds content versions, the lifecycle and the guided-tour state)');
     // Version-aware release checks (the legacy catalogue is intentionally still present until it is retired).
     const rows = (await a.query(`select c.id, c.case_code, c.title, c.content_version, c.status, (c.content_hash is not null) as hashed,
         (c.content_hash is not null and c.tested_hash = c.content_hash) as tested,
@@ -70,11 +71,14 @@ async function live() {
     add(ineligible.length === 0, 'every published (assignable) version is eligible: published pack versions carry a recorded human test', ineligible.join(', '));
     const badOpen = rows.filter((r) => r.open_assignments > 0 && r.status !== 'published').map((r) => `${r.case_code} v${r.content_version} (${r.status})`);
     add(badOpen.length === 0, 'every open assignment points at a published version, so no registration is stuck', badOpen.join(', '));
-    const stray = rows.filter((r) => r.status === 'published' && !(CATALOGUE_CODES.includes(r.case_code) && r.content_version >= CANONICAL_VERSION));
-    const protectedStray = stray.filter((r) => r.open_assignments > 0 || r.live_teams > 0);
-    const loose = stray.filter((r) => !(r.open_assignments > 0 || r.live_teams > 0));
-    for (const r of protectedStray) console.log(`  NOTE  protected legacy exception: ${r.case_code} v${r.content_version} stays published (${r.open_assignments} open assignment(s), ${r.live_teams} unfinished team(s))`);
-    add(loose.length === 0, `no unprotected legacy version is still published or assignable (${protectedStray.length} protected exception(s) reported above)`, `${loose.length} left: run node scripts/retire-legacy-cases.mjs (dry run) then --apply`);
+    // Legacy = published and not a canonical v2. The retirement planner decides which of them are safe to retire; the rest are
+    // protected exceptions (an open assignment, an unfinished team, or the last assignable version of a catalogue code) and are listed.
+    const legacy = rows
+      .filter((r) => r.status === 'published' && !(CATALOGUE_CODES.includes(r.case_code) && r.content_version >= CANONICAL_VERSION))
+      .map((r) => ({ ...r, cancelled_assignments: 0, published_v2: rows.some((n) => n.case_code === r.case_code && n.content_version >= CANONICAL_VERSION && n.status === 'published') }));
+    const { retire, keep } = planRetirement(legacy, CATALOGUE_CODES);
+    for (const r of keep) console.log(`  NOTE  protected legacy exception: ${r.case_code} v${r.content_version} stays published: ${r.reasons.join('; ')}`);
+    add(retire.length === 0, `no retirable legacy version is still published or assignable (${keep.length} protected exception(s) listed above)`, `${retire.length} retirable: run node scripts/retire-legacy-cases.mjs (dry run), then --apply when ready`);
     add(rows.some((r) => r.status === 'published'), 'at least one case version is published', 'publish a tested version from Admin -> Cases');
     const sample = (await a.query("select c.id, c.slug, k.key, k.table_name as tbl from cases c join case_table_keys k on k.case_id = c.id where c.case_code ~ '^(SQL|LOG)0[1-6]$' and k.table_name = (select tables_unlocked[1] from case_phases where case_id = c.id and phase_number = 1) order by (c.status = 'published') desc, c.content_version desc limit 1")).rows[0];
 

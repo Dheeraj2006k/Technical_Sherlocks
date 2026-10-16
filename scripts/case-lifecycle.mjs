@@ -20,7 +20,7 @@ const [code, versionRaw, to, ...rest] = process.argv.slice(2);
 const dryRun = rest.includes('--dry-run');
 const version = Number(versionRaw);
 if (!code || !Number.isInteger(version) || !to) {
-  console.error('usage: node scripts/case-lifecycle.mjs <CODE> <content_version> <status|review|tested|published|disabled> [--dry-run]');
+  console.error('usage: node scripts/case-lifecycle.mjs <CODE> <content_version> <status|review|tested|published|disabled> [--dry-run] [--owner-exception "reason"]');
   process.exit(1);
 }
 const target = describeDatabase(process.env.DATABASE_URL);
@@ -39,7 +39,13 @@ try {
   if (to === 'status') process.exit(0);
   if (pack && pack.hash !== row.content_hash && to !== 'disabled') throw new Error('the pack on disk differs from the seeded version: re-seed (or bump content_version) before changing its status');
   let record = {};
-  if (to === 'tested') {
+  const exIdx = rest.indexOf('--owner-exception');
+  if (to === 'tested' && exIdx > -1) {
+    // explicit, labelled, never a review or playtest: needs who approved it and why
+    const reason = rest[exIdx + 1];
+    if (!reason || reason.startsWith('--')) throw new Error('--owner-exception needs a quoted reason, e.g. --owner-exception "owner decision for the event"');
+    record = { owner_exception: true, approved_by: 'owner', reason: reason.slice(0, 300), blind_playtest: 'not_performed' };
+  } else if (to === 'tested') {
     const r = pack?.review;
     const h = r?.human_review;
     const b = r?.blind_playtest;
