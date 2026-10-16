@@ -75,3 +75,6 @@ Tested on a populated isolated local database (`tests/v5_migration.test.mjs`, `t
 4. Human review and blind playtest per case; record in `review.json`; `case-lifecycle.mjs ... tested`; Publish from Admin.
 5. `node scripts/retire-legacy-cases.mjs` (dry run), then `--apply` once no event team needs the old cases (disables only).
 6. `npm run check:env` against production, then the smoke checklist in `EVENT_RUNBOOK.md`.
+
+### Migration 014 (owner exception)
+`014_owner_exception.sql` lets `review -> tested` accept an explicit, labelled owner exception (`owner_exception`, `approved_by`, `reason`, `blind_playtest = not_performed`) as the only alternative to a named reviewer plus a completed blind playtest. It is stored as an exception, never as a review or playtest, is audited, and shows in Admin -> Cases as "OWNER EXCEPTION". Hash gates are unchanged. Applied to production on 2026-10-16. Use: `node scripts/case-lifecycle.mjs <CODE> 2 tested --owner-exception "reason"`, then `... published`.
