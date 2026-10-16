@@ -8,6 +8,10 @@ import { fileURLToPath } from 'node:url';
 import pg from 'pg';
 import Cursor from 'pg-cursor';
 import { loadEnvLocal } from './lib/env.mjs';
+import { CATALOGUE_CODES, CANONICAL_TITLES, CANONICAL_VERSION } from './cases/pack.mjs';
+
+// Same rule as lib/caseEligibility.ts: a published version that carries a content hash needs a human test for that exact hash.
+const assignability = (r) => ({ ok: r.status === 'published' && !(r.hashed && !r.tested) });
 
 loadEnvLocal(join(dirname(fileURLToPath(import.meta.url)), '..'));
 const E = process.env;
@@ -50,10 +54,28 @@ async function live() {
     add(true, 'DATABASE_URL connects and answers a query');
     const mig = await a.query("select count(*)::int n from schema_migrations").catch(() => null);
     add(Boolean(mig) && mig.rows[0].n >= 12, 'all migrations are applied (12 or more)', 'run: npm run db:migrate (010 adds content versions, the lifecycle and the guided-tour state)');
-    const cases = (await a.query("select count(*)::int total, count(distinct case_code) filter (where case_code ~ '^(SQL|LOG)0[1-6]$')::int catalogue, count(*) filter (where status = 'published')::int published, count(*) filter (where status = 'published' and not (case_code ~ '^(SQL|LOG)0[1-6]$'))::int stray from cases")).rows[0];
-    add(cases.catalogue === 12, `all twelve catalogue codes (SQL01-06, LOG01-06) have a version installed (${cases.catalogue} of 12)`, 'run: npm run db:seed');
-    add(cases.stray === 0, 'no case outside the twelve-case catalogue is still published', 'run: node scripts/retire-legacy-cases.mjs --apply');
-    add(cases.published >= 1, `at least one case version is published (${cases.published} published)`, 'promote a tested version: node scripts/case-lifecycle.mjs <CODE> <version> published');
+    // Version-aware release checks (the legacy catalogue is intentionally still present until it is retired).
+    const rows = (await a.query(`select c.id, c.case_code, c.title, c.content_version, c.status, (c.content_hash is not null) as hashed,
+        (c.content_hash is not null and c.tested_hash = c.content_hash) as tested,
+        (select count(*)::int from team_case_assignments x where x.case_id = c.id and x.status in ('assigned', 'started')) as open_assignments,
+        (select count(*)::int from teams t left join team_progress tp on tp.team_id = t.id where t.case_id = c.id and coalesce(tp.state, 'WAITING') <> 'FINISHED') as live_teams
+        from cases c`)).rows;
+    const canon = rows.filter((r) => r.content_version === CANONICAL_VERSION && CATALOGUE_CODES.includes(r.case_code));
+    add(CATALOGUE_CODES.every((c) => canon.filter((r) => r.case_code === c).length === 1) && canon.length === 12, `all twelve canonical v${CANONICAL_VERSION} cases exist exactly once (${canon.length} found)`, 'run: npm run db:seed');
+    const badTitles = canon.filter((r) => r.title !== CANONICAL_TITLES[r.case_code]).map((r) => r.case_code);
+    add(badTitles.length === 0, 'every canonical v2 title matches the supplied roster', badTitles.join(', '));
+    const dupPublished = [...new Set(rows.filter((r) => r.status === 'published').map((r) => r.case_code))].filter((c) => rows.filter((r) => r.case_code === c && r.status === 'published').length > 1);
+    add(dupPublished.length === 0, 'no case code has two published versions', dupPublished.join(', '));
+    const ineligible = rows.filter((r) => r.status === 'published' && !assignability(r).ok).map((r) => `${r.case_code} v${r.content_version}`);
+    add(ineligible.length === 0, 'every published (assignable) version is eligible: published pack versions carry a recorded human test', ineligible.join(', '));
+    const badOpen = rows.filter((r) => r.open_assignments > 0 && r.status !== 'published').map((r) => `${r.case_code} v${r.content_version} (${r.status})`);
+    add(badOpen.length === 0, 'every open assignment points at a published version, so no registration is stuck', badOpen.join(', '));
+    const stray = rows.filter((r) => r.status === 'published' && !(CATALOGUE_CODES.includes(r.case_code) && r.content_version >= CANONICAL_VERSION));
+    const protectedStray = stray.filter((r) => r.open_assignments > 0 || r.live_teams > 0);
+    const loose = stray.filter((r) => !(r.open_assignments > 0 || r.live_teams > 0));
+    for (const r of protectedStray) console.log(`  NOTE  protected legacy exception: ${r.case_code} v${r.content_version} stays published (${r.open_assignments} open assignment(s), ${r.live_teams} unfinished team(s))`);
+    add(loose.length === 0, `no unprotected legacy version is still published or assignable (${protectedStray.length} protected exception(s) reported above)`, `${loose.length} left: run node scripts/retire-legacy-cases.mjs (dry run) then --apply`);
+    add(rows.some((r) => r.status === 'published'), 'at least one case version is published', 'publish a tested version from Admin -> Cases');
     const sample = (await a.query("select c.id, c.slug, k.key, k.table_name as tbl from cases c join case_table_keys k on k.case_id = c.id where c.case_code ~ '^(SQL|LOG)0[1-6]$' and k.table_name = (select tables_unlocked[1] from case_phases where case_id = c.id and phase_number = 1) order by (c.status = 'published') desc, c.content_version desc limit 1")).rows[0];
 
     const p = new pg.Client({ connectionString: E.DATABASE_URL_PLAYER });

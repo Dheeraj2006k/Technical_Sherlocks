@@ -233,7 +233,9 @@ test('draft, review, tested and disabled versions cannot be assigned as if they 
     const reg = await g.register({ assign: false });
     const r = await admin.post('/api/admin/assign-case', { registration_id: reg.id, case_code: g.caseCode });
     assert.equal(r.status, 409, s);
-    assert.match(r.data.error, new RegExp(`${s}; only published`));
+    assert.match(r.data.error, /only published, eligible versions can be assigned/, s);
+    const byId = await admin.post('/api/admin/assign-case', { registration_id: reg.id, case_id: g.caseId });
+    assert.equal(byId.status, 409, `${s} by id`);
   }
 });
 
@@ -350,33 +352,31 @@ test('case-lifecycle refuses tested without a recorded human review and blind pl
   assert.match(pub.stderr, /illegal case status transition review -> published/);
 });
 
-test('retiring legacy cases disables them for new assignments and deletes nothing: live teams keep playing', async () => {
+test('retirement never touches a version with a live team or an open assignment: live teams keep playing and unstarted registrations can still start', async () => {
   const legacy = await makeGame(pool, defByCode('LOG01'), { caseCode: 'LOG99', status: 'published' });
   const stub = await makeGame(pool, defByCode('SQL01'), { caseCode: 'SH3R10CK', status: 'published' });
   cleanups.push(() => legacy.cleanup(), () => stub.cleanup());
   const team = await startedTeam(legacy, 1);
   const waiting = await stub.register();
-  const dry = nodeScript(['scripts/retire-legacy-cases.mjs']);
+  const scope = `--only=LOG99,SH3R10CK`;
+  const dry = nodeScript(['scripts/retire-legacy-cases.mjs', scope]);
   assert.equal(dry.status, 0, dry.stderr);
-  assert.match(dry.stdout, /Would retire/);
-  assert.equal(await status(legacy.caseId), 'published', 'a dry run changes nothing');
-  const run = nodeScript(['scripts/retire-legacy-cases.mjs', '--apply']);
+  assert.match(dry.stdout, /DRY RUN: 0 version\(s\) can be retired, 2 must be kept/);
+  assert.ok(dry.stdout.includes('LOG99 v1  stays published:') && dry.stdout.includes('1 team(s) not yet finished are pinned to it'));
+  assert.ok(dry.stdout.includes('SH3R10CK v1  stays published: 1 open assignment(s)'));
+  const run = nodeScript(['scripts/retire-legacy-cases.mjs', scope, '--apply']);
   assert.equal(run.status, 0, run.stderr);
-  assert.equal(await status(legacy.caseId), 'disabled');
-  assert.equal(await status(stub.caseId), 'disabled');
+  assert.equal(await status(legacy.caseId), 'published');
+  assert.equal(await status(stub.caseId), 'published');
   assert.equal((await pool.query("select count(*)::int n from cases where case_code ~ '^(SQL|LOG)0[1-6]$' and status = 'disabled'")).rows[0].n, 0, 'catalogue cases are not retired');
-  // the live team on the retired case is untouched and keeps playing
+  // the live team keeps playing and the unstarted registration can still start
   const q = legacy.tasks[0];
   const r = await submit(team.head, q.id, answerValue(q));
   assert.equal(r.status, 200);
   assert.equal(r.data.correct, true);
   assert.equal((await new Client().headJoin(legacy, team.reg, 'Head')).status, 200);
   assert.equal((await new Client().joinTeam(team.teamCode, 'Late')).status, 200);
-  // an unstarted registration assigned to the stub can no longer start
-  assert.equal((await new Client().headJoin(stub, waiting)).status, 401);
-  // and nothing new can be assigned to a retired case
-  const reg2 = await legacy.register({ assign: false });
-  assert.equal((await admin.post('/api/admin/assign-case', { registration_id: reg2.id, case_code: 'LOG99' })).status, 409);
+  assert.equal((await new Client().headJoin(stub, waiting)).status, 200);
   const audit = (await pool.query("select count(*)::int n from admin_audit where action = 'case_retired' and case_id = any($1)", [[legacy.caseId, stub.caseId]])).rows[0].n;
-  assert.equal(audit, 2);
+  assert.equal(audit, 0, 'nothing was retired, so nothing is audited');
 });

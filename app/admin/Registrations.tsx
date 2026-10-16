@@ -17,7 +17,7 @@ type Reg = {
   team_state: string | null;
   players_joined: number | null;
 };
-type CaseRow = { case_code: string; title: string; track: string; status: string; content_version: number; validated: boolean; tested: boolean; active_assignments: number; teams_pinned: number };
+type CaseRow = { id: string; assignable: boolean; reason: string; case_code: string; title: string; track: string; status: string; content_version: number; validated: boolean; tested: boolean; active_assignments: number; teams_pinned: number };
 type Audit = { id: number; created_at: string; action: string; actor: string; team_ref: string | null; case_code: string | null };
 type Toast = (tone: "success" | "error" | "info", text: string) => void;
 
@@ -79,15 +79,17 @@ export default function Registrations({ toast }: { toast: Toast }) {
   }
 
   async function assign(reg: Reg) {
-    const code = pick[reg.id];
-    if (!code) return;
-    const r = await call("/api/admin/assign-case", { registration_id: reg.id, case_code: code });
-    if (r.ok) toast("success", `${reg.team_ref} assigned to ${code}.`);
+    const chosen = cases.find((c) => c.id === pick[reg.id]);
+    if (!chosen) return;
+    // the exact version is sent, never just the code: v1 can never be substituted for v2 (or the reverse)
+    const r = await call("/api/admin/assign-case", { registration_id: reg.id, case_id: chosen.id });
+    if (r.ok) toast("success", `${reg.team_ref} assigned to ${chosen.case_code} v${chosen.content_version}.`);
     else toast("error", String(r.data.error ?? "Could not assign."));
     load();
   }
 
-  const published = cases.filter((c) => c.status === "published");
+  const assignable = cases.filter((c) => c.assignable);
+  const notYet = cases.filter((c) => !c.assignable && c.status !== "disabled");
 
   async function setStatus(c: CaseRow, status: "published" | "disabled") {
     const verb = status === "published" ? "publish" : "disable";
@@ -145,7 +147,7 @@ export default function Registrations({ toast }: { toast: Toast }) {
                       <div className="row-actions">
                         <select aria-label={`Case for ${r.team_ref}`} value={pick[r.id] ?? ""} onChange={(e) => setPick({ ...pick, [r.id]: e.target.value })}>
                           <option value="">Choose a case…</option>
-                          {published.map((c) => <option key={c.case_code} value={c.case_code}>{c.case_code} · {c.title}</option>)}
+                          {assignable.map((c) => <option key={c.id} value={c.id}>{c.case_code} · {c.title} (v{c.content_version})</option>)}
                         </select>
                         <button type="button" className="btn ghost sm" disabled={!pick[r.id]} onClick={() => assign(r)}>{r.case_code ? "Reassign" : "Assign"}</button>
                       </div>
@@ -160,12 +162,13 @@ export default function Registrations({ toast }: { toast: Toast }) {
 
       <section className="panel" aria-labelledby="cases-title">
         <h2 id="cases-title" className="panel-title">Case catalogue and publication</h2>
+        <p className="muted" data-testid="review-only-note">{notYet.length > 0 ? `${notYet.length} version${notYet.length === 1 ? " is" : "s are"} not assignable yet (see the Why column). The assignment list shows only published, eligible versions, so a new case appears there only after its human review, blind playtest and publication.` : "Every listed version is assignable or disabled."}</p>
         <p className="muted">Lifecycle: draft, review, tested, published. Only a tested version can be published, and only a published version can be assigned. A version a team has started stays pinned to it.</p>
         <div className="table-wrap">
           <table className="lb admin-table" data-testid="case-catalogue">
             <caption className="sr-only">Case versions</caption>
             <thead>
-              <tr><th scope="col">Case</th><th scope="col">Version</th><th scope="col">Status</th><th scope="col">Checks</th><th scope="col">In use</th><th scope="col">Action</th></tr>
+              <tr><th scope="col">Case</th><th scope="col">Version</th><th scope="col">Status</th><th scope="col">Checks</th><th scope="col">In use</th><th scope="col">Assignable</th><th scope="col">Action</th></tr>
             </thead>
             <tbody>
               {cases.map((c) => (
@@ -175,6 +178,7 @@ export default function Registrations({ toast }: { toast: Toast }) {
                   <td><StatusPill tone={c.status === "published" ? "green" : c.status === "disabled" ? "muted" : "cyan"}>{c.status}</StatusPill></td>
                   <td className="case-name">{c.validated ? "validated" : "not validated"} · {c.tested ? "human-tested" : "not human-tested"}</td>
                   <td className="case-name">{c.active_assignments} assigned · {c.teams_pinned} team{c.teams_pinned === 1 ? "" : "s"}</td>
+                  <td className="case-name" data-testid={`assignable-${c.case_code}-v${c.content_version}`}><b>{c.assignable ? "Yes" : "No"}</b> · {c.reason}</td>
                   <td>
                     <div className="row-actions">
                       {c.status === "tested" && <button type="button" className="btn ghost sm" onClick={() => setStatus(c, "published")}>Publish</button>}

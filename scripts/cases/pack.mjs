@@ -27,6 +27,12 @@ import { fileURLToPath } from 'node:url';
 
 export const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 export const CASES_DIR = join(ROOT, 'cases');
+// The supplied roster: the only titles a canonical (content_version 2) case may carry.
+export const CANONICAL_TITLES = {
+  SQL01: 'Seven Minutes Late', SQL02: 'The Last Show', SQL03: 'The Missing Batch', SQL04: 'The Borrowed Badge', SQL05: 'The Wrong Parcel', SQL06: 'The Empty Account',
+  LOG01: "The Locked Room That Wasn't", LOG02: 'The Vanishing Trophy', LOG03: 'The Silent Call', LOG04: 'The Rainy-Day Alibi', LOG05: 'The Duplicate Invitation', LOG06: 'The Last Render',
+};
+export const CANONICAL_VERSION = 2;
 export const CATALOGUE_CODES = ['SQL01', 'SQL02', 'SQL03', 'SQL04', 'SQL05', 'SQL06', 'LOG01', 'LOG02', 'LOG03', 'LOG04', 'LOG05', 'LOG06'];
 export const LIFECYCLE = ['draft', 'review', 'tested', 'published', 'disabled'];
 export const REWARD_SCHEDULE = [10, 8, 6, 4, 2];

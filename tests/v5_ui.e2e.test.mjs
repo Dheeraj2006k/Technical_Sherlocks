@@ -426,7 +426,7 @@ test('UI: mission control creates registrations, assigns a case, shows the team,
     const row = page.locator('tr', { hasText: 'E2E Admin Squad' }).first();
     await row.waitFor({ timeout: 8000 });
     await row.getByText('Not assigned').waitFor();
-    await row.getByLabel(/Case for/).selectOption({ value: S.caseCode });
+    await row.getByLabel(/Case for/).selectOption({ value: S.caseId });
     await row.getByRole('button', { name: 'Assign' }).click();
     await page.getByText(new RegExp(`E2E Admin Squad assigned to ${S.caseCode}`)).waitFor();
     await page.locator('tr', { hasText: 'E2E Admin Squad' }).first().getByText(S.caseCode).first().waitFor({ timeout: 8000 });
